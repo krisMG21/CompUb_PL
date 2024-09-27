@@ -11,3 +11,10 @@
    * 2.4. Lector tarjetas
    * 2.5. Luz
 3. Otros:ESP32
+
+
+* Apuntes:
+Ocupación de cubículos / puestos individuales tmbn
+Sensores de climatización de la biblio
+Cerraduras inteligentes para las salas
+Técnica Pomodoro
