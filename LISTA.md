@@ -75,7 +75,7 @@ Igual que como sucedía con las salas, un nivel excesivo de ruido alertará a lo
 responsables, mientras que po debajo de ese nivel, solo aconsejará a los usuarios
 a la hora de coger sitio.
 
-Se pueden implementar add-ons como un cronómetro y buzzer para implementar la 
+Se pueden implementar add-ons como un cronómetro y buzzer para implementar la
 técnica Pomodoro.
 
 ### Sensores en la entrada
