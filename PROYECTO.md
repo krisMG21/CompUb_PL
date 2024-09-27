@@ -1,7 +1,3 @@
-¡Desarrollar el proyecto del **Sistema Inteligente de Reservas de Espacios** es una excelente idea para optimizar el uso de salas y espacios en un campus universitario! Vamos a desglosar todos los componentes, desde el concepto hasta la implementación.
-
----
-
 ## **Sistema Inteligente de Reservas de Espacios con Arduino y Sensores**
 
 ### **Objetivo del Proyecto**
