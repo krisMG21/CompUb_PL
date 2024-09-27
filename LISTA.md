@@ -1,4 +1,4 @@
-# Lista de la compra
+# Lista de los componentes
 1. Actuadores
    * 1.1. Buzzer
    * 1.2. Servo motor
