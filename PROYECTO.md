@@ -1,11 +1,11 @@
-## **Sistema Inteligente de Reservas de Espacios con Arduino y Sensores**
+# **Sistema Inteligente de Reservas de Espacios con Arduino y Sensores**
 
-### **Objetivo del Proyecto**
+## **> Objetivo del Proyecto**
 Desarrollar un sistema que permita a los estudiantes y profesores reservar salas de estudio, laboratorios o aulas a través de una aplicación o plataforma web, gestionando de manera eficiente los recursos y asegurando el acceso automatizado a los mismos mediante el uso de sensores de presencia y cerraduras electrónicas.
 
-### **Modelo de 4 Capas**
+## **> Modelo de 4 Capas**
 
-#### **1. Capa de Dispositivos (Hardware)**
+### **1. Capa de Dispositivos (Hardware)**
 
 Esta capa se encarga de recolectar información en tiempo real sobre la ocupación de las salas y controlar los accesos a las mismas.
 
@@ -28,7 +28,7 @@ Esta capa se encarga de recolectar información en tiempo real sobre la ocupaci�
   - Pantalla LCD o LEDs indicadores
   - Lector RFID (opcional)
 
-#### **2. Capa de Red**
+### **2. Capa de Red**
 
 El propósito de esta capa es conectar los dispositivos de hardware con el servidor o la nube para transmitir y recibir datos.
 
@@ -38,7 +38,7 @@ El propósito de esta capa es conectar los dispositivos de hardware con el servi
 
 - **Servidor**: Los datos se envían a un servidor central (puede ser un servidor local o en la nube) para gestionar las reservas y los accesos.
 
-#### **3. Capa de Servicios de Middleware**
+### **3. Capa de Servicios de Middleware**
 
 Esta capa se encarga de procesar los datos enviados por los dispositivos, gestionar la lógica del sistema y almacenar la información sobre el uso y reservas de las salas.
 
@@ -50,7 +50,7 @@ Esta capa se encarga de procesar los datos enviados por los dispositivos, gestio
 
 - **API RESTful**: Un servicio RESTful permitirá que la aplicación web o móvil interactúe con el sistema, solicitando y actualizando datos en la base de datos sobre las reservas y el estado de las salas.
 
-#### **4. Capa de Aplicación (Software)**
+### **4. Capa de Aplicación (Software)**
 
 La capa de aplicación es donde los usuarios interactúan con el sistema. Ofrece una interfaz para que los estudiantes y profesores reserven las salas, vean la disponibilidad en tiempo real y reciban notificaciones sobre el estado de sus reservas.
 
@@ -69,7 +69,7 @@ La capa de aplicación es donde los usuarios interactúan con el sistema. Ofrece
 
 - **Notificaciones Automáticas**: El sistema puede enviar notificaciones por correo electrónico o mensajes en la aplicación para avisar a los usuarios cuando una sala esté disponible o para recordarles que su reserva está a punto de expirar.
 
-### **Flujo de Funcionamiento del Sistema**
+## **> Flujo de Funcionamiento del Sistema**
 
 1. **Reserva**: Un usuario ingresa a la aplicación web o móvil, selecciona una sala y elige un horario. El sistema verifica la disponibilidad y confirma la reserva.
   
@@ -83,7 +83,7 @@ La capa de aplicación es donde los usuarios interactúan con el sistema. Ofrece
 
 ---
 
-### **Beneficios del Sistema**
+## **Beneficios del Sistema**
 - **Optimización de recursos**: Las salas no estarán subutilizadas, ya que el sistema garantiza que estén ocupadas solo cuando hayan sido reservadas.
 - **Automatización del acceso**: Mejora la seguridad y evita el uso indebido de las instalaciones.
 - **Facilidad de uso**: Los usuarios pueden hacer reservas desde cualquier lugar y recibir notificaciones cuando la sala esté lista.
@@ -91,7 +91,7 @@ La capa de aplicación es donde los usuarios interactúan con el sistema. Ofrece
 
 ---
 
-### **Posible Expansión**
+## **Posible Expansión**
 Este sistema puede expandirse fácilmente a otros tipos de espacios en el campus, como laboratorios, áreas de trabajo colaborativo e incluso auditorios. También se podría integrar con sistemas de climatización para ahorrar energía ajustando el aire acondicionado o la calefacción en función de la ocupación de las salas.
 
 Con estos componentes, tienes una solución completa para la gestión inteligente de espacios en un campus universitario.
