@@ -14,7 +14,9 @@
 
 
 * Apuntes:
-Ocupación de cubículos / puestos individuales tmbn
-Sensores de climatización de la biblio
-Cerraduras inteligentes para las salas
-Técnica Pomodoro
+  * Ocupación de cubículos / puestos individuales tmbn
+  * Sensores de climatización de la biblio
+  * Cerraduras inteligentes para las salas
+  * Técnica Pomodoro
+  * Sensores de ruido / movimiento
+  * Análisis estadístico de los datos recogidos
