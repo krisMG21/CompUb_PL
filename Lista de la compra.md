@@ -10,6 +10,7 @@
    * 2.3. Sonido
    * 2.4. Lector tarjetas
    * 2.5. Luz
+   * 2.6. Botón
 3. Otros:ESP32
 
 
