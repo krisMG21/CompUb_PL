@@ -1,14 +1,16 @@
 # **Sistema Inteligente de Reservas de Espacios con Arduino y Sensores**
 
-## **> Objetivo del Proyecto**
+## **Objetivo del Proyecto**
 
-Desarrollar un sistema que permita a los estudiantes y profesores reservar
-salas de estudio, laboratorios o aulas a través de una aplicación o plataforma
-web, gestionando de manera eficiente los recursos y asegurando el acceso
-automatizado a los mismos mediante el uso de sensores de presencia y cerraduras
-electrónicas.
+Desarrollar un sistema que permita reservar salas de estudio en una biblioteca,
+y domotizar tanto las salas de estudio como cubículos individuales para regular
+la ocupación, recopilar datos y estadísticas sobre y para los usuarios.
 
-## **> Modelo de 4 Capas**
+De esta forma que se agilizará y optimizará el uso de los espacios, y se
+facilitará la gestión de los recursos y la gestión de la calidad de los
+servicios.
+
+## **Modelo de 4 Capas**
 
 ### **1. Capa de Dispositivos (Hardware)**
 
@@ -29,12 +31,13 @@ diferentes colores para indicar el estado (verde: disponible, rojo: ocupada,
 amarillo: reservada).
 
 - **Arduino**: Actúa como el centro de control, procesando los datos de los sensores
-y controlando las cerraduras. Dependiendo de la conectividad requerida, puede ser
-un **Arduino Uno** con **ESP8266** para conectividad Wi-Fi o directamente un **ESP32**
-que ya cuenta con conectividad Wi-Fi.
+y controlando las cerraduras. Usaríamos un **ESP32**, circuito integrado que ya
+cuenta con conectividad Wi-Fi.
 
 - **Tarjeta RFID (Opcional)**: Para permitir la entrada de los usuarios mediante
 tarjetas de identificación, como las que utilizan los estudiantes en el campus.
+En su defecto, se podría usar un código QR o similar el cual interprete y
+tramite la aplicación de reserva.
 
 #### **Componentes necesarios**
 
@@ -120,7 +123,7 @@ alertas de problemas en las cerraduras o sensores.
 correo electrónico o mensajes en la aplicación para avisar a los usuarios cuando
 una sala esté disponible o para recordarles que su reserva está a punto de expirar.
 
-## **> Flujo de Funcionamiento del Sistema**
+## **Flujo de Funcionamiento del Sistema**
 
 1. **Reserva**: Un usuario ingresa a la aplicación web o móvil, selecciona una
 sala y elige un horario. El sistema verifica la disponibilidad y confirma la
