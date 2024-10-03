@@ -3,19 +3,38 @@
 ## Componentes
 
 1. Actuadores
-   * 1.1. Buzzer
+   * 1.1. Buzzer (Active / Passive?)
    * 1.2. Servo motor
-   * 1.3. Led
+   * 1.3. Led: Varios LEDs o RGB LED
 
 2. Sensores:
-   * 2.1. Temperatura
-   * 2.2. Movimiento
-   * 2.3. Sonido
-   * 2.4. Lector tarjetas
-   * 2.5. Luz
+   * 2.1. Temperatura y humedad: `DHT11`
+   * 2.2. Movimiento: `HC-SRSOI PIR Sensor`
+   * 2.3. Sonido: `Sound sensor module`
+   * 2.4. Lector tarjetas RFID `RC522`  básico o RFID comercial
+   * 2.5. Luz (fotoresistores)
    * 2.6. Botón
 
-3. Otros: ESP32
+3. Controladores
+   * 3.1. Arduino: `ESP32`, conectividad Wi-Fi
+
+## Cuales tenemos
+
+### Elegoo mega 2560
+
+[x] Buzzer (Active / Passive?)
+[x] Servo motor
+[x] Leds
+[x] Sensor de temperatura y humedad: `DHT11`
+[x] Sensor de movimiento: `HC-SRSOI PIR Sensu IPC`
+[x] Sensor de ruido: `Sound sensor module`
+[X] Botón (5 unidades)
+[-] Arduino: `ESP32`, conectividad Wi-Fi
+
+### Otros
+
+[ ] Sensor de luz, fotoresistores
+[ ] Lector tarjetas RFID `RC522` / RFID comercial
 
 ---
 

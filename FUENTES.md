@@ -1,6 +1,6 @@
 # Fuentes
 
-## Domótica
+## Estudios domótica
 
 [Equip. de una biblioteca](https://www.bibliopos.es/Biblion-A2-Biblioteconomia/24Construccion-equipamiento-bibliotecas.pdf)
 :Información sobre correcta climatización e iluminación
@@ -14,4 +14,7 @@ cuenta
 [Curso Konnex / KNX](https://cursodidacticoknx.wordpress.com/)
 : Tochaco de información, algo podremos sacar
 
+## Componentes
 
+[Tutorial Lector de Tarjetas](https://naylampmechatronics.com/blog/22_tutorial-modulo-lector-rfid-rc522.html)
+[Fotoresistores, sensores de luz](https://www.seeedstudio.com/blog/2020/01/08/what-is-a-light-sensor-types-uses-arduino-guide/)
