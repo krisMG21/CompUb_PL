@@ -12,6 +12,8 @@
 6. [Conclusiones](#conclusiones)
 7. [Bibliografía](#bibliografía)
 
+RESUMEN
+
 ## Introducción
 
    Como estudiantes sabemos que muchas veces es complicado encontrar un espacio
