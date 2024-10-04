@@ -19,6 +19,7 @@
    salas libres, pudiendo reservarlos, sino que también se integrarán sensores
    para medir la ocupación, ruido y climatización, optimizando el uso de los
    espacios.
+   Esta plataforma esta destinada a la gestión de espacios y no a la gestión de los libros.
 
    Para mejorar la productividad, cada cubículo contará con un botón Pomodoro,
    permitiendo a los estudiantes gestionar su tiempo de estudio de forma eficiente.
@@ -32,6 +33,7 @@
    reservas no siempre se utilizan de manera eficiente, ya que a veces hay
    cubículos sin personas, pero ocupados por sus cosas. Además, la falta de
    control sobre el ruido y la climatización puede afectar la concentración.
+   
 
 ## Proyectos de referencia
 
@@ -51,6 +53,9 @@ Como proyectos de referencia tenemos a:
    Empresa que implementa software de reserva de espacios, gestión y control de
    accesos a empresas a nivel de aplicación. También aporta estadísticas y análisis
    sobre los datos obtenidos.
+* Como proyecto de referencia también contamos que en la misma universidad de Alcalá cuentan con un sistema para poder reservar asientos y salas en un intervalo de tiempo, aunque la reserva de asiento no esta implementado en la Escuela Politecnica de la Universidad de Álcala.
+Además este sistema no cuenta con sensores para controlar la climatización de salas y/o cubículos, mostrar la disponibilidad de forma física mediante led y en la plataforma.
+
 
 ## Objetivos y alcance del proyecto
 
@@ -61,6 +66,7 @@ Incorporar un mapa  que muestre la disponibilidad de salas y cubículos.
 Ofrecer estadísticas detalladas para optimizar la gestión de los espacios.
 Implementar el acceso a las salas mediante códigos QR o tarjetas para ayudar a
 los usuarios a la hora de hacer uso de la biblioteca.
+Destinado en un principio a los usuarios de la biblioteca de la politécnica de la UAH, ya que es nuestra biblioteca de referencia.
 
 ## Propuesta de desarrollo
 
