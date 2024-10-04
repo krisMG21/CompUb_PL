@@ -22,19 +22,19 @@
 
 ### Elegoo mega 2560
 
-- [x] Buzzer (Active / Passive?)
-- [x] Servo motor
-- [x] Leds
-- [x] Sensor de temperatura y humedad: `DHT11`
-- [x] Sensor de movimiento: `HC-SRSOI PIR Sensu IPC`
-- [x] Sensor de ruido: `Sound sensor module`
-- [X] Botón (5 unidades)
-- [ ] Arduino: `ESP32`, conectividad Wi-Fi
+* [x] Buzzer (Active / Passive?)
+* [x] Servo motor
+* [x] Leds
+* [x] Sensor de temperatura y humedad: `DHT11`
+* [x] Sensor de movimiento: `HC-SRSOI PIR Sensu IPC`
+* [x] Sensor de ruido: `Sound sensor module`
+* [X] Botón (5 unidades)
+* [ ] Arduino: `ESP32`, conectividad Wi-Fi
 
 ### Otros
 
-- [ ] Sensor de luz, fotoresistores
-- [ ] Lector tarjetas RFID `RC522` / RFID comercial
+* [ ] Sensor de luz, fotoresistores
+* [ ] Lector tarjetas RFID `RC522` / RFID comercial
 
 ---
 
