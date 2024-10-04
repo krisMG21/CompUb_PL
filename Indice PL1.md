@@ -28,7 +28,10 @@
    Como proyectos de referencia tenemos a:
    Condeco
    https://www.condecosoftware.com/es/
-   Condeco es una empresa dedicada a software integrado de reserva de espacio de trabajo aunque está destinada principalmente a las oficinas.La diferencia que marcamos con ellos seria el público al que está dirigido y el uso de sensores para el control del ambiente.
+   
+   Condeco es una empresa dedicada a software integrado de reserva de espacio de trabajo aunque está destinada principalmente a las oficinas.
+   La diferencia que marcamos con ellos seria el público al que está dirigido y el uso de sensores para el control del ambiente.
+   
    Roomzilla
    https://www.softwareadvice.ie/software/262110/roomzilla
    Software dedicado a  la reserva de salas en oficinas, coworking y universidades. 
