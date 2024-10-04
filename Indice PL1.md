@@ -59,6 +59,7 @@ Como proyectos de referencia tenemos a:
    Empresa que implementa software de reserva de espacios, gestión y control de
    accesos a empresas a nivel de aplicación. También aporta estadísticas y análisis
    sobre los datos obtenidos.
+
 * Universidad de Álcala  [(link)]( https://biblioteca.uah.es/conoce-la-biblioteca/servicios/reserva-de-puestos-de-lectura/):
   En la misma Universidad de Alcalá cuentan con un sistema para poder reservar
   asientos y salas en un intervalo de tiempo, aunque la reserva de asiento no esta
@@ -91,6 +92,29 @@ siguientes espacios:
 
 1. Salas de la biblioteca: con el estado de ocupación, ruido, climatización
 2. Cubículos de la biblioteca: con el estado de ocupación, ruido, climatización
+
+#### Hardware
+
+##### Actuadores
+
+* Buzzer (Active / Passive?): Indica la finalización del sprint del pomodoro
+* Servo motor: Para la cerradura inteligente
+* Led: Para indicar la ocupación de los espacios
+
+##### Sensores
+
+* Temperatura y humedad: `DHT11`
+* Movimiento: `HC-SRSOI PIR Sensor`
+* Sonido: `Sound sensor module`
+* Lector tarjetas RFID `RC522`  básico o RFID comercial
+* Luz (fotoresistores)
+* Botón
+
+##### Controladores
+
+* Arduino: `ESP32`, conectividad Wi-Fi
+
+#### Software
 
 Cada espacio de la instalación tendrá sus respectivos componentes, ambos con
 sensor de ocupación (con LED asociado), climatización y ruido.
