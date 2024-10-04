@@ -59,7 +59,7 @@ Como proyectos de referencia tenemos a:
    sobre los datos obtenidos.
 * Universidad de Álcala  [(link)]( https://biblioteca.uah.es/conoce-la-biblioteca/servicios/reserva-de-puestos-de-lectura/):
   En la misma Universidad de Alcalá cuentan con un sistema para poder reservar asientos y salas en un intervalo de tiempo,
-  aunque la reserva de asiento no esta implementado en la Escuela Politecnica de la Universidad de Álcala.
+  aunque la reserva de asiento no esta implementado en la Escuela Politecnica de la Universidad de Alcalá.
    Además este sistema no cuenta con sensores para controlar la climatización de salas y/o cubículos, mostrar la disponibilidad de forma física mediante led y en la plataforma.
 
 
