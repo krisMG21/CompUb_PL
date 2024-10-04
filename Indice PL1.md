@@ -53,9 +53,10 @@ Como proyectos de referencia tenemos a:
    Empresa que implementa software de reserva de espacios, gestión y control de
    accesos a empresas a nivel de aplicación. También aporta estadísticas y análisis
    sobre los datos obtenidos.
-*Universidad de Álcala  [(link)]( https://biblioteca.uah.es/conoce-la-biblioteca/servicios/reserva-de-puestos-de-lectura/):
-Como proyecto de referencia también contamos que en la misma Universidad de Alcalá cuentan con un sistema para poder reservar asientos y salas en un intervalo de tiempo, aunque la reserva de asiento no esta implementado en la Escuela Politecnica de la Universidad de Álcala.
-Además este sistema no cuenta con sensores para controlar la climatización de salas y/o cubículos, mostrar la disponibilidad de forma física mediante led y en la plataforma.
+* Universidad de Álcala  [(link)]( https://biblioteca.uah.es/conoce-la-biblioteca/servicios/reserva-de-puestos-de-lectura/):
+   Como proyecto de referencia también contamos que en la misma Universidad de Alcalá cuentan con un sistema para poder reservar asientos y salas en un intervalo de tiempo,
+  aunque la reserva de asiento no esta implementado en la Escuela Politecnica de la Universidad de Álcala.
+   Además este sistema no cuenta con sensores para controlar la climatización de salas y/o cubículos, mostrar la disponibilidad de forma física mediante led y en la plataforma.
 
 
 ## Objetivos y alcance del proyecto
