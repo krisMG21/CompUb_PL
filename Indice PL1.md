@@ -47,17 +47,12 @@ Como proyectos de referencia tenemos a:
    Software dedicado a  la reserva de salas en oficinas, coworking y universidades.
    La diferencia con ellos es la implementación de los sensores.
 
-## Objetivos y alcance del proyecto
-   Zityhub
-   https://zityhub.com/space-management
-   Empresa que implementa software de reserva de espacios, gestión y control de accesos a empresas a nivel de aplicación. También aporta estadísticas y análisis sobre los datos obtenidos.
+* Zityhub [(link)](https://zityhub.com/space-management):
+   Empresa que implementa software de reserva de espacios, gestión y control de
+   accesos a empresas a nivel de aplicación. También aporta estadísticas y análisis
+   sobre los datos obtenidos.
 
-   4.Objetivos y alcance del proyecto
-   Desarrollar una plataforma que se pueda utilizar tanto desde la web como desde dispositivos móviles.
-   Crear un sistema de reserva de espacios en la biblioteca para los usuarios de esta.
-   Incorporar un mapa  que muestre la disponibilidad de salas y cubículos.
-   Ofrecer estadísticas detalladas para optimizar la gestión de los espacios.
-   Implementar el acceso a las salas mediante códigos QR o tarjetas para ayudar a los usuarios a la hora de hacer uso de la biblioteca.
+## Objetivos y alcance del proyecto
 
 Desarrollar una plataforma que se pueda utilizar tanto desde la web como desde
 dispositivos móviles.
