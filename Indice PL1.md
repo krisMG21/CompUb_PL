@@ -5,6 +5,10 @@
 3. [Proyectos de referencia](#proyectos-de-referencia)
 4. [Objetivos y alcance del proyecto](#objetivos-y-alcance-del-proyecto)
 5. [Propuesta de desarrollo](#propuesta-de-desarrollo)
+   * 5.1. [Arquitectura del sistema](#arquitectura-del-sistema)
+   * 5.2. [Tecnología a utilizar](#tecnología-a-utilizar)
+   * 5.3. [Mockup de aplicaciones](#mockup-de-aplicaciones)
+   * 5.4. [Plan de desarrollo](#plan-de-desarrollo)
 6. [Conclusiones](#conclusiones)
 7. [Bibliografía](#bibliografía)
 
@@ -63,6 +67,31 @@ Implementar el acceso a las salas mediante códigos QR o tarjetas para ayudar a
 los usuarios a la hora de hacer uso de la biblioteca.
 
 ## Propuesta de desarrollo
+
+### Arquitectura del sistema
+
+Consta de una aplicación web, que se encargará de gestionar los espacios de
+estudio, y de gestionar las reservas de los usuarios.
+
+A la aplicación web se aporta información desde los distintos sensores de los
+siguientes espacios:
+
+1. Salas de la biblioteca: con el estado de ocupación, ruido, climatización
+2. Cubículos de la biblioteca: con el estado de ocupación, ruido, climatización
+
+Cada espacio de la instalación tendrá sus respectivos componentes, ambos con
+sensor de ocupación (con LED asociado), climatización y ruido.
+
+Lo único que tienen de diferencia es la cerradura inteligente de la sala de
+estudio, y el mini-sistema pomodoro para el cubículo.
+
+### Tecnología a utilizar
+
+### Mockup de aplicaciones
+
+### Plan de desarrollo
+
+### Presupuesto
 
 ## Conclusiones
 

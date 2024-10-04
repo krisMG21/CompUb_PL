@@ -2,6 +2,10 @@
 
 ## Estudios domótica
 
+[TFG de Domótica](https://biblus.us.es/bibing/proyectos/abreproy/12379/fichero/Proyecto+de+domotizaci%C3%B3n+de+un+edificio+basado+en+KNX.pdf)
+
+[TFG Inmótica Bilbilioteca](https://dspace.ups.edu.ec/bitstream/123456789/4839/1/UPS-CT002656.pdf)
+
 [Equip. de una biblioteca](https://www.bibliopos.es/Biblion-A2-Biblioteconomia/24Construccion-equipamiento-bibliotecas.pdf)
 :Información sobre correcta climatización e iluminación
 

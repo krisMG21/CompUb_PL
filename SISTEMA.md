@@ -1,5 +1,16 @@
 # Sistema
 
+## Estructura
+
+Consta de una aplicación web, que se encargará de gestionar los espacios de
+estudio, y de gestionar las reservas de los usuarios.
+
+A la aplicación web se aporta información desde los distintos sensores de los
+siguientes espacios:
+
+1. Salas de la biblioteca: con el estado de ocupación, ruido, climatización
+2. Cubículos de la biblioteca: con el estado de ocupación, ruido, climatización
+
 ## Aplicación
 
 La reserva de las salas se pretende realizar desde una plataforma web (o móvil)
