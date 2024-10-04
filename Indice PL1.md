@@ -6,13 +6,17 @@
 4. [Objetivos y alcance del proyecto](#objetivos-y-alcance-del-proyecto)
 5. [Propuesta de desarrollo](#propuesta-de-desarrollo)
    * 5.1. [Arquitectura del sistema](#arquitectura-del-sistema)
+      * 5.1.1. [Salas de la biblioteca](#salas-de-la-biblioteca)
+         * [Software sala](#software-sala)
+         * [Hardware sala](#hardware-sala)
+      * 5.1.2. [Cubículos de la biblioteca](#cubículos-de-la-biblioteca)
+         * [Software cubículo](#software-cubículo)
+         * [Hardware cubículo](#hardware-cubículo)
    * 5.2. [Tecnología a utilizar](#tecnología-a-utilizar)
    * 5.3. [Mockup de aplicaciones](#mockup-de-aplicaciones)
    * 5.4. [Plan de desarrollo](#plan-de-desarrollo)
 6. [Conclusiones](#conclusiones)
 7. [Bibliografía](#bibliografía)
-
-RESUMEN
 
 ## Introducción
 
@@ -84,6 +88,11 @@ la UAH, ya que es nuestra biblioteca de referencia.
 
 ### Arquitectura del sistema
 
+> [!NOTE]
+> ¿Tendremos que detallar todos los componentes intermedios?
+> Sensores, Actuadores <-> Controlador -> Middleware <-> Aplicación
+>(BBDD, Frontend, Backend)
+
 Consta de una aplicación web, que se encargará de gestionar los espacios de
 estudio, y de gestionar las reservas de los usuarios.
 
@@ -93,7 +102,50 @@ siguientes espacios:
 1. Salas de la biblioteca: con el estado de ocupación, ruido, climatización
 2. Cubículos de la biblioteca: con el estado de ocupación, ruido, climatización
 
+#### Salas de la biblioteca
+
+Las salas de la biblioteca se encuentran conectadas a un sistema de reservas
+que permite a los usuarios reservar las salas, y recibir notificaciones sobre
+el estado de las reservas.
+
+##### Software sala
+
+Para poder gestionar las reservas, se utilizará un sistema de usuarios y permisos
+que permita a los usuarios registrarse y gestionar sus reservas.
+
+Se podrá acceder desde la web (si puede ser adaptada para móvil tmbn).
+
+La apliación web recibe información de los sensores (ocupación, climatización y
+ruido). Podremos monitorizar el uso de la sala con el de ocupación y comprobarlo
+con las resresas de los usuarios.
+
+##### Hardware sala
+
+Los sensores de ocupación, climatización y ruido se encuentran conectados al
+controlador principal, desde el que se envía la información a la aplicación web,
+con fines de monitorización y estadísticos.
+
+La sala cuenta también con una cerradura inteligente, que se encarga controlar
+el acceso a la sala. Se activa desde la aplicación web, por parte del usuario
+que ha reservado la sala, cuando quiere acceder a ella.
+
+#### Cubículos de la biblioteca
+
+Los cubículos de la biblioteca están equipados, aparte de con sensores de
+ocupación, climatización y ruido, con un sistema Pomodoro para el estudio.
+
+##### Software cubículo
+
+La aplicación web recibe la información de todos los sensores.
+
+##### Hardware cubículo
+
+### Tecnología a utilizar
+
 #### Hardware
+
+En cuanto a los componentes de hardware del sistema, usamos los siguientes a lo
+largo de ambos espacios:
 
 ##### Actuadores
 
@@ -121,8 +173,6 @@ sensor de ocupación (con LED asociado), climatización y ruido.
 
 Lo único que tienen de diferencia es la cerradura inteligente de la sala de
 estudio, y el mini-sistema pomodoro para el cubículo.
-
-### Tecnología a utilizar
 
 ### Mockup de aplicaciones
 
