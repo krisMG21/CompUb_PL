@@ -26,9 +26,9 @@
 
    3.Proyectos de referencia
    Como proyectos de referencia tenemos a:
+   
    Condeco
    https://www.condecosoftware.com/es/
-   
    Condeco es una empresa dedicada a software integrado de reserva de espacio de trabajo aunque está destinada principalmente a las oficinas.
    La diferencia que marcamos con ellos seria el público al que está dirigido y el uso de sensores para el control del ambiente.
    
