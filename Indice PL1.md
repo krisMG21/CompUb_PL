@@ -136,9 +136,16 @@ ocupación, climatización y ruido, con un sistema Pomodoro para el estudio.
 
 ##### Software cubículo
 
-La aplicación web recibe la información de todos los sensores.
+La aplicación web recibe la información de todos los sensores, saca estadísticas
+detalladas para los gestores y la resumen para mostrarla en el mapa del usuario.
 
 ##### Hardware cubículo
+
+El cubículo cuenta con un sensor de ocupación (conectado a un led (verde/rojo) ),
+climatización y ruido, y un sistema Pomodoro para el estudio.
+
+Este sistema consta de un display de tiempo, un botón de inicio y un buzzer
+para indicar la finalización del sprint del pomodoro.
 
 ### Tecnología a utilizar
 
@@ -149,13 +156,13 @@ largo de ambos espacios:
 
 ##### Actuadores
 
-* Buzzer (Active / Passive?): Indica la finalización del sprint del pomodoro
+* Buzzer activo: Indica la finalización del sprint del pomodoro
 * Servo motor: Para la cerradura inteligente
 * Led: Para indicar la ocupación de los espacios
 
 ##### Sensores
 
-* Temperatura y humedad: `DHT11`
+* Temperatura y humedad `DHT11`
 * Movimiento: `HC-SRSOI PIR Sensor`
 * Sonido: `Sound sensor module`
 * Lector tarjetas RFID `RC522`  básico o RFID comercial
@@ -168,11 +175,14 @@ largo de ambos espacios:
 
 #### Software
 
-Cada espacio de la instalación tendrá sus respectivos componentes, ambos con
-sensor de ocupación (con LED asociado), climatización y ruido.
+La aplicación web aporta, de cara a los usuarios, información sobre el estado de
+los espacios de estudio, y permite gestionar las reservas de los usuarios.
+Además, tendrá a su disposición un mapa que muestre la disponibilidad de las
+salas y cubículos, así como datos resumidos de ruido y climatización.
 
-Lo único que tienen de diferencia es la cerradura inteligente de la sala de
-estudio, y el mini-sistema pomodoro para el cubículo.
+De cara a los gestores, aporta la información recogida de los sensores y las
+estadísticas derivadas de ellos, como puede ser el uso de las salas y los cubículos,
+la climatización y ruido a lo largo del día,...
 
 ### Mockup de aplicaciones
 
