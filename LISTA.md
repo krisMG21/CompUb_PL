@@ -52,3 +52,6 @@
    --> Monitorear zonas +/- concurridas / ruidosas
 * Análisis estadístico de los datos recogidos
    --> Backend y BBDD
+* Temporizador cuenta atrás finalización reserva (salas)
+   --> Notificación de la aplicación
+* Luz led salas ocupadas y libres
