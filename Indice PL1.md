@@ -37,6 +37,10 @@
    Software dedicado a  la reserva de salas en oficinas, coworking y universidades. 
    La diferencia con ellos es la implementación de los sensores.
 
+   Zityhub
+   https://zityhub.com/space-management
+   Empresa que implementa software de reserva de espacios, gestión y control de accesos a empresas a nivel de aplicación. También aporta estadísticas y análisis sobre los datos obtenidos.
+
    4.Objetivos y alcance del proyecto
    Desarrollar una plataforma que se pueda utilizar tanto desde la web como desde dispositivos móviles.
    Crear un sistema de reserva de espacios en la biblioteca para los usuarios de esta.
