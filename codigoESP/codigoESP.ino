@@ -1,3 +1,4 @@
+#include <cstdio>
 #include <DHT.h>
 #define RED_LED 2  // Led de ocupación del cubículo: RED
 #define GREEN_LED 0      // Led de ocupación del cubículo: GREEN
@@ -8,7 +9,10 @@
 #define DHTPIN 3
 #define DHTTYPE DHT11 
 DHT dht(DHTPIN, DHTTYPE);
-#include <cstdio>
+
+#inclde "leds.h"
+#include "timer.h"
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -22,13 +26,10 @@ void setup() {
   pinMode(SSONIDO, INPUT);
 }
 
-void alternating_leds(){
-  digitalWrite(RED_LED, HIGH);  // Turn on the LED
-  digitalWrite(GREEN_LED, LOW);
-  delay(1000);                  // Wait for 1 second
-  digitalWrite(RED_LED, LOW);   // Turn off the LED
-  digitalWrite(GREEN_LED, HIGH);
-  delay(1000);                  // Wait for 1 second
+// LEDS
+
+void change_occupied(){
+  
 }
 
 void read_light_sensor() {
