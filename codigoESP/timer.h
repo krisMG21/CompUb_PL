@@ -1,4 +1,3 @@
-// Timer.h
 #ifndef TIMER_H
 #define TIMER_H
 
@@ -19,8 +18,8 @@ public:
     bool isFinished() const;
     unsigned int getMinutes() const;
     unsigned int getSeconds() const;
+    unsigned int getProgress() const;
     void addTime(int minutes);
 };
 
-#endif // TIMER_H
-
+#endif //TIMER_H

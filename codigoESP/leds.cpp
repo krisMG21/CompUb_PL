@@ -18,6 +18,7 @@
 #include "timer.h"
 
 struct leds leds;
+Timer timer;
 
 bool occupied = false;
 
@@ -29,6 +30,10 @@ void leds_init(int red, int green, int pomodoro[6]) {
     }
 }
 
+void set_occupied(bool occupied) {
+    occupied = occupied;
+}
+
 void change_occupied() {
     occupied = !occupied;
 }
@@ -37,9 +42,9 @@ void update_leds() {
     digitalWrite(leds.red, occupied);
     digitalWrite(leds.green, !occupied);
 
-    int leds = time / 5;
+    int leds = timer.getProgress() * 5;
     for (int i = 0; i < 5; i++) {
-        digitalWrite(leds.pomodoro[i], i < leds);
+        digitalWrite(leds.pomodoro[i], i <= leds);
     }
 }
 

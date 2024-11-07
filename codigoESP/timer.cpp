@@ -69,6 +69,10 @@ unsigned int Timer::getSeconds() const {
     return totalTimeSeconds % 60;
 }
 
+unsigned int Timer::getProgress() const {
+    return (totalTimeSeconds > 0) ? (totalTimeSeconds/ startTime) : 0;
+}
+
 void Timer::addTime(int minutes) {
     if (minutes > 0) {
         totalTimeSeconds += minutes * 60UL;
