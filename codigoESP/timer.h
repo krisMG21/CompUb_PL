@@ -8,17 +8,24 @@ private:
     bool timerRunning;
 
 public:
+    //Constructor
     Timer();
+
+    //Methods
     void setTime(unsigned int minutes);
     unsigned long readTime();
+
     void start();
     void stop();
     void reset();
+
     bool isRunning() const;
     bool isFinished() const;
+
     unsigned int getMinutes() const;
     unsigned int getSeconds() const;
     unsigned int getProgress() const;
+
     void addTime(int minutes);
 };
 

@@ -1,18 +1,7 @@
 #ifdef ARDUINO
 #include <Arduino.h>
 #else
-    #define HIGH 1
-    #define LOW 0
-    #define INPUT 0
-    #define OUTPUT 1
-    #define digitalWrite(pin, val) ((void)0)
-    #define digitalRead(pin) (0)
-    #define pinMode(pin, mode) ((void)0)
-    #define delay(ms) ((void)0)
     #define millis() (0)
-    typedef unsigned char uint8_t;
-    typedef unsigned int uint16_t;
-    typedef int int16_t;
 #endif
 
 #include "timer.h"
