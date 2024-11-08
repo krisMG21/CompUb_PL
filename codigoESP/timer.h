@@ -1,32 +1,31 @@
 #ifndef TIMER_H
 #define TIMER_H
 
+#include "arduino.h"
+
 class Timer {
 private:
-    unsigned long totalTimeSeconds;
+    enum State { WORK, BREAK, IDLE };
+
+    static const unsigned long WORK_TIME = 25 * 60 * 1000UL;  // 25 minutos en milisegundos
+    static const unsigned long BREAK_TIME = 5 * 60 * 1000UL;  // 5 minutos en milisegundos
+
     unsigned long startTime;
-    bool timerRunning;
+    unsigned long elapsedTime;
+    State currentState;
+    bool isRunning;
 
 public:
-    //Constructor
     Timer();
-
-    //Methods
-    void setTime(unsigned int minutes);
-    unsigned long readTime();
-
     void start();
-    void stop();
+    void pause();
     void reset();
-
-    bool isRunning() const;
-    bool isFinished() const;
-
-    unsigned int getMinutes() const;
-    unsigned int getSeconds() const;
-    unsigned int getProgress() const;
-
-    void addTime(int minutes);
+    void toggle();
+    void update();
+    bool isInWorkState() const;
+    bool isInBreakState() const;
+    int getProgress() const;
+    bool isTimerRunning() const;
 };
 
-#endif //TIMER_H
+#endif // TIMER_H

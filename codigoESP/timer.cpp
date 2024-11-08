@@ -1,72 +1,68 @@
-#ifdef ARDUINO
-#include <Arduino.h>
-#else
-    #define millis() (0)
-#endif
-
 #include "timer.h"
 
-Timer::Timer() : totalTimeSeconds(0), startTime(0), timerRunning(false) {}
-
-void Timer::setTime(unsigned int minutes) {
-    if (!timerRunning) {
-        totalTimeSeconds = minutes * 60UL;
-    }
-}
-
-unsigned long Timer::readTime() {
-    if (timerRunning) {
-        unsigned long elapsedTime = (millis() - startTime) / 1000UL;
-        return (elapsedTime < totalTimeSeconds) ? (totalTimeSeconds - elapsedTime) : 0;
-    }
-    return totalTimeSeconds;
-}
+Timer::Timer() : startTime(0), elapsedTime(0), currentState(IDLE), isRunning(false) {}
 
 void Timer::start() {
-    if (!timerRunning && totalTimeSeconds > 0) {
-        timerRunning = true;
-        startTime = millis();
+    if (!isRunning) {
+        startTime = millis() - elapsedTime;
+        currentState = WORK;
+        isRunning = true;
     }
 }
 
-void Timer::stop() {
-    if (timerRunning) {
-        timerRunning = false;
-        unsigned long elapsedTime = (millis() - startTime) / 1000UL;
-        totalTimeSeconds = (elapsedTime < totalTimeSeconds) ? (totalTimeSeconds - elapsedTime) : 0;
+void Timer::pause() {
+    if (isRunning) {
+        elapsedTime = millis() - startTime;
+        isRunning = false;
     }
 }
 
 void Timer::reset() {
-    stop();
-    totalTimeSeconds = 0;
+    elapsedTime = 0;
+    currentState = IDLE;
+    isRunning = false;
 }
 
-bool Timer::isRunning() const {
-    return timerRunning;
-}
-
-bool Timer::isFinished() const {
-    return timerRunning && (millis() - startTime) / 1000UL >= totalTimeSeconds;
-}
-
-unsigned int Timer::getMinutes() const {
-    return totalTimeSeconds / 60;
-}
-
-unsigned int Timer::getSeconds() const {
-    return totalTimeSeconds % 60;
-}
-
-unsigned int Timer::getProgress() const {
-    return (totalTimeSeconds > 0) ? (totalTimeSeconds/ startTime) : 0;
-}
-
-void Timer::addTime(int minutes) {
-    if (minutes > 0) {
-        totalTimeSeconds += minutes * 60UL;
-    } else if (minutes < 0 && static_cast<unsigned long>(-minutes * 60) < totalTimeSeconds) {
-        totalTimeSeconds -= static_cast<unsigned long>(-minutes * 60);
+void Timer::toggle() {
+    if (isRunning) {
+        pause();
+    } else {
+        start();
     }
 }
 
+void Timer::update() {
+    if (isRunning) {
+        unsigned long currentTime = millis();
+        elapsedTime = currentTime - startTime;
+
+        if (currentState == WORK && elapsedTime >= WORK_TIME) {
+            currentState = BREAK;
+            startTime = currentTime;
+            elapsedTime = 0;
+        } else if (currentState == BREAK && elapsedTime >= BREAK_TIME) {
+            currentState = WORK;
+            startTime = currentTime;
+            elapsedTime = 0;
+        }
+    }
+}
+
+bool Timer::isInWorkState() const {
+    return currentState == WORK;
+}
+
+bool Timer::isInBreakState() const {
+    return currentState == BREAK;
+}
+
+int Timer::getProgress() const {
+    if (!isRunning) return 0;
+
+    unsigned long totalTime = (currentState == WORK) ? WORK_TIME : BREAK_TIME;
+    return elapsedTime / totalTime;
+}
+
+bool Timer::isTimerRunning() const {
+    return isRunning;
+}
