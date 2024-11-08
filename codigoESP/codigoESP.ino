@@ -1,18 +1,23 @@
 #include <cstdio>
 #include <DHT.h>
-#define RED_LED 2  // Led de ocupación del cubículo: RED
-#define GREEN_LED 0      // Led de ocupación del cubículo: GREEN
-#define BUZZER 15
-#define SSONIDO 35
-#define LIGHT_SENSOR 12
-#define BUTTON 21
-#define DHTPIN 3
-#define DHTTYPE DHT11
+#include <WiFi.h>
+#include <PubSubClient.h>
+
+#define RED_LED 2             // LED de ocupación del cubículo: ROJO
+#define GREEN_LED 0           // LED de ocupación del cubículo: VERDE
+#define BUZZER 15             // Buzzer
+#define SSONIDO 35            // Sensor de sonido
+#define LIGHT_SENSOR 12       // Sensor de luz
+#define BUTTON 21             // Botón inicio pomodoro
+#define DHTPIN 3              // Pin del sensor DHT
+#define DHTTYPE DHT11         // Tipo de sensor DHT
+#define TRIG_ULTRASONIC 25    // Pin TRIG para sensor ultrasónico
+#define ECHO_ULTRASONIC 26    // Pin ECHO para sensor ultrasónico
+
 DHT dht(DHTPIN, DHTTYPE);
 
-//#include "leds.h"
-//#include "timer.h"
-
+#include "sala.h"
+#include "cubiculo.h"
 
 void setup() {
   // put your setup code here, to run once:
@@ -20,15 +25,16 @@ void setup() {
   dht.begin();
   pinMode(RED_LED,OUTPUT);
   pinMode(GREEN_LED,OUTPUT);
-  digitalWrite(GREEN_LED, LOW);
   pinMode(BUZZER,OUTPUT);
-  pinMode(LIGHT_SENSOR, INPUT);
   pinMode(BUTTON,INPUT);
   pinMode(SSONIDO, INPUT);
+  pinMode(SLUZ, INPUT);
+  pinMode(TRIG_ULTRASONIC, OUTPUT);
+  pinMode(ECHO_ULTRASONIC, INPUT);
 }
 
 void read_light_sensor() {
-  int light_value = analogRead(LIGHT_SENSOR);
+  int light_value = analogRead(SLUZ);
   Serial.print("Valor del sensor de luz: ");
   Serial.println(light_value);
 }
