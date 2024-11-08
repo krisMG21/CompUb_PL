@@ -1,7 +1,12 @@
 #include "sala.h"
 
-Sala::Sala(struct leds leds) {
-    occupied = false;
-    timer = Timer();
-    leds_i = leds;
+void Sala::update() {
+    if (button.isPressed()) {
+        leds.change_occupied();
+        leds.start_pomodoro(timer.getProgress());
+    }
+    else {
+        leds.set_occupied(occupied);
+    }
+    leds.update();
 }

@@ -1,0 +1,4 @@
+class Cubiculo {
+  public:
+    Cubiculo();
+};
