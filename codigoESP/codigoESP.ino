@@ -23,14 +23,11 @@ void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   dht.begin();
-  pinMode(RED_LED,OUTPUT);
-  pinMode(GREEN_LED,OUTPUT);
-  pinMode(BUZZER,OUTPUT);
-  pinMode(BUTTON,INPUT);
-  pinMode(SSONIDO, INPUT);
-  pinMode(SLUZ, INPUT);
-  pinMode(TRIG_ULTRASONIC, OUTPUT);
-  pinMode(ECHO_ULTRASONIC, INPUT);
+
+  Timer timer;
+  Leds leds(RED_LED, GREEN_LED, pomodoro, timer);
+  Cubiculo cub(LIGHT_SENSOR, TRIG_ULTRASONIC, ECHO_ULTRASONIC, BUZZER, BUTTON, SSONIDO, SLUZ);
+  Sala sala(leds, cub);
 }
 
 void read_light_sensor() {

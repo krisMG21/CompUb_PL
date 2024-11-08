@@ -24,3 +24,26 @@ int Sensor_US::readDistance(){
     Serial.println(distance);
     return distance;
 }
+
+bool Sensor_US::ocupado(){
+    return readDistance() < 10;
+}
+
+float Sensor_DHT::readTemperature(){
+    return dht.readTemperature();
+}
+
+float Sensor_DHT::readHumidity(){
+    return dht.readHumidity();
+}
+
+void Sensor_DHT::printDHT(){
+    float temperature_f = readTemperature();
+    float humidity_f = readHumidity();
+    Serial.print("Temperatura: ");
+    Serial.print(temperature_f);
+    Serial.print(" C");
+    Serial.print(" Humedad: ");
+    Serial.print(humidity_f);
+    Serial.println(" %");
+}

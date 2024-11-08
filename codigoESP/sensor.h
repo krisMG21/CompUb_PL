@@ -1,17 +1,8 @@
+#include "arduino.h"
+
 #ifndef SENSOR_H
 #define SENSOR_H
-#ifdef ARDUINO
-#include <Arduino.h>
-#else
-    #define HIGH 1
-    #define LOW 0
-    #define pinMode(pin, mode) ((void)0)
-    #define digitalRead(pin) (0)
-    #define digitalWrite(pin, val) ((void)0)
-    #define analogRead(pin) (0)
-    #define delayMicroseconds(ms) ((void)0)
-    #define pulseIn(pin, state) (0)
-#endif
+
 
 #include <cstdio>
 #include <string>
@@ -19,9 +10,12 @@
 class Sensor { //Sensores analogicos
 private:
     int pin;
+    DHT dht;
     std::string nombre;
 public:
-    Sensor(int pin, std::string nombre):pin(pin), nombre(nombre) {};
+    Sensor(int pin, std::string nombre):pin(pin), nombre(nombre) {
+        pinMode(pin, INPUT);
+    };
     int read();
 };
 
@@ -35,7 +29,24 @@ public:
         pinMode(pin_echo, INPUT);
     };
     int readDistance();
+    bool ocupado();
 
 };
+
+class Sensor_DHT { //Sensor de temperatura y humedad
+private:
+    int pin;
+    DHT dht;
+
+public:
+    Sensor_DHT(int pin):pin(pin) {
+        pinMode(pin, INPUT);
+        dht = dht(pin, DHTTYPE);
+    };
+    float readTemperature();
+    float readHumidity();
+    void printDHT();
+};
+
 
 #endif // SENSOR_H

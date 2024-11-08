@@ -20,14 +20,13 @@ private:
     int pomodoro_duration;
 
     Timer timer;
-    bool occupied;
+    bool ocupado;
 public:
     //Constructor
     Leds(int red, int green, int pomodoro[6], Timer& timer):timer(timer){}; //Pines de los leds
     void init();
-    void set_occupied(bool occupied);
-    void change_occupied();
-    void start_pomodoro();
+    void set_ocupado(bool ocupado);
+    void change_ocupado();
     void update();
 };
 

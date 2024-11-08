@@ -8,18 +8,15 @@ void Leds::init(){
     }
 }
 
-void Leds::set_occupied(bool occupied) {
-    digitalWrite(led_red, occupied);
-    digitalWrite(led_green, !occupied);
+void Leds::set_ocupado(bool is_ocupado) {
+    digitalWrite(led_red, is_ocupado);
+    digitalWrite(led_green, !is_ocupado);
+    ocupado = is_ocupado;
 }
 
-void Leds::change_occupied() {
-    occupied = !occupied;
-    set_occupied(occupied);
-}
-
-void Leds::start_pomodoro() {
-    timer.start();
+void Leds::change_ocupado() {
+    ocupado = !ocupado;
+    set_ocupado(ocupado);
 }
 
 void Leds::update() {
