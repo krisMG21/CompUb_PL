@@ -10,7 +10,6 @@
 class Sensor { //Sensores analogicos
 private:
     int pin;
-    DHT dht;
     std::string nombre;
 public:
     Sensor(int pin, std::string nombre):pin(pin), nombre(nombre) {
