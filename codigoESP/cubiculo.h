@@ -2,7 +2,6 @@
 #define SALA_H
 
 #include "comps/pomodoro.h"
-#include "utils/timer.h"
 #include "comps/sensor.h"
 
 class Cubiculo {

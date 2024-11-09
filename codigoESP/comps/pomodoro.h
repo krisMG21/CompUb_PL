@@ -2,7 +2,7 @@
 #define LEDS_H
 
 #include "../arduino.h"
-#include "../utils/timer.h"
+#include "../logic/timer.h"
 
 class Leds {
 private:

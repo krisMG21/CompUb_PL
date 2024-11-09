@@ -49,6 +49,8 @@ void setup() {
 
     Cubiculo cub(leds, s_luz, s_sonido, s_posicion, s_dht, button);
     Sala sala(leds, cub);
+
+    MQTT mqtt(mqttServer, mqttPort, mqttUser, mqttPassword, espClient, client);
 }
 
 void read_light_sensor() {
@@ -79,10 +81,18 @@ void readDHT(){
 }
 
 void loop() {
-    read_sound_sensor();
-    read_light_sensor();
-    readDHT();
-    delay(1000);
+    // Leer el sensor de luz
+    int light_value = read_light_sensor();
+
+    // Publicar información en MQTT si está conectado
+    if (client.connected()) {
+        client.publish(light_topic, String(light_value).c_str());
+    } else {
+        reconnectMQTT();  // Reintentar conexión si no está conectado
+    }
+
+    client.loop();  // Mantener la conexión
+    delay(1000);    // Ajusta según el intervalo necesario
 }
 
 // Conexión a WiFi

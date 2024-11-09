@@ -35,6 +35,7 @@ public:
     MQTT(char* mqttServer, int mqttPort, char* mqttUser, char* mqttPassword, WiFiClient& espClient, PubSubClient& client);
     void initMQTTServer();
     void reconnectMQTT();
+    void tryPublish(std::string topic, std::string message);
 };
 
 #endif // MQTT_H
