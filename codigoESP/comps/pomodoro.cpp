@@ -1,4 +1,14 @@
-#include "leds.h"
+#include "pomodoro.h"
+
+Leds::Leds(int red, int green, int pomodoro[6], Timer& timer) : timer(timer) {
+    led_red = red;
+    led_green = green;
+    for (int i = 0; i < 6; i++) {
+        leds_pomodoro[i] = pomodoro[i];
+    }
+    ocupado = false;
+    init();
+}
 
 void Leds::init(){
     pinMode(led_red, OUTPUT);
@@ -24,4 +34,14 @@ void Leds::update() {
     for (int i = 0; i < 5; i++) {
         digitalWrite(leds_pomodoro[i], i <= leds);
     }
+}
+
+bool Button::isPressed(){
+    int value = digitalRead(pin);
+    return (bool)value;
+}
+
+int Button::read(){
+    int value = digitalRead(pin);
+    return value;
 }

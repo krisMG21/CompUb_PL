@@ -1,7 +1,7 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include "arduino.h"
+#include "../arduino.h"
 
 class Timer {
 private:

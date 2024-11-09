@@ -9,11 +9,13 @@
     #define HIGH 1
     #define LOW 0
     #define pinMode(pin, mode) ((void)0)
+    #define digitalRead(pin) (0)
     #define digitalWrite(pin, val) ((void)0)
     #define analogRead(pin) (0)
     #define delayMicroseconds(ms) ((void)0)
-    #define millis() (0)
     #define pulseIn(pin, state) (0)
+    #define millis() (0)
+    #define delay(ms) ((void)0)
 
     #define DHTTYPE DHT11
     #define dht(pin, type) DHT()
@@ -21,12 +23,12 @@
 
 class SerialClass {
 public:
-    template<typename T>
-    void print(T message);
-    template<typename T>
-    void println(T message);
+    void print(std::string message);
+    void print(int message);
+    void println(std::string message);
+    void println(int message);
 };
-extern SerialClass Serial;
+SerialClass Serial;
 
 class DHT {
 public:
@@ -34,6 +36,14 @@ public:
     void begin();
     int readTemperature();
     int readHumidity();
+};
+
+class Servo {
+public:
+    Servo();
+    void write(int position);
+    void attach(int pin, int min, int max);
+    void setPeriodHertz(int hertz);
 };
 
 #endif // ARDUINO_H

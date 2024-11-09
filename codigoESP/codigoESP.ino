@@ -29,6 +29,10 @@ const char* mqttPassword = "ubicua";
 //Solo luz
 #define light_topic "station1/light"
 
+// Objetos WiFi, MQTT y DHT
+WiFiClient espClient;
+PubSubClient client(espClient);
+
 void setup() {
     // put your setup code here, to run once:
     Serial.begin(9600);
@@ -80,3 +84,16 @@ void loop() {
     readDHT();
     delay(1000);
 }
+
+// Conexión a WiFi
+void initWifi() {
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  Serial.print("Conectando a WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nConectado a WiFi");
+}
+
+

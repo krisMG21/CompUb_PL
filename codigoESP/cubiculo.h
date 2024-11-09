@@ -1,10 +1,9 @@
 #ifndef SALA_H
 #define SALA_H
 
-#include "leds.h"
-#include "timer.h"
-#include "sensor.h"
-#include "button.h"
+#include "comps/pomodoro.h"
+#include "utils/timer.h"
+#include "comps/sensor.h"
 
 class Cubiculo {
 private:
@@ -15,8 +14,6 @@ private:
     Sensor_US s_posicion;
     Sensor_DHT s_dht;
     Button button;
-    // Ventilador
-    Timer timer;
 
 public:
     Cubiculo(
@@ -25,18 +22,8 @@ public:
         const Sensor& s_sonido,
         const Sensor_US& s_posicion,
         const Sensor_DHT& s_dht,
-        const Button& button):
-        leds(leds),
-        s_luz(s_luz),
-        s_sonido(s_sonido),
-        s_posicion(s_posicion),
-        s_dht(s_dht),
-        button(button) {
-        occupied = false;
-    };
+        const Button& button);
 
     void update();
-
-
 };
 #endif //SALA_H

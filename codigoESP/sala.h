@@ -1,14 +1,15 @@
 #ifndef SALA_H
 #define SALA_H
 
-#include "leds.h"
-#include "timer.h"
-#include "sensor.h"
-#include "button.h"
+typedef struct {
+    int id;
+} Usuario;
+
+#include "comps/sensor.h"
 
 class Sala {
 private:
-    //Usuario usuario;
+    Usuario usuario;
     bool ocupada;
     bool reservada;
 
@@ -18,12 +19,9 @@ private:
     Sensor_DHT s_dht;
 
 public:
-    Sala(const Sensor_DHT& s_dht): s_dht(s_dht) {
-        ocupada = false;
-        reservada = false;
-    };
+    Sala(const Sensor_DHT& s_dht);
 
-
+    void reservar(Usuario& usuario);
 
     void update();
 
