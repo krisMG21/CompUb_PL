@@ -25,9 +25,6 @@ const int mqttPort = 1883;
 const char* mqttUser = "ubicua";
 const char* mqttPassword = "ubicua";
 
-// Tópicos MQTT
-//Solo luz
-#define light_topic "station1/light"
 
 // Objetos WiFi, MQTT y DHT
 WiFiClient espClient;
@@ -97,13 +94,13 @@ void loop() {
 
 // Conexión a WiFi
 void initWifi() {
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  Serial.print("Conectando a WiFi");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("\nConectado a WiFi");
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    Serial.print("Conectando a WiFi");
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+    Serial.println("\nConectado a WiFi");
 }
 
 

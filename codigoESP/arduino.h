@@ -8,14 +8,21 @@
 #else
     #define HIGH 1
     #define LOW 0
+    #define INPUT 0
+    #define OUTPUT 1
+
     #define pinMode(pin, mode) ((void)0)
     #define digitalRead(pin) (0)
     #define digitalWrite(pin, val) ((void)0)
-    #define analogRead(pin) (0)
+    #define analogRead(pin) (0.0)
+    #define analogWrite(pin, val) ((void)0)
+
     #define delayMicroseconds(ms) ((void)0)
     #define pulseIn(pin, state) (0)
     #define millis() (0)
     #define delay(ms) ((void)0)
+
+    #define String(x) (std::to_string(x))
 
     #define DHTTYPE DHT11
     #define dht(pin, type) DHT()

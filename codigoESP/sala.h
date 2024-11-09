@@ -6,6 +6,9 @@ typedef struct {
 } Usuario;
 
 #include "comps/sensor.h"
+#include "comps/servo.h"
+#include "comps/rfid.h"
+#include "logic/mqtt.h"
 
 class Sala {
 private:
@@ -13,15 +16,27 @@ private:
     bool ocupada;
     bool reservada;
 
-    //Servo cerradura;
-    //RFID escaner;
+    unsigned long startTime;
+    unsigned long elapsedTime;
+    unsigned long reservationTime;
+
+    Servo cerradura;
+    RFID escaner;
 
     Sensor_DHT s_dht;
 
-public:
-    Sala(const Sensor_DHT& s_dht);
+    MQTT mqtt;
 
-    void reservar(Usuario& usuario);
+public:
+    Sala(const Sensor_DHT& s_dht, const Servo& cerradura, const MQTT& mqtt);
+
+    void reservar(Usuario& usuario, int time);
+
+    void abrir();
+    void cerrar();
+
+    bool is_reservada();
+    bool is_ocupada();
 
     void update();
 

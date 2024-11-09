@@ -12,22 +12,30 @@ MQTT::MQTT(char* mqttServer, int mqttPort, char* mqttUser, char* mqttPassword, W
 
 // Conexión al servidor MQTT
 void MQTT::initMQTTServer() {
-  client.setServer(mqttServer, mqttPort);
-  reconnectMQTT();
+    client.setServer(mqttServer, mqttPort);
+    reconnectMQTT();
 }
 
 void MQTT::reconnectMQTT() {
-  while (!client.connected()) {
-    Serial.print("Intentando conexión MQTT...");
-    // Intentar conexión con credenciales
-    if (client.connect("ESP32Client", mqttUser, mqttPassword)) {
-      Serial.println("Conectado a MQTT");
-      client.publish("esp/test", "Hello from ESP32");  // Mensaje de prueba
-    } else {
-      Serial.print("Fallo, rc=");
-      Serial.print(client.state());
-      Serial.println(" Reintentando en 2 segundos...");
-      delay(2000);
+    while (!client.connected()) {
+        Serial.print("Intentando conexión MQTT...");
+        // Intentar conexión con credenciales
+        if (client.connect("ESP32Client", mqttUser, mqttPassword)) {
+          Serial.println("Conectado a MQTT");
+          client.publish("esp/test", "Hello from ESP32");  // Mensaje de prueba
+        } else {
+          Serial.print("Fallo, rc=");
+          Serial.print(client.state());
+          Serial.println(" Reintentando en 2 segundos...");
+          delay(2000);
+        }
     }
-  }
+}
+
+void MQTT::publish(std::string topic, std::string message) {
+    if (client.connected()) {
+        client.publish(topic.c_str(), message.c_str());
+    } else {
+        reconnectMQTT();  // Reintentar conexión si no está conectado
+    }
 }
