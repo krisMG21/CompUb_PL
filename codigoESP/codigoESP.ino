@@ -9,7 +9,7 @@
 
 // NOTE: MODO DE EJECUCIÓN
 // ==================================================
-typdef enum {SALA, CUBICULO} tipo;
+typedef enum {SALA, CUBICULO} tipo;
 // #define MODE SALA
 #define MODE CUBICULO
 
@@ -35,6 +35,7 @@ typdef enum {SALA, CUBICULO} tipo;
 #define DHTTYPE DHT11         // Tipo de sensor DHT
 #define TRIG_ULTRASONIC 25    // Pin TRIG para sensor ultrasónico
 #define ECHO_ULTRASONIC 26    // Pin ECHO para sensor ultrasónico
+#define SERVO_PIN 13
 
 
 // Objetos WiFi, MQTT y DHT
