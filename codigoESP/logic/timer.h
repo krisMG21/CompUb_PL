@@ -5,8 +5,8 @@ class Timer {
 private:
     enum State { WORK, BREAK, IDLE };
 
-    static const unsigned long WORK_TIME = 25 * 60 * 1000UL;  // 25 minutos en milisegundos
-    static const unsigned long BREAK_TIME = 5 * 60 * 1000UL;  // 5 minutos en milisegundos
+    static const unsigned long WORK_TIME = 5 * 60 * 1000UL;  // 25 minutos en milisegundos
+    static const unsigned long BREAK_TIME = 1 * 60 * 1000UL;  // 5 minutos en milisegundos
 
     unsigned long startTime;
     unsigned long elapsedTime;

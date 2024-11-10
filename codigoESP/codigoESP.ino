@@ -77,6 +77,7 @@ void setup() {
             Timer timer;
             mqtt.publish("esp/checklist", "2. Timer");  // Mensaje de prueba
 
+            int* pomodoro = []; // 6 PINES DEL POMODORO, PRIMERO LOS 5 ROJOS Y LUEGO EL AMARILLO
             Leds leds(RED_LED, GREEN_LED, pomodoro, timer);
             Button button(BUTTON);
             mqtt.publish("esp/checklist", "3. Leds y botón del pomodoro");  // Mensaje de prueba
