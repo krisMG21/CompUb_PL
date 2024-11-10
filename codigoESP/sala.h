@@ -17,6 +17,7 @@ private:
 
     Usuario usuario;
     bool ocupada;
+    bool reservada;
 
     unsigned long startTime;
     unsigned long elapsedTime; //Tiempo transcurrido desde la reserva
@@ -30,15 +31,15 @@ private:
     MQTT mqtt;
 
 public:
-    Sala(const Sensor_DHT& s_dht, const Servo& cerradura, const MQTT& mqtt);
+    Sala(const unsigned ID, const Sensor_DHT& s_dht, const Servo& cerradura, const int RFID_RST, const int RFID_SS, const MQTT& mqtt);
 
     void reservar(Usuario& usuario, int time);
 
-    void abrir();
-    void cerrar();
+    void abrir(); //Abre la sala con el servo
+    void cerrar(); //Cierra la sala con el servo
 
-    bool is_reservada();
-    bool is_ocupada();
+    bool is_reservada(); //Compara tiempo transcurrido con el tiempo reservado
+    bool is_ocupada(); //Cuando se abre, se marca como ocupada, cuando se cierra se interpreta como libre
 
     void update();
 

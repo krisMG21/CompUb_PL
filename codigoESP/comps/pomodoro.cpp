@@ -54,18 +54,13 @@ void Leds::update() {
         }
     }
 
-    if (button.isPressed()) {
+    if (button.read()) {
         if (timer.isTimerRunning()) {
             stop_pomodoro();
         } else {
             start_pomodoro();
         }
     }
-}
-
-bool Button::isPressed(){
-    int value = digitalRead(pin);
-    return (bool)value;
 }
 
 int Button::read(){

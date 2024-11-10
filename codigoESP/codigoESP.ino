@@ -45,6 +45,7 @@ void setup() {
     switch (MODE) {
         case SALA:
             Serial.println("Modo: sala");
+            unsigned ID = 1;
 
             Sensor_DHT s_dht(DHTPIN);
             Servo cerradura(SERVO_PIN);
@@ -52,11 +53,13 @@ void setup() {
 
             MQTT mqtt(MQTT_SERVER, MQTT_PORT, MQTT_USER, MQTT_PASS, espClient, client);
 
-            Sala sala(s_dht, cerradura, escaner, mqtt);
+            Sala sala(ID, s_dht, cerradura, escaner, mqtt);
 
             break;
+
         case CUBICULO:
             Serial.println("Modo: cubículo");
+            unsigned ID = 1;
 
             Timer timer;
 
@@ -68,7 +71,7 @@ void setup() {
             Sensor_US s_posicion(TRIG_ULTRASONIC, ECHO_ULTRASONIC);
             Sensor_DHT s_dht(DHTPIN);
 
-            Cubiculo cub(leds, s_luz, s_sonido, s_posicion, s_dht, button);
+            Cubiculo cub(ID, leds, s_luz, s_sonido, s_posicion, s_dht, button);
 
             break;
     }

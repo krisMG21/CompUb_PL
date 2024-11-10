@@ -9,7 +9,6 @@ private:
     int pin;
 public:
     Button(int pin) : pin(pin){};
-    bool isPressed();
     int read();
 };
 

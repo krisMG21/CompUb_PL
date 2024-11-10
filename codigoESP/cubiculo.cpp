@@ -27,36 +27,45 @@ void Cubiculo::update() {
     std::string topic = "cubiculo/"+ (std::to_string(ID));
 
     switch (state) {
-        case 0:{
+        case 0:{ //Actualizar los leds del pomodoro
             leds.update();
             state++;
             break;
             }
-        case 1:{
+        case 1:{ //Leer sensor de luz
             int light_value = s_luz.read();
-            mqtt.publish(topic+"/luz", String(light_value));
+            mqtt.publish(topic+"/luz", String(light_value).c_str());
             state++;
+            Serial.println("PUBLISHED: "+topic+"/luz:" + String(light_value));
             break;
             }
-        case 2:{
+        case 2:{ //Leer sensor de sonido
             int sound_value = s_sonido.read();
             mqtt.publish(topic+"/ruido", String(sound_value));
+            Serial.println("PUBLISHED: "+topic+"/ruido:" + String(sound_value));
             state++;
             break;
             }
-        case 3:{
+        case 3:{ //Leer sensor de ocupación
             bool ocupado = s_posicion.ocupado();
             leds.set_ocupado(ocupado);
             mqtt.publish(topic+"/ocupado", String(ocupado));
+            Serial.println("PUBLISHED: "+topic+"/ocupado:" + String(ocupado));
             state++;
             break;
             }
-        case 4:{
+        case 4:{ //Leer temperatura del sensor DHT
             float temp = s_dht.readTemperature();
-            float hum = s_dht.readHumidity();
             mqtt.publish(topic+"/temp", String(temp));
-            mqtt.publish(topic+"/hum", String(hum));
+            Serial.println("PUBLISHED: "+topic+"/temp:" + String(temp));
             state++;
+            break;
+            }
+        case 5:{ //Leer humedad del sensor DHT
+            float hum = s_dht.readHumidity();
+            mqtt.publish(topic+"/hum", String(hum));
+            Serial.println("PUBLISHED: "+topic+"/hum:" + String(hum));
+            state = 0;
             break;
             }
         default:{
