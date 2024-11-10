@@ -1,85 +1,121 @@
+#include <cstdio>
 #include <DHT.h>
-#define RED_LED 2        // Led de ocupación del cubículo: RED
-#define GREEN_LED 0      // Led de ocupación del cubículo: GREEN
-#define BUZZER 39        // Buzzer
-#define SSONIDO 35       // Sensor de sonido
-#define LIGHT_SENSOR 12  // Sensor de luz
-#define BUTTON 36        // Boton inicio pomodoro
-#define DHTPIN 3         // Sensor DHT
-#define DHTTYPE DHT11
-#define TRIG_ULTRASONIC 25
-#define ECHO_ULTRASONIC 26
-long duration;
-int distance;
-DHT dht(DHTPIN, DHTTYPE);
+#include <WiFi.h>
+#include <PubSubClient.h>
+
+#include "config.h" //Credenciales de WiFi y MQTT
+#include "sala.h" //Objeto de la sala
+#include "cubiculo.h" //Objeto del cubículo
+
+// NOTE: MODO DE EJECUCIÓN
+// ==================================================
+typdef enum {SALA, CUBICULO} tipo;
+// #define MODE SALA
+#define MODE CUBICULO
+
+
+// NOTE: PINES
+// ==================================================
+#define RED_LED 2             // LED de ocupación del cubículo: ROJO
+#define GREEN_LED 0           // LED de ocupación del cubículo: VERDE
+
+// LEDs del pomodoro
+// #define P_LED1 0
+// #define P_LED2 0
+// #define P_LED3 0
+// #define P_LED4 0
+// #define P_LED5 0
+// #define P_LED_AMARILLO 0
+
+#define BUZZER 15             // Buzzer
+#define SSONIDO 35            // Sensor de sonido
+#define SLUZ 12       // Sensor de luz
+#define BUTTON 21             // Botón inicio pomodoro
+#define DHTPIN 3              // Pin del sensor DHT
+#define DHTTYPE DHT11         // Tipo de sensor DHT
+#define TRIG_ULTRASONIC 25    // Pin TRIG para sensor ultrasónico
+#define ECHO_ULTRASONIC 26    // Pin ECHO para sensor ultrasónico
+
+
+// Objetos WiFi, MQTT y DHT
+WiFiClient espClient;
+PubSubClient client(espClient);
 
 void setup() {
-  Serial.begin(9600);
-  dht.begin();
+    // put your setup code here, to run once:
+    Serial.begin(9600);
 
-  pinMode(RED_LED, OUTPUT);
-  pinMode(GREEN_LED, OUTPUT);
-  digitalWrite(GREEN_LED, LOW);
+    initWifi();
 
-  pinMode(BUZZER, OUTPUT);
-  pinMode(LIGHT_SENSOR, INPUT);
-  pinMode(BUTTON, INPUT);
-  pinMode(SSONIDO, INPUT);
-  pinMode(TRIG_ULTRASONIC, OUTPUT); // Sets the trigPin as an Output
-  pinMode(ECHO_ULTRASONIC, INPUT); // Sets the echoPin as an Input
+    // Conexión MQTT, encapsulada en un objeto, para pasarla
+    // a la sala y el cubículo y realizar allí el pubsub.
+    MQTT mqtt(MQTT_SERVER, MQTT_PORT, MQTT_USER, MQTT_PASS, espClient, client);
+
+    mqtt.publish("esp/checklist", "1. Conexión exitosa con Wifi y MQTT");  // Mensaje de prueba
+
+    switch (MODE) {
+        case SALA:
+            Serial.println("Modo: sala");
+            unsigned ID = 1;
+
+            Sensor_DHT s_dht(DHTPIN);
+            mqtt.publish("esp/checklist", "2. Sensor de temperatura y humedad");  // Mensaje de prueba
+            Servo cerradura(SERVO_PIN);
+            mqtt.publish("esp/checklist", "3. Servo");  // Mensaje de prueba
+            RFID escaner(RFID_RST, RFID_SS);
+            mqtt.publish("esp/checklist", "4. RFID");  // Mensaje de prueba
+
+            Sala sala(ID, s_dht, cerradura, escaner, mqtt);
+            mqtt.publish("esp/checklist", "5. Sala");  // Mensaje de prueba
+
+            break;
+
+        case CUBICULO:
+            Serial.println("Modo: cubículo");
+            unsigned ID = 1;
+
+            Timer timer;
+            mqtt.publish("esp/checklist", "2. Timer");  // Mensaje de prueba
+
+            Leds leds(RED_LED, GREEN_LED, pomodoro, timer);
+            Button button(BUTTON);
+            mqtt.publish("esp/checklist", "3. Leds y botón del pomodoro");  // Mensaje de prueba
+
+
+            Sensor s_luz(SLUZ, "Luz");
+            mqtt.publish("esp/checklist", "4. Sensor de luz");  // Mensaje de prueba
+
+            Sensor s_sonido(SSONIDO, "Sonido");
+            mqtt.publish("esp/checklist", "5. Sensor de sonido");  // Mensaje de prueba
+
+            Sensor_US s_posicion(TRIG_ULTRASONIC, ECHO_ULTRASONIC);
+            mqtt.publish("esp/checklist", "6. Sensor de ultrasonido");  // Mensaje de prueba
+
+            Sensor_DHT s_dht(DHTPIN);
+            mqtt.publish("esp/checklist", "7. Sensor de temperatura y humedad");  // Mensaje de prueba
+
+            Cubiculo cub(ID, leds, s_luz, s_sonido, s_posicion, s_dht, button);
+            mqtt.publish("esp/checklist", "8. Cubiculo construido");  // Mensaje de prueba
+
+            break;
+    }
 }
 
-void read_light_sensor() {
-  int light_value = analogRead(LIGHT_SENSOR);
-  Serial.print("Valor del sensor de luz: ");
-  Serial.println(light_value);
-}
-
-void read_sound_sensor() {
-  int sound_value = analogRead(SSONIDO);
-  Serial.print("Valor del sensor de sonido: ");
-  Serial.println(sound_value);
-}
-
-void readDHT(){
-  float h = dht.readHumidity();
-  float t = dht.readTemperature();
-  Serial.print("Humedad: ");
-  Serial.print(h);
-  Serial.println("%");
-  Serial.print("Temperatura: ");
-  Serial.print(t);
-  Serial.println("°C ");
-}
-
-void readDistance(){
-  // Clears the trigPin
-  digitalWrite(TRIG_ULTRASONIC, LOW);
-  delayMicroseconds(2);
-  // Sets the trigPin on HIGH state for 10 micro seconds
-  digitalWrite(TRIG_ULTRASONIC, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(TRIG_ULTRASONIC, LOW);
-  // Reads the echoPin, returns the sound wave travel time in microseconds
-  duration = pulseIn(ECHO_ULTRASONIC, HIGH);
-  // Calculating the distance
-  distance = duration * 0.034 / 2;
-  // Prints the distance on the Serial Monitor
-  Serial.print("Distance: ");
-  Serial.println(distance);
-}
 void loop() {
-  /*read_sound_sensor();
-  read_light_sensor();
-  readDHT();
-  readDistance();
-  delay(3000);*/
-  valorPulsador = digitalRead(BUTTON);  // Lectura digital de pulsadorPin
-  if (valorPulsador == HIGH) {
-      digitalWrite(BUZZER, HIGH); // Si detecta que pulsamos el pulsador imprime por el monitor serie "pulsado".
-  }
-  else {
-     digitalWrite(BUZZER, LOW); 
-  }
-  delay(1000); 
+    if (MODE == SALA) {
+        sala.update();
+    } else if (MODE == CUBICULO) {
+        cub.update();
+    }
+}
+
+// Conexión a WiFi
+void initWifi() {
+    WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    Serial.print("Conectando a WiFi");
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+    Serial.println("\nConectado a WiFi");
 }
