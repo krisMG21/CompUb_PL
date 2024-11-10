@@ -34,9 +34,11 @@ void MQTT::reconnectMQTT() {
 }
 
 void MQTT::publish(std::string topic, std::string message) {
-    if (client.connected()) {
-        client.publish(topic.c_str(), message.c_str());
-    } else {
-        reconnectMQTT();  // Reintentar conexión si no está conectado
-    }
+    Serial.println("Publishing: "+topic+":"+message);
+
+    // if (client.connected()) {
+    //     client.publish(topic.c_str(), message.c_str());
+    // } else {
+    //     reconnectMQTT();  // Reintentar conexión si no está conectado
+    // }
 }
