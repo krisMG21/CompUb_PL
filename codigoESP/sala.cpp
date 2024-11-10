@@ -47,7 +47,11 @@ void Sala::update() {
             break;
             }
         case 2: {
-
+            unsigned long currentTime = millis();
+            elapsedTime = currentTime - startTime;
+            mqtt.publish("sala/reservado", String(elapsedTime));
+            state++;
+            break;
         }
         // case 3:{
             // pregunta por sub datos de reserva a la app, pero tdvia no hay app, no se hace no?
