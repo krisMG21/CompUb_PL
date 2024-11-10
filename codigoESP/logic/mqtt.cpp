@@ -12,9 +12,10 @@ MQTT::MQTT(char* mqttServer, int mqttPort, char* mqttUser, char* mqttPassword, W
 
 // Conexión al servidor MQTT
 void MQTT::initMQTTServer() {
-    client.setServer(mqttServer, mqttPort);
-    Serial.print("Servidor MQTT cargado.");
-    reconnectMQTT();
+    Serial.println("MQTT server connected");
+    // client.setServer(mqttServer, mqttPort);
+    // Serial.print("Servidor MQTT cargado.");
+    // reconnectMQTT();
 }
 
 void MQTT::reconnectMQTT() {
