@@ -7,7 +7,7 @@ int Sensor::read(){
     return value;
 }
 
-int Sensor_US::readDistance(){
+int Sensor_US::read(){
     // Clears the trigPin
     digitalWrite(pin_trigger, LOW);
     delayMicroseconds(2);
@@ -26,7 +26,7 @@ int Sensor_US::readDistance(){
 }
 
 bool Sensor_US::ocupado(){
-    return readDistance() < 10;
+    return read() < 10;
 }
 
 float Sensor_DHT::readTemperature(){

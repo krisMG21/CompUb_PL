@@ -12,13 +12,15 @@ typedef struct {
 
 class Sala {
 private:
+    unsigned ID;
+    int state = 0;
+
     Usuario usuario;
     bool ocupada;
-    bool reservada;
 
     unsigned long startTime;
-    unsigned long elapsedTime;
-    unsigned long reservationTime;
+    unsigned long elapsedTime; //Tiempo transcurrido desde la reserva
+    unsigned long reservedTime;
 
     Servo cerradura;
     RFID escaner;

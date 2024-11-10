@@ -27,8 +27,8 @@ public:
         pinMode(pin_trigger, OUTPUT);
         pinMode(pin_echo, INPUT);
     };
-    int readDistance();
-    bool ocupado();
+    int read(); //Devuelve la distancia en cm
+    bool ocupado(); //Devuelve si la distancia es menor a 10cm
 
 };
 
@@ -42,9 +42,9 @@ public:
         pinMode(pin, INPUT);
         dht = dht(pin, DHTTYPE);
     };
-    float readTemperature();
-    float readHumidity();
-    void printDHT();
+    float readTemperature(); //Devuelve la temperatura en grados Celsius
+    float readHumidity(); //Devuelve la humedad en porcentaje
+    void printDHT(); //Imprime la temperatura y humedad
 };
 
 

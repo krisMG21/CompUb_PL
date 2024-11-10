@@ -3,7 +3,10 @@
 #ifndef MQTT_H
 #define MQTT_H
 
-#ifndef ARDUINO
+#ifdef ARDUINO
+#include <WiFi.h>
+#include <PubSubClient.h>
+#else
      class WiFiClient{
         public:
             void begin(std::string ssid, std::string password);

@@ -4,6 +4,16 @@
 #include "../arduino.h"
 #include "../logic/timer.h"
 
+class Button {
+private:
+    int pin;
+public:
+    Button(int pin) : pin(pin){};
+    bool isPressed();
+    int read();
+};
+
+
 class Leds {
 private:
     int led_red;
@@ -14,22 +24,16 @@ private:
     Timer timer;
     bool ocupado;
 
+    Button button;
+
 public:
     //Constructor
-    Leds(int red, int green, int pomodoro[6], Timer& timer); //Pines de los leds
+    Leds(int red, int green, int pomodoro[6], Timer& timer, Button& button); //Pines de los leds
     void init();
     void set_ocupado(bool ocupado);
-    void change_ocupado();
+    void start_pomodoro();
+    void stop_pomodoro();
     void update();
-};
-
-class Button {
-private:
-    int pin;
-public:
-    Button(int pin) : pin(pin){};
-    bool isPressed();
-    int read();
 };
 
 

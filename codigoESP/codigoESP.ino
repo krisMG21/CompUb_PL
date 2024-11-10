@@ -3,9 +3,19 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 
-#include "sala.h"
-#include "cubiculo.h"
+#include "config.h" //Credenciales de WiFi y MQTT
+#include "sala.h" //Objeto de la sala
+#include "cubiculo.h" //Objeto del cubículo
 
+// NOTE: MODO DE EJECUCIÓN
+// ==================================================
+typdef enum {SALA, CUBICULO} tipo;
+#define MODE SALA
+// #define MODE CUBICULO
+
+
+// NOTE: PINES
+// ==================================================
 #define RED_LED 2             // LED de ocupación del cubículo: ROJO
 #define GREEN_LED 0           // LED de ocupación del cubículo: VERDE
 #define BUZZER 15             // Buzzer
@@ -17,14 +27,6 @@
 #define TRIG_ULTRASONIC 25    // Pin TRIG para sensor ultrasónico
 #define ECHO_ULTRASONIC 26    // Pin ECHO para sensor ultrasónico
 
-// Credenciales de WiFi y MQTT
-#define WIFI_SSID "iPhone de Martin"
-#define WIFI_PASSWORD "contrasea"
-const char* mqttServer = "172.20.10.2";  // Dirección del servidor MQTT
-const int mqttPort = 1883;
-const char* mqttUser = "ubicua";
-const char* mqttPassword = "ubicua";
-
 
 // Objetos WiFi, MQTT y DHT
 WiFiClient espClient;
@@ -34,62 +36,50 @@ void setup() {
     // put your setup code here, to run once:
     Serial.begin(9600);
 
-    Timer timer;
+    initWifi();
 
-    Leds leds(RED_LED, GREEN_LED, pomodoro, timer);
+    // Conexión MQTT, encapsulada en un objeto, para pasarla
+    // a la sala y el cubículo y realizar allí el pubsub.
+    MQTT mqtt(MQTT_SERVER, MQTT_PORT, MQTT_USER, MQTT_PASS, espClient, client);
 
-    Sensor s_luz(SLUZ, "Luz");
-    Sensor s_sonido(SSONIDO, "Sonido");
-    Sensor_US s_posicion(TRIG_ULTRASONIC, ECHO_ULTRASONIC);
-    Sensor_DHT s_dht(DHTPIN);
-    Button button(BUTTON);
+    switch (MODE) {
+        case SALA:
+            Serial.println("Modo: sala");
 
-    Cubiculo cub(leds, s_luz, s_sonido, s_posicion, s_dht, button);
-    Sala sala(leds, cub);
+            Sensor_DHT s_dht(DHTPIN);
+            Servo cerradura(SERVO_PIN);
+            RFID escaner(RFID_RST, RFID_SS);
 
-    MQTT mqtt(mqttServer, mqttPort, mqttUser, mqttPassword, espClient, client);
-}
+            MQTT mqtt(MQTT_SERVER, MQTT_PORT, MQTT_USER, MQTT_PASS, espClient, client);
 
-void read_light_sensor() {
-    int light_value = analogRead(SLUZ);
-    Serial.print("Valor del sensor de luz: ");
-    Serial.println(light_value);
-}
+            Sala sala(s_dht, cerradura, escaner, mqtt);
 
-void read_sound_sensor() {
-    int sound_value = analogRead(SSONIDO);
-    Serial.print("Valor del sensor de sonido: ");
-    Serial.println(sound_value);
-}
+            break;
+        case CUBICULO:
+            Serial.println("Modo: cubículo");
 
-void readDHT(){
-    float h = dht.readHumidity();
-    float t = dht.readTemperature();
+            Timer timer;
 
-    if (isnan(h) || isnan(t)) {
-    Serial.println("Failed to read from DHT sensor!");
-    return;
+            Leds leds(RED_LED, GREEN_LED, pomodoro, timer);
+            Button button(BUTTON);
+
+            Sensor s_luz(SLUZ, "Luz");
+            Sensor s_sonido(SSONIDO, "Sonido");
+            Sensor_US s_posicion(TRIG_ULTRASONIC, ECHO_ULTRASONIC);
+            Sensor_DHT s_dht(DHTPIN);
+
+            Cubiculo cub(leds, s_luz, s_sonido, s_posicion, s_dht, button);
+
+            break;
     }
-    Serial.print("Humedad: ");
-    Serial.println(h);
-    Serial.print("Temperatura: ");
-    Serial.print(t);
-    Serial.println("°C ");
 }
 
 void loop() {
-    // Leer el sensor de luz
-    int light_value = read_light_sensor();
-
-    // Publicar información en MQTT si está conectado
-    if (client.connected()) {
-        client.publish(light_topic, String(light_value).c_str());
-    } else {
-        reconnectMQTT();  // Reintentar conexión si no está conectado
+    if (MODE == SALA) {
+        sala.update();
+    } else if (MODE == CUBICULO) {
+        cub.update();
     }
-
-    client.loop();  // Mantener la conexión
-    delay(1000);    // Ajusta según el intervalo necesario
 }
 
 // Conexión a WiFi
@@ -102,5 +92,3 @@ void initWifi() {
     }
     Serial.println("\nConectado a WiFi");
 }
-
-

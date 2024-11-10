@@ -30,12 +30,13 @@
 
 class SerialClass {
 public:
+    operator bool();
     void print(std::string message);
     void print(int message);
     void println(std::string message);
     void println(int message);
 };
-SerialClass Serial;
+extern SerialClass Serial;
 
 class DHT {
 public:
