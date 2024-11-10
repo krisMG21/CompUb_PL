@@ -1,6 +1,11 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
+#include <DHT.h>
+#include <cstdint>
+#define DHTTYPE DHT11         // Tipo de sensor DHT
+
+#include <Arduino.h>
 #include <cstdio>
 #include <string>
 
@@ -31,13 +36,11 @@ public:
 
 class Sensor_DHT { //Sensor de temperatura y humedad
 private:
-    int pin;
-    DHT dht;
+    DHT dht; //DHT11
 
 public:
-    Sensor_DHT(int pin):pin(pin) {
+    Sensor_DHT(uint8_t pin, uint8_t type): dht(pin, type) {;
         pinMode(pin, INPUT);
-        dht = dht(pin, DHTTYPE);
     };
     float readTemperature(); //Devuelve la temperatura en grados Celsius
     float readHumidity(); //Devuelve la humedad en porcentaje

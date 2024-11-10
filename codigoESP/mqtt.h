@@ -1,6 +1,8 @@
 #ifndef MQTT_H
 #define MQTT_H
 
+#include <string>
+
 #ifdef ARDUINO
 #include <WiFi.h>
 #include <PubSubClient.h>

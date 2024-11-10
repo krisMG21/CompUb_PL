@@ -1,9 +1,10 @@
-#ifndef SALA_H
-#define SALA_H
+#ifndef CUBICULO_H
+#define CUBICULO_H
+#include "pomodoro.h"
+#include "sensor.h"
+#include "mqtt.h"
 
-#include "comps/pomodoro.h"
-#include "comps/sensor.h"
-#include "logic/mqtt.h"
+#include <string>
 
 class Cubiculo {
 private:
@@ -33,4 +34,4 @@ public:
 
     void update();
 };
-#endif //SALA_H
+#endif //CUBICULO_H

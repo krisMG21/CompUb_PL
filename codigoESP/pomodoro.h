@@ -1,7 +1,8 @@
-#ifndef LEDS_H
-#define LEDS_H
+#ifndef POMODORO_H
+#define POMODORO_H
 
-#include "../logic/timer.h"
+#include <Arduino.h>
+#include "timer.h"
 
 class Button {
 private:
@@ -35,4 +36,4 @@ public:
 };
 
 
-#endif // LEDS_H
+#endif // POMODORO_H

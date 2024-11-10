@@ -1,4 +1,4 @@
-#include "logic/timer.h"
+#include "timer.h"
 #include <unistd.h>
 #include <cstdio>
 

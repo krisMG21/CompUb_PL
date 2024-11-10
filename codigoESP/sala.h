@@ -1,21 +1,22 @@
 #ifndef SALA_H
 #define SALA_H
 
+#include <string>
+
+#include "sensor.h"
+#include "servo.h"
+#include "rfid.h"
+#include "mqtt.h"
+
 typedef struct {
     int id;
 } Usuario;
-
-#include "comps/sensor.h"
-#include "comps/servo.h"
-#include "comps/rfid.h"
-#include "logic/mqtt.h"
 
 class Sala {
 private:
     unsigned ID;
     int state = 0;
 
-    Usuario usuario;
     bool ocupada;
     bool reservada;
 
@@ -23,7 +24,7 @@ private:
     unsigned long elapsedTime; //Tiempo transcurrido desde la reserva
     unsigned long reservedTime;
 
-    Servo cerradura;
+    Cerradura cerradura;
     RFID escaner;
 
     Sensor_DHT s_dht;
@@ -31,7 +32,9 @@ private:
     MQTT mqtt;
 
 public:
-    Sala(const unsigned ID, const Sensor_DHT& s_dht, const Servo& cerradura, const int RFID_RST, const int RFID_SS, const MQTT& mqtt);
+    Sala(const unsigned ID, const Sensor_DHT& s_dht, const Cerradura& cerradura, const RFID& rfid, const MQTT& mqtt);
+
+    void init(const unsigned ID, const Sensor_DHT& s_dht, const Cerradura& cerradura, const int RFID_RST, const int RFID_SS, const MQTT& mqtt);
 
     void reservar(Usuario& usuario, int time);
 

@@ -12,13 +12,14 @@ MQTT::MQTT(char* mqttServer, int mqttPort, char* mqttUser, char* mqttPassword, W
 
 // Conexión al servidor MQTT
 void MQTT::initMQTTServer() {
-    Serial.println("MQTT server connected");
-    // client.setServer(mqttServer, mqttPort);
-    // Serial.print("Servidor MQTT cargado.");
-    // reconnectMQTT();
+    // Serial.println("MQTT server connected");
+    client.setServer(mqttServer, mqttPort);
+    Serial.print("Servidor MQTT cargado.");
+    reconnectMQTT();
 }
 
 void MQTT::reconnectMQTT() {
+    // Serial.println("Connecting to MQTT");
     while (!client.connected()) {
         Serial.print("Intentando conexión MQTT...");
         // Intentar conexión con credenciales
@@ -35,11 +36,11 @@ void MQTT::reconnectMQTT() {
 }
 
 void MQTT::publish(std::string topic, std::string message) {
-    Serial.println("Publishing: "+topic+":"+message);
+    // Serial.println("Publishing: "+topic+":"+message);
 
-    // if (client.connected()) {
-    //     client.publish(topic.c_str(), message.c_str());
-    // } else {
-    //     reconnectMQTT();  // Reintentar conexión si no está conectado
-    // }
+    if (client.connected()) {
+        client.publish(topic.c_str(), message.c_str());
+    } else {
+        reconnectMQTT();  // Reintentar conexión si no está conectado
+    }
 }
