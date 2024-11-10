@@ -16,21 +16,21 @@ typdef enum {SALA, CUBICULO} tipo;
 
 // NOTE: PINES
 // ==================================================
-#define RED_LED 2             // LED de ocupación del cubículo: ROJO
-#define GREEN_LED 0           // LED de ocupación del cubículo: VERDE
+#define RED_LED 5             // LED de ocupación del cubículo: ROJO
+#define GREEN_LED 21           // LED de ocupación del cubículo: VERDE
 
 // LEDs del pomodoro
-// #define P_LED1 0
-// #define P_LED2 0
-// #define P_LED3 0
-// #define P_LED4 0
-// #define P_LED5 0
-// #define P_LED_AMARILLO 0
+ #define P_LED1 2
+ #define P_LED2 14
+ #define P_LED3 27
+ #define P_LED4 16
+ #define P_LED5 0
+ #define P_LED_AMARILLO 15
 
-#define BUZZER 15             // Buzzer
+#define BUZZER 32             // Buzzer
 #define SSONIDO 35            // Sensor de sonido
 #define SLUZ 12       // Sensor de luz
-#define BUTTON 21             // Botón inicio pomodoro
+#define BUTTON 33             // Botón inicio pomodoro
 #define DHTPIN 3              // Pin del sensor DHT
 #define DHTTYPE DHT11         // Tipo de sensor DHT
 #define TRIG_ULTRASONIC 25    // Pin TRIG para sensor ultrasónico
@@ -77,7 +77,7 @@ void setup() {
             Timer timer;
             mqtt.publish("esp/checklist", "2. Timer");  // Mensaje de prueba
 
-            int* pomodoro = []; // 6 PINES DEL POMODORO, PRIMERO LOS 5 ROJOS Y LUEGO EL AMARILLO
+            int pomodoro = [P_LED1, P_LED2, P_LED3, P_LED4, P_LED5, P_LED_AMARILLO]; // 6 PINES DEL POMODORO, PRIMERO LOS 5 ROJOS Y LUEGO EL AMARILLO
             Leds leds(RED_LED, GREEN_LED, pomodoro, timer);
             Button button(BUTTON);
             mqtt.publish("esp/checklist", "3. Leds y botón del pomodoro");  // Mensaje de prueba

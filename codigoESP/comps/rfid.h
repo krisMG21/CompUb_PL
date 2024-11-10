@@ -2,7 +2,7 @@
 #define RFID_H
 
 #include "SPI.h"
-#include "../MFRC522v2/src/MFRC522v2.h"
+#include "MFRC522v2.h"
 
 
 class RFID { //Sensor de RFID
