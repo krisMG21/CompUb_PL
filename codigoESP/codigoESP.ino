@@ -70,15 +70,14 @@ void setup() {
     // put your setup code here, to run once:
     Serial.begin(9600);
 
-    // WARNING: COMENTAR SI NO SE USA WIFI
-    // initWifi();
+    //initWifi();
 
     // Conexión MQTT, encapsulada en un objeto, para pasarla
     // a la sala y el cubículo y realizar allí el pubsub.
     // WARNING: COMENTAR SI NO SE USA MQTT
     // MQTT mqtt(MQTT_SERVER, MQTT_PORT, MQTT_USER, MQTT_PASS, espClient, client);
 
-    MQTT mqtt;
+    MQTT mqtt(MQTT_SERVER, MQTT_PORT, MQTT_USER, MQTT_PASS, espClient, client);
 
     unsigned ID = 1;
 

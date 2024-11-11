@@ -37,11 +37,9 @@ void MQTT::reconnectMQTT() {
 
 void MQTT::publish(std::string topic, std::string message) {
     Serial.print("Publishing: ");
-    Serial.print(topic);
+    Serial.print(topic.c_str());
     Serial.print(" - ");
-    Serial.println(message);
-
-    client.publish(topic.c_str(), message.c_str());
+    Serial.println(message.c_str());
 
     // if (client.connected()) {
     //     client.publish(topic.c_str(), message.c_str());

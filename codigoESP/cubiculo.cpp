@@ -31,7 +31,7 @@ void Cubiculo::update() {
 
     switch (state) {
         case 0:{ //Actualizar los leds del pomodoro
-            leds.update();
+            leds.update_pomodoro();
             state++;
             break;
             }
@@ -63,11 +63,6 @@ void Cubiculo::update() {
         case 5:{ //Leer humedad del sensor DHT
             float hum = s_dht.readHumidity();
             mqtt.publish(topic+"hum", std::to_string(hum));
-            state++;
-            break;
-            }
-        case 6:{ //Update de los leds del pomodoro
-            leds.update_pomodoro();
             state = 0;
             break;
             }
