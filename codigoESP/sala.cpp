@@ -57,7 +57,7 @@ void Sala::update() {
             break;
         }
         // case 3:{
-            // LEER DATOS DE TOPIC DE RESERVA
+            // LEER DATOS DE TOPIC DE RESERVA?
             // Utilizar MQTT, debe haber hecho subscribe a los datos de reserva
         // }
 

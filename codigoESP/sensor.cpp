@@ -2,7 +2,9 @@
 
 int Sensor::read(){
     int value = analogRead(pin);
-    Serial.print("Valor del sensor de " + nombre + ": ");
+    Serial.print("Valor del sensor de ");
+    Serial.print(pin);
+    Serial.print(": ");
     Serial.println(value);
     return value;
 }

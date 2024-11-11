@@ -2,6 +2,7 @@
 #define SALA_H
 
 #include <string>
+#include <Arduino.h>
 
 #include "sensor.h"
 #include "servo.h"
