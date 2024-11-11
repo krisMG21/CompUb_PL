@@ -7,7 +7,7 @@ MQTT::MQTT(char* mqttServer, int mqttPort, char* mqttUser, char* mqttPassword, W
     mqttPassword(mqttPassword),
     espClient(espClient),
     client(client) {
-    initMQTTServer();
+    //initMQTTServer();
 }
 
 // Conexión al servidor MQTT
