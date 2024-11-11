@@ -26,6 +26,9 @@ void Leds::set_ocupado(bool is_ocupado) {
 
 void Leds::start_pomodoro() {
     timer.start();
+    for (int i = 0; i < 6; i++) {
+        digitalWrite(leds_pomodoro[i], true);
+    }
 }
 
 void Leds::stop_pomodoro() {
@@ -36,23 +39,17 @@ void Leds::stop_pomodoro() {
 }
 
 
-void Leds::update() {
+void Leds::update_pomodoro() {
     timer.update();
     if (timer.isTimerRunning()) {
         // Los leds se encienden progresivamente en función del tiempo transcurrido
-        if (timer.isInWorkState()) {
-            int leds = timer.getProgress() * 5;
-            for (int i = 0; i < 5; i++) {
-                digitalWrite(leds_pomodoro[i], i <= leds);
-            }
-
-            // El led amarillo se enciende si se está trabajando, se apaga en el descanso
-            digitalWrite(leds_pomodoro[5], timer.isInWorkState());
-
-        } else {
-            digitalWrite(led_red, false);
-            digitalWrite(led_green, true);
+        int leds = (1-timer.getProgress()) * 5;
+        for (int i = 0; i < 5; i++) {
+            digitalWrite(leds_pomodoro[i], i <= leds);
         }
+
+        // El led amarillo se enciende si se está trabajando, se apaga en el descanso
+        digitalWrite(leds_pomodoro[5], timer.isInWorkState());
     }
 
     if (button.read()) {

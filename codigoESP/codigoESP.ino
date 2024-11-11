@@ -82,30 +82,47 @@ void setup() {
 
     unsigned ID = 1;
 
+    if (MODE == SALA) {
+        Serial.println("SISTEMA MODO SALA");
+    } else if (MODE == CUBICULO) {
+        Serial.println("SISTEMA MODO CUBICULO");
+    }
+
     Timer timer;
 
     int pomodoro[] = {P_LED1, P_LED2, P_LED3, P_LED4, P_LED5, P_LED_AMARILLO}; // 6 PINES DEL POMODORO, PRIMERO LOS 5 ROJOS Y LUEGO EL AMARILLO
     Button button(BUTTON);
     Leds leds(RED_LED, GREEN_LED, pomodoro, timer, button);
-
     Serial.println("Sistema pomodoro iniciado");
 
     Sensor s_luz(SLUZ, "Luz");
     Serial.println("Sensor de luz iniciado");
 
     Sensor s_sonido(SSONIDO, "Sonido");
+    Serial.println("Sensor de sonido iniciado");
 
     Sensor_US s_posicion(TRIG_ULTRASONIC, ECHO_ULTRASONIC);
+    Serial.println("Sensor de ultrasonido iniciado");
 
     Sensor_DHT s_dht(DHTPIN, DHTTYPE);
+    Serial.println("Sensor de temperatura y humedad iniciado");
 
     Cerradura cerradura(SERVO);
+    Serial.println("Servo iniciado");
 
     RFID escaner(RFID_RST, RFID_SS);
+    Serial.println("RFID iniciado");
 
-    if(sala) sala = new Sala(ID, s_dht, cerradura, escaner, mqtt);
+    if(sala) {
+        sala = new Sala(ID, s_dht, cerradura, escaner, mqtt);
+        Serial.println("Sala iniciada");
+    }
 
-    if (cub) cub = new Cubiculo(ID, leds, s_luz, s_sonido, s_posicion, s_dht, button, mqtt);
+    if (cub) {
+        cub = new Cubiculo(ID, leds, s_luz, s_sonido, s_posicion, s_dht, button, mqtt);
+        Serial.println("Cubiculo iniciado");
+    }
+
 }
 
 void loop() {

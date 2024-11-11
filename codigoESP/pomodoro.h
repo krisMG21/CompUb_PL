@@ -32,7 +32,7 @@ public:
     void set_ocupado(bool ocupado);
     void start_pomodoro();
     void stop_pomodoro();
-    void update();
+    void update_pomodoro();
 };
 
 

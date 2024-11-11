@@ -17,7 +17,9 @@ Cubiculo::Cubiculo(
     s_posicion(s_posicion),
     s_dht(s_dht),
     button(button),
-    mqtt(mqtt) {}
+    mqtt(mqtt) {
+    state = 0;
+}
 
 /** Publica cada vez llamada la información de uno de los sensores,
  * no haciéndolo todo de golpe para solaparse un poco con el resto de
@@ -61,6 +63,11 @@ void Cubiculo::update() {
         case 5:{ //Leer humedad del sensor DHT
             float hum = s_dht.readHumidity();
             mqtt.publish(topic+"hum", std::to_string(hum));
+            state++;
+            break;
+            }
+        case 6:{ //Update de los leds del pomodoro
+            leds.update_pomodoro();
             state = 0;
             break;
             }

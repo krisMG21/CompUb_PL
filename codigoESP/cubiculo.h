@@ -9,7 +9,7 @@
 class Cubiculo {
 private:
     unsigned ID;
-    int state = 0;
+    int state;
 
     Leds leds; //Leds del pomodoro
     Button button; //Botón de inicio pomodoro
