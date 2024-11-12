@@ -46,7 +46,6 @@ typedef enum {SALA, CUBICULO} tipo;
 #define RFID_RST 18
 #define RFID_SS 19
 
-
 // Objetos WiFi, MQTT y DHT
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -112,16 +111,20 @@ void setup() {
     RFID escaner(RFID_RST, RFID_SS);
     Serial.println("RFID iniciado");
 
-    if(sala) {
-        sala = new Sala(ID, s_dht, cerradura, escaner, mqtt);
-        Serial.println("Sala iniciada");
+    //error after print
+
+    sala = new Sala(ID, s_dht, cerradura, escaner, mqtt);
+    Serial.println("Sala iniciada");
+
+    cub = new Cubiculo(ID, leds, s_luz, s_sonido, s_posicion, s_dht, button, mqtt);
+    Serial.println("Cubiculo iniciado");
     }
 
-    if (cub) {
-        cub = new Cubiculo(ID, leds, s_luz, s_sonido, s_posicion, s_dht, button, mqtt);
-        Serial.println("Cubiculo iniciado");
+    // Check if memory allocation was successful
+    if (sala == nullptr || cub == nullptr) {
+        Serial.println("Failed to allocate memory for objects");
+        while (1); // Halt program execution
     }
-
 }
 
 void loop() {
