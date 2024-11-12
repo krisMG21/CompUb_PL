@@ -5,15 +5,13 @@
 
 class Cerradura {
 private:
-    Servo myservo;
+    Servo servo;
     int servoPin;
     int position;
 public:
     Cerradura(int pin);
-    void set_position(int position);
     void abrir();
     void cerrar();
-    void mover(int position);
 };
 
 #endif // SERVO_H

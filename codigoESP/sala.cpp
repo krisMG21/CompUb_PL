@@ -11,14 +11,14 @@ Sala::Sala(const unsigned ID, const Sensor_DHT& s_dht, const Cerradura& cerradur
     ocupada = false;
     reservada = false;
 
-    mqtt.subscribe("sala/reserva", [this](const std::string& message) {
-        std::string value = message;
-        if (value == "true") {
-            reservar(message.toInt(), message.toInt());
-        } else {
-            cancelarReserva();
-        }
-    });
+    // mqtt.subscribe("sala/reserva", [this](const std::string& message) {
+    //     std::string value = message;
+    //     if (value == "true") {
+    //         reservar(message.toInt(), message.toInt());
+    //     } else {
+    //         cancelarReserva();
+    //     }
+    // });
 }
 
 

@@ -28,7 +28,7 @@ public:
 
     // void subscribe(const std::string& topic, std::function<void(const std::string&)> cb);
     // void loop();
-    void publish(const std::string& topic, const std::string& message);
+    void publish(const std::string topic, const std::string message);
 };
 
 #endif // MQTT_H

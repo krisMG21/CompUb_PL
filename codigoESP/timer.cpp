@@ -8,12 +8,14 @@ void Timer::start() {
         currentState = WORK;
         isRunning = true;
     }
+    Serial.println("Timer start");
 }
 
 void Timer::reset() {
     elapsedTime = 0;
     currentState = IDLE;
     isRunning = false;
+    Serial.println("Timer reset");
 }
 
 // void Timer::pause() {
@@ -47,6 +49,7 @@ void Timer::update() {
             elapsedTime = 0;
         }
     }
+    Serial.println("Timer update");
 }
 
 bool Timer::isInWorkState() const {

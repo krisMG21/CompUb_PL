@@ -16,6 +16,7 @@ void Leds::init(){
     for (int i = 0; i < 6; i++) {
         pinMode(leds_pomodoro[i], OUTPUT);
     }
+    Serial.println("Leds init");
 }
 
 void Leds::set_ocupado(bool is_ocupado) {
@@ -29,6 +30,7 @@ void Leds::start_pomodoro() {
     for (int i = 0; i < 6; i++) {
         digitalWrite(leds_pomodoro[i], true);
     }
+    Serial.println("Leds start pomodoro");
 }
 
 void Leds::stop_pomodoro() {
@@ -36,6 +38,7 @@ void Leds::stop_pomodoro() {
     for (int i = 0; i < 6; i++) {
         digitalWrite(leds_pomodoro[i], false);
     }
+    Serial.println("Leds stop pomodoro");
 }
 
 
@@ -63,5 +66,7 @@ void Leds::update_pomodoro() {
 
 int Button::read(){
     int value = digitalRead(pin);
+    Serial.println("Button read");
+    Serial.println(value);
     return value;
 }
