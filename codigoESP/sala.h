@@ -9,15 +9,15 @@
 #include "rfid.h"
 #include "mqtt.h"
 
-typedef struct {
-    int id;
-} Usuario;
 
 class Sala {
 private:
+    static const Sala sala;
     unsigned ID;
-    int state = 0;
+    unsigned long userID; // Usuario con reserva de la sala en este momento
+    unsigned long last_reading;
 
+    int state = 0;
     bool ocupada;
     bool reservada;
 
@@ -37,7 +37,8 @@ public:
 
     void init(const unsigned ID, const Sensor_DHT& s_dht, const Cerradura& cerradura, const int RFID_RST, const int RFID_SS, const MQTT& mqtt);
 
-    void reservar(Usuario& usuario, int time);
+    void reservar(unsigned long userID, int time);
+    void cancelarReserva();
 
     void abrir(); //Abre la sala con el servo
     void cerrar(); //Cierra la sala con el servo

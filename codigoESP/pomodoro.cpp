@@ -42,7 +42,7 @@ void Leds::stop_pomodoro() {
 void Leds::update_pomodoro() {
     timer.update();
     if (timer.isTimerRunning()) {
-        // Los leds se encienden progresivamente en función del tiempo transcurrido
+        // Los leds se apagan progresivamente en función del tiempo transcurrido
         int leds = (1-timer.getProgress()) * 5;
         for (int i = 0; i < 5; i++) {
             digitalWrite(leds_pomodoro[i], i <= leds);

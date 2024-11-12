@@ -1,43 +1,34 @@
 #ifndef MQTT_H
 #define MQTT_H
 
-#include <string>
-
-#ifdef ARDUINO
-#include <WiFi.h>
 #include <PubSubClient.h>
-#else
-     class WiFiClient{
-        public:
-            void begin(std::string ssid, std::string password);
-            int status();
-            void print(std::string message);
-};
-     class PubSubClient{
-        public:
-            void setServer(std::string server, int port);
-            bool connect(std::string id, std::string user, std::string password);
-            bool connected();
-            void publish(std::string topic, std::string message);
-            int state();
-};
-#endif
+#include <WiFiClient.h>
+#include <map>
+#include <functional>
+#include <string>
 
 class MQTT {
 private:
+    WiFiClient espClient;
+    PubSubClient client;
     const char* mqttServer;  // Dirección del servidor MQTT
     const int mqttPort;
     const char* mqttUser;
     const char* mqttPassword;
 
-    WiFiClient espClient;
-    PubSubClient client;
+    // static void callback(char* topic, std::byte* payload, unsigned int length);
+
+    static MQTT* instance;
 
 public:
-    MQTT(char* mqttServer, int mqttPort, char* mqttUser, char* mqttPassword, WiFiClient& espClient, PubSubClient& client);
+    MQTT(char* MQTT_SERVER, int MQTT_PORT, char* MQTT_USER, char* MQTT_PASS, WiFiClient espClient, PubSubClient client);
+
     void initMQTTServer();
     void reconnectMQTT();
-    void publish(std::string topic, std::string message);
+
+    // void subscribe(const std::string& topic, std::function<void(const std::string&)> cb);
+    // void loop();
+    void publish(const std::string& topic, const std::string& message);
 };
 
 #endif // MQTT_H

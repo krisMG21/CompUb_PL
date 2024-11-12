@@ -10,14 +10,26 @@ Sala::Sala(const unsigned ID, const Sensor_DHT& s_dht, const Cerradura& cerradur
     // MQTT.subscribe("sala/reserva");
     ocupada = false;
     reservada = false;
+
+    mqtt.subscribe("sala/reserva", [this](const std::string& message) {
+        std::string value = message;
+        if (value == "true") {
+            reservar(message.toInt(), message.toInt());
+        } else {
+            cancelarReserva();
+        }
+    });
 }
 
-void Sala::reservar(Usuario& new_usuario, int time) {
-    ocupada = true;
-    reservada = true;
 
-    startTime = millis();
-    reservedTime = time * 60 * 1000;
+
+void Sala::reservar(unsigned long userID, int time) {
+    if (!is_reservada()) {
+        userID = userID;
+        reservada = true;
+        startTime = millis();
+        reservedTime = time * 60 * 1000;
+    }
 }
 
 void Sala::abrir() {
@@ -33,6 +45,12 @@ void Sala::cerrar() {
 bool Sala::is_reservada() {
     elapsedTime = millis() - startTime;
     return (elapsedTime < reservedTime);
+}
+
+void Sala::cancelarReserva() {
+    reservada = false;
+    startTime = 0;
+    reservedTime = 0;
 }
 
 void Sala::update() {
@@ -53,13 +71,23 @@ void Sala::update() {
             }
         case 2: { //Comprobar si sigue reservada
             mqtt.publish(topic+"reserva", std::to_string(reservada));
-            state = 0;
+            state++;
             break;
         }
-        // case 3:{
-            // LEER DATOS DE TOPIC DE RESERVA?
-            // Utilizar MQTT, debe haber hecho subscribe a los datos de reserva
-        // }
+        case 3: { // Subir el valor del rfid si hay uno nuevo
+            unsigned long value = escaner.read();
+            if (value) {
+                userID = value;
+                last_reading = millis();
+                mqtt.publish(topic+"uid", std::to_string(value));
+                mqtt.publish(topic+"last_reading", std::to_string(last_reading));
+            }
+            state++;
+            break;
+        }
+        case 4:{
+            
+        }
 
         default:{
             state = 0;

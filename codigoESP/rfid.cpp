@@ -14,22 +14,8 @@ RFID::RFID(int RST_PIN, int SS_PIN) :
 
     SPI.begin();
     mfrc522.PCD_Init();
-
-    //
-    // if (!mfrc522.PCD_PerformSelfTest()) {
-    //     if (Serial) {
-    //         Serial.println("MFRC522 self-test failed. Check your wiring.");
-    //     }
-    //     return;
-    // }
-    //
-    // if (Serial) {
-    //     Serial.println("RFID module initialized");
-    //     Serial.print(F("Firmware Version: 0x"));
-    //     Serial.println(mfrc522.PCD_ReadRegister(MFRC522::VersionReg), HEX);
-    // }
-
 }
+
 unsigned long RFID::read() {
     if (! mfrc522.PICC_IsNewCardPresent()) {
         return 0;
@@ -45,5 +31,7 @@ unsigned long RFID::read() {
     hex_num += mfrc522.uid.uidByte[3];
     mfrc522.PICC_HaltA(); // Stop reading
     Serial.println("Card read succesfully!");
+    Serial.print("Card UID: ");
+    Serial.println(hex_num, HEX);
     return hex_num;
 }

@@ -68,13 +68,14 @@ void initWifi() {
 void setup() {
     // put your setup code here, to run once:
     Serial.begin(9600);
+    delay(1000);
+    Serial.println("Serial connection initialized");
 
-    //initWifi();
+    initWifi();
 
     // Conexión MQTT, encapsulada en un objeto, para pasarla
     // a la sala y el cubículo y realizar allí el pubsub.
     // WARNING: COMENTAR SI NO SE USA MQTT
-    // MQTT mqtt(MQTT_SERVER, MQTT_PORT, MQTT_USER, MQTT_PASS, espClient, client);
 
     MQTT mqtt(MQTT_SERVER, MQTT_PORT, MQTT_USER, MQTT_PASS, espClient, client);
 
@@ -120,10 +121,10 @@ void setup() {
     Serial.println("Cubiculo iniciado");
     }
 
-    // Check if memory allocation was successful
-    if (sala == nullptr || cub == nullptr) {
-        Serial.println("Failed to allocate memory for objects");
-        while (1); // Halt program execution
+    // Check if memory allocation was successful
+    if (sala == nullptr || cub == nullptr) {
+        Serial.println("Failed to allocate memory for objects");
+        while (1); // Halt program execution
     }
 }
 
