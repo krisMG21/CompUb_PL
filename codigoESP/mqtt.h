@@ -21,7 +21,7 @@ private:
     static MQTT* instance;
 
 public:
-    MQTT(char* MQTT_SERVER, int MQTT_PORT, char* MQTT_USER, char* MQTT_PASS, WiFiClient espClient, PubSubClient client);
+    MQTT(char* MQTT_SERVER, int MQTT_PORT, char* MQTT_USER, char* MQTT_PASS, WiFiClient& espClient, PubSubClient& client);
 
     void initMQTTServer();
     void reconnectMQTT();
