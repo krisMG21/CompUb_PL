@@ -2,10 +2,7 @@
 
 int Sensor::read(){
     int value = analogRead(pin);
-    Serial.print("Valor del sensor de ");
-    Serial.print(pin);
-    Serial.print(": ");
-    Serial.println(value);
+    
     return value;
 }
 
@@ -21,9 +18,6 @@ int Sensor_US::read(){
     int duration = pulseIn(pin_echo, HIGH);
     // Calculating the distance
     int distance = duration * 0.034 / 2;
-    // Prints the distance on the Serial Monitor
-    Serial.print("Distance: ");
-    Serial.println(distance);
     return distance;
 }
 
@@ -37,15 +31,4 @@ float Sensor_DHT::readTemperature(){
 
 float Sensor_DHT::readHumidity(){
     return dht.readHumidity();
-}
-
-void Sensor_DHT::printDHT(){
-    float temperature_f = readTemperature();
-    float humidity_f = readHumidity();
-    Serial.print("Temperatura: ");
-    Serial.print(temperature_f);
-    Serial.print(" C");
-    Serial.print(" Humedad: ");
-    Serial.print(humidity_f);
-    Serial.println(" %");
 }

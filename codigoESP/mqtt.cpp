@@ -1,14 +1,7 @@
 #include "mqtt.h"
 #include <Arduino.h>
 
-MQTT* MQTT::instance = nullptr;
-
-// void MQTT::callback(char* topic, std::byte* payload, unsigned int length) {
-//     std::string topicStr(topic);
-//     std::string message(reinterpret_cast<char*>(payload), length);
-//     // Llamar al callback correspondiente si existe
-//     if (topicStr == "")
-// }
+// MQTT* MQTT::instance = nullptr;
 
 MQTT::MQTT(char* mqttServer, int mqttPort, char* mqttUser, char* mqttPassword, WiFiClient& espClient, PubSubClient& client):
     mqttServer(mqttServer),
@@ -17,13 +10,26 @@ MQTT::MQTT(char* mqttServer, int mqttPort, char* mqttUser, char* mqttPassword, W
     mqttPassword(mqttPassword),
     espClient(espClient),
     client(client) {
+    // instance = this;
+
     initMQTTServer();
-    instance = this;
+    // client.setCallback(callback);
 }
+
+// void MQTT::callback(char* topic, std::byte* payload, unsigned int length) {
+//     if (instance != nullptr) {
+//         std::string topicStr(topic);
+//         std::string message(reinterpret_cast<char*>(payload), length);
+//         // Llamar al callback correspondiente si existe
+//         if (topic == "sala/1/user_reserva") {
+//             sala->reservar(std::stoul(message), 60);
+//         }
+//     }
+// }
 
 void MQTT::initMQTTServer() {
     client.setServer(mqttServer, mqttPort);
-    //reconnectMQTT();
+    reconnectMQTT();
 }
 
 void MQTT::reconnectMQTT() {
@@ -31,29 +37,30 @@ void MQTT::reconnectMQTT() {
         Serial.print("Intentando conexión MQTT...");
         // Intentar conexión con credenciales
         if (client.connect("ESP32Client", mqttUser, mqttPassword)) {
-          Serial.println("Conectado a MQTT");
-          client.publish("esp/test", "Hello from ESP32");  // Mensaje de prueba
+            Serial.println("Conectado a MQTT");
         } else {
-          Serial.print("Fallo, rc=");
-          Serial.print(client.state());
-          Serial.println(" Reintentando en 2 segundos...");
-          delay(2000);
+            Serial.print("Fallo, rc=");
+            Serial.print(client.state());
+            Serial.println(" Reintentando en 2 segundos...");
+            delay(2000);
         }
     }
 }
 
 
-// void MQTT::subscribe(const std::string& topic, std::function<void(const std::string&)> cb) {
+// void MQTT::subscribe(const std::string& topic) {
 //     client.subscribe(topic.c_str());
-//     callbacks[topic] = cb;
 // }
 //
 // void MQTT::loop() {
 //     client.loop();
 // }
-
+//
 void MQTT::publish(const std::string topic, const std::string message) {
-    Serial.println("Publishing message");
+    Serial.print(topic.c_str());
+    Serial.print("/");
     Serial.println(message.c_str());
-    //client.publish(topic.c_str(), message.c_str());
+    Serial.println("ANTES DE PUBLISH");
+    client.publish(topic.c_str(), message.c_str());
+    Serial.println("DESPUES DE PUBLISH");
 }

@@ -4,11 +4,12 @@
 #include <Arduino.h>
 #include "timer.h"
 
+
 class Button {
 private:
     int pin;
 public:
-    Button(int pin) : pin(pin){};
+    Button(int pin);
     int read();
 };
 
@@ -24,10 +25,11 @@ private:
     bool ocupado;
 
     Button button;
+    Buzzer buzzer;
 
 public:
     //Constructor
-    Leds(int red, int green, int pomodoro[6], Timer& timer, Button& button); //Pines de los leds
+    Leds(int red, int green, int pomodoro[6], Timer& timer, Button& button, Buzzer& buzzer); //Pines de los leds
     void init();
     void set_ocupado(bool ocupado);
     void start_pomodoro();

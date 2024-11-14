@@ -1,9 +1,9 @@
 #include "buzzer.h"
 
-Buzzer::Buzzer(int buzzerPin) : buzzerPin(buzzerPin) {}
+Buzzer::Buzzer(int pin) : pin(pin) { pinMode(pin, OUTPUT); };
 
 void Buzzer::beep(int duration) {
-    digitalWrite(buzzerPin, HIGH);
-    delay(duration);
-    digitalWrite(buzzerPin, LOW);
+  digitalWrite(pin, HIGH);
+  delay(duration);
+  digitalWrite(pin, LOW);
 }

@@ -21,21 +21,21 @@ typedef enum {SALA, CUBICULO} tipo;
 
 // NOTE: PINES
 // ==================================================
-#define RED_LED 5             // LED de ocupación del cubículo: ROJO
+#define RED_LED 17             // LED de ocupación del cubículo: ROJO
 #define GREEN_LED 21           // LED de ocupación del cubículo: VERDE
 
 // LEDs del pomodoro
- #define P_LED1 2
- #define P_LED2 14
+ #define P_LED1 22
+ #define P_LED2 16
  #define P_LED3 27
- #define P_LED4 16
- #define P_LED5 0
+ #define P_LED4 14
+ #define P_LED5 2
  #define P_LED_AMARILLO 15
 
 #define BUZZER 32             // Buzzer
 #define SERVO 13
 #define SSONIDO 35            // Sensor de sonido
-#define SLUZ 12       // Sensor de luz
+#define SLUZ 34               // Sensor de luz
 #define BUTTON 33             // Botón inicio pomodoro
 #define DHTPIN 3              // Pin del sensor DHT
 #define DHTTYPE DHT11         // Tipo de sensor DHT
@@ -43,8 +43,8 @@ typedef enum {SALA, CUBICULO} tipo;
 #define ECHO_ULTRASONIC 26    // Pin ECHO para sensor ultrasónico
 #define SERVO_PIN 13
 
-#define RFID_RST 18 
-#define RFID_SS 19
+#define RFID_RST 4
+#define RFID_SDA 5
 
 // Objetos WiFi, MQTT y DHT
 WiFiClient espClient;
@@ -65,14 +65,13 @@ void initWifi() {
     Serial.println("\nConectado a WiFi");
 }
 
-void setup() {
+void setup(){
     // put your setup code here, to run once:
     Serial.begin(9600);
     delay(1000);
-    Serial.println("Serial connection initialized");
+    Serial.println("Serial connection initialized"); // Iniciar conexión serial
 
-    // initWifi();
-
+    initWifi();
     MQTT mqtt(MQTT_SERVER, MQTT_PORT, MQTT_USER, MQTT_PASS, espClient, client);
 
     unsigned ID = 1;
@@ -83,45 +82,52 @@ void setup() {
         Serial.println("SISTEMA MODO CUBICULO");
     }
 
-    Timer timer;
-
     // 6 PINES DEL POMODORO, PRIMERO LOS 5 ROJOS Y LUEGO EL AMARILLO
     int pomodoro[] = {P_LED1, P_LED2, P_LED3, P_LED4, P_LED5, P_LED_AMARILLO}; 
+
     Button button(BUTTON);
-    Leds leds(RED_LED, GREEN_LED, pomodoro, timer, button);
-    Serial.println("Sistema pomodoro iniciado");
+    Buzzer buzzer(BUZZER);
+
+    Timer timer(buzzer);
+
+    Leds leds(RED_LED, GREEN_LED, pomodoro, timer, button, buzzer);
+    Serial.println("-> Sistema pomodoro iniciado");
 
     Sensor s_luz(SLUZ, "Luz");
-    Serial.println("Sensor de luz iniciado");
+    Serial.println("-> Sensor de luz iniciado");
 
     Sensor s_sonido(SSONIDO, "Sonido");
-    Serial.println("Sensor de sonido iniciado");
+    Serial.println("-> Sensor de sonido iniciado");
 
     Sensor_US s_posicion(TRIG_ULTRASONIC, ECHO_ULTRASONIC);
-    Serial.println("Sensor de ultrasonido iniciado");
+    Serial.println("-> Sensor de ultrasonido iniciado");
 
     Sensor_DHT s_dht(DHTPIN, DHTTYPE);
-    Serial.println("Sensor de temperatura y humedad iniciado");
+    Serial.println("-> Sensor de temperatura y humedad iniciado");
 
     Cerradura cerradura(SERVO);
-    Serial.println("Servo iniciado");
+    Serial.println("-> Servo iniciado");
 
-    RFID escaner(RFID_RST, RFID_SS);
-    Serial.println("RFID iniciado");
-
-    //error after print
+    RFID escaner(RFID_RST, RFID_SDA);
+    Serial.println("-> RFID iniciado");
+    Serial.println("-----------------------");
 
     sala = new Sala(ID, s_dht, cerradura, escaner, mqtt);
     Serial.println("Sala iniciada");
 
-    cub = new Cubiculo(ID, leds, s_luz, s_sonido, s_posicion, s_dht, button, mqtt);
+    cub = new Cubiculo(ID, leds, s_luz, s_sonido, s_posicion, s_dht, mqtt);
     Serial.println("Cubiculo iniciado");
+
+
+    // MQTT mqtt(MQTT_SERVER, MQTT_PORT, MQTT_USER, MQTT_PASS, espClient, client, sala);
 
     // Check if memory allocation was successful
     if (sala == nullptr || cub == nullptr) {
         Serial.println("Failed to allocate memory for objects");
         while (1); // Halt program execution
     }
+
+    Serial.println("-----------------------");
 }
 
 void loop() {
@@ -130,5 +136,5 @@ void loop() {
     } else if (MODE == CUBICULO) {
         cub->update();
     }
+    delay(1000);
 }
-

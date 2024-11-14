@@ -1,10 +1,13 @@
+#ifndef BUZZER_H
+#define BUZZER_H
+
 #include <Arduino.h>
 
 class Buzzer {
-private:
-    const int buzzerPin;
-
+    int pin;
 public:
-    Buzzer(int buzzerPin);
+    Buzzer(int pin);
     void beep(int duration);
 };
+
+#endif // BUZZER_H

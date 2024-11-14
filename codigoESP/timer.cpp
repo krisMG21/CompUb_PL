@@ -1,6 +1,6 @@
 #include "timer.h"
 
-Timer::Timer() : startTime(0), elapsedTime(0), currentState(IDLE), isRunning(false) {}
+Timer::Timer(Buzzer& buzzer) :buzzer(buzzer), startTime(0), elapsedTime(0), currentState(IDLE), isRunning(false) {}
 
 void Timer::start() {
     if (!isRunning) {
@@ -8,14 +8,12 @@ void Timer::start() {
         currentState = WORK;
         isRunning = true;
     }
-    Serial.println("Timer start");
 }
 
 void Timer::reset() {
     elapsedTime = 0;
     currentState = IDLE;
     isRunning = false;
-    Serial.println("Timer reset");
 }
 
 // void Timer::pause() {
@@ -38,18 +36,39 @@ void Timer::update() {
     if (isRunning) {
         unsigned long currentTime = millis();
         elapsedTime = currentTime - startTime;
+        int elapsedSeconds = elapsedTime / 1000;
+
+        if (currentState == WORK) {
+            Serial.println("Pomodoro: TRABAJANDO");
+            Serial.print("Tiempo transcurrido: ");
+            Serial.println(elapsedSeconds);
+            Serial.println("Tiempo total: ");
+            Serial.println(WORK_TIME);
+            Serial.println("Progreso: ");
+            Serial.println(getProgress());
+        } else if (currentState == BREAK) {
+            Serial.println("Pomodoro: DESCANSANDO");
+            Serial.print("Tiempo transcurrido: ");
+            Serial.println(elapsedSeconds);
+            Serial.println("Tiempo total: ");
+            Serial.println(BREAK_TIME);
+            Serial.println("Progreso: ");
+            Serial.println(getProgress());
+        }
+
 
         if (currentState == WORK && elapsedTime >= WORK_TIME) {
             currentState = BREAK;
             startTime = currentTime;
             elapsedTime = 0;
+            buzzer.beep(50);
         } else if (currentState == BREAK && elapsedTime >= BREAK_TIME) {
             currentState = WORK;
             startTime = currentTime;
             elapsedTime = 0;
+            buzzer.beep(50);
         }
     }
-    Serial.println("Timer update");
 }
 
 bool Timer::isInWorkState() const {
@@ -60,8 +79,9 @@ bool Timer::isInBreakState() const {
     return currentState == BREAK;
 }
 
-int Timer::getProgress() const {
+float Timer::getProgress() const {
     if (!isRunning) return 0;
+    float elapsedTime = this->elapsedTime;
 
     unsigned long totalTime = (currentState == WORK) ? WORK_TIME : BREAK_TIME;
     return elapsedTime / totalTime;

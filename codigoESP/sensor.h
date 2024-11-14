@@ -44,7 +44,6 @@ public:
     };
     float readTemperature(); //Devuelve la temperatura en grados Celsius
     float readHumidity(); //Devuelve la humedad en porcentaje
-    void printDHT(); //Imprime la temperatura y humedad
 };
 
 

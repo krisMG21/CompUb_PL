@@ -35,7 +35,8 @@ private:
 public:
     Sala(const unsigned ID, const Sensor_DHT& s_dht, const Cerradura& cerradura, const RFID& rfid, const MQTT& mqtt);
 
-    void init(const unsigned ID, const Sensor_DHT& s_dht, const Cerradura& cerradura, const int RFID_RST, const int RFID_SS, const MQTT& mqtt);
+    void setUserID(unsigned long userID);
+    void setReservedTime(int time);
 
     void reservar(unsigned long userID, int time);
     void cancelarReserva();

@@ -1,5 +1,6 @@
 #ifndef CUBICULO_H
 #define CUBICULO_H
+#include "Arduino.h"
 #include "pomodoro.h"
 #include "sensor.h"
 #include "mqtt.h"
@@ -12,8 +13,7 @@ private:
     int state;
 
     Leds leds; //Leds del pomodoro
-    Button button; //Botón de inicio pomodoro
-    //
+
     Sensor s_luz;
     Sensor s_sonido;
     Sensor_US s_posicion; //Sensor de ocupación
@@ -29,7 +29,6 @@ public:
         const Sensor& s_sonido,
         const Sensor_US& s_posicion,
         const Sensor_DHT& s_dht,
-        const Button& button,
         const MQTT& mqtt);
 
     void update();
