@@ -12,7 +12,7 @@ MQTT::MQTT(char* mqttServer, int mqttPort, char* mqttUser, char* mqttPassword, W
     client(client) {
     // instance = this;
 
-    initMQTTServer();
+    // initMQTTServer();
     // client.setCallback(callback);
 }
 
@@ -60,7 +60,8 @@ void MQTT::publish(const std::string topic, const std::string message) {
     Serial.print(topic.c_str());
     Serial.print("/");
     Serial.println(message.c_str());
-    Serial.println("ANTES DE PUBLISH");
-    client.publish(topic.c_str(), message.c_str());
-    Serial.println("DESPUES DE PUBLISH");
+    // Serial.println("ANTES DE PUBLISH");
+    // client.publish(topic.c_str(), message.c_str());
+    // Serial.println("DESPUES DE PUBLISH");
+    // delay(1000);
 }

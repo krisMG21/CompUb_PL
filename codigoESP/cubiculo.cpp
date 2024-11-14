@@ -31,12 +31,8 @@ void Cubiculo::update() {
     int light_value = s_luz.read();
     mqtt.publish(topic+"/luz", std::to_string(light_value));
 
-    Serial.println("QUE");
-    delay(100);
-    Serial.println("COJONES");
     //Leer sensor de sonido
     int sound_value = s_sonido.read();
-    Serial.println("PASA");
     mqtt.publish(topic+"/ruido", std::to_string(sound_value));
 
     //Leer sensor de ocupación

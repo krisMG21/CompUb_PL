@@ -15,8 +15,8 @@
 // NOTE: MODO DE EJECUCIÓN
 // ==================================================
 typedef enum {SALA, CUBICULO} tipo;
-// #define MODE SALA
-#define MODE CUBICULO
+#define MODE SALA
+// #define MODE CUBICULO
 
 
 // NOTE: PINES
@@ -71,7 +71,7 @@ void setup(){
     delay(1000);
     Serial.println("Serial connection initialized"); // Iniciar conexión serial
 
-    initWifi();
+    // initWifi();
     MQTT mqtt(MQTT_SERVER, MQTT_PORT, MQTT_USER, MQTT_PASS, espClient, client);
 
     unsigned ID = 1;
