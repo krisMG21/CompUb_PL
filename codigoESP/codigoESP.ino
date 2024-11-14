@@ -2,6 +2,7 @@
 #include <DHT.h>
 #include <WiFi.h>
 #include <PubSubClient.h>
+#include <ESP32Servo.h>
 
 #include "config.h" //Credenciales de WiFi y MQTT
 #include "sala.h" //Objeto de la sala
@@ -66,6 +67,7 @@ void initWifi() {
 }
 
 void setup(){
+
     // put your setup code here, to run once:
     Serial.begin(9600);
     delay(1000);
@@ -136,5 +138,5 @@ void loop() {
     } else if (MODE == CUBICULO) {
         cub->update();
     }
-    delay(1000);
+    delay(500);
 }

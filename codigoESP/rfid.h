@@ -18,7 +18,6 @@ private:
 public:
     RFID(int RST_PIN, int SDA_PIN);
     void read();
-    void test();
 };
 
 
