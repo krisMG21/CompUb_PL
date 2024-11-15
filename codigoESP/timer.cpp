@@ -16,22 +16,6 @@ void Timer::reset() {
     isRunning = false;
 }
 
-// void Timer::pause() {
-//     if (isRunning) {
-//         elapsedTime = millis() - startTime;
-//         isRunning = false;
-//     }
-// }
-
-
-// void Timer::toggle() {
-//     if (isRunning) {
-//         pause();
-//     } else {
-//         start();
-//     }
-// }
-
 void Timer::update() {
     if (isRunning) {
         unsigned long currentTime = millis();
