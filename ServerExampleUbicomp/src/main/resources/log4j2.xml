@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+    <Appenders>				
+        <!-- LOG -->
+        <RollingFile name="LogFile" fileName="/opt/tomcat/webapps/ServerExampleUbicomp/log.log"
+                             filePattern="/opt/tomcat/webapps/ServerExampleUbicomp/logs/Ubicomp-%d{yyyy}-%i.log.gz">
+            <PatternLayout
+                pattern="%n%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %-30l %logger{36} ### %msg"
+                header="-- UBICOMP SERVER EXAMPLE LOG --" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>			
+        <!-- LOG -->
+        <RollingFile name="LogFileMQTT" fileName="/opt/tomcat/webapps/ServerExampleUbicomp/logmqtt.log"
+                             filePattern="/opt/tomcat/webapps/ServerExampleUbicomp/logs/Ubicompmqtt-%d{yyyy}-%i.log.gz">
+            <PatternLayout
+                pattern="%n%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %-30l %logger{36} ### %msg"
+                header="-- UBICOMP SERVER EXAMPLE MQTT LOG --" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>			
+        <!-- LOGDB -->
+        <RollingFile name="LogFileDB" fileName="/opt/tomcat/webapps/ServerExampleUbicomp/logdb.log"
+                             filePattern="/opt/tomcat/webapps/ServerExampleUbicomp/logs/Ubicompdb-%d{yyyy}-%i.log.gz">
+            <PatternLayout
+                pattern="%n%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level %-30l %logger{36} ### %msg"
+                header="-- UBICOMP SERVER EXAMPLE DATABASE LOG --" />
+            <Policies>
+                <TimeBasedTriggeringPolicy />
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy max="20"/>
+        </RollingFile>	
+    </Appenders>
+    <Loggers>
+        <!-- LOG -->
+        <Logger name="log" additivity="FALSE" level="DEBUG">
+            <AppenderRef ref="LogFile" level="DEBUG" />
+        </Logger>
+        <!-- LOG MQTT -->
+        <Logger name="logmqtt" additivity="FALSE" level="DEBUG">
+            <AppenderRef ref="LogFileMQTT" level="DEBUG" />
+        </Logger>
+        <!-- LOG DATABASE-->
+        <Logger name="logdb" additivity="FALSE" level="DEBUG">
+            <AppenderRef ref="LogFileDB" level="DEBUG" />
+        </Logger>
+    </Loggers>
+</Configuration>

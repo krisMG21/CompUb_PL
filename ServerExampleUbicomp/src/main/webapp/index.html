@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="ISO-8859-1">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>  
+        <title>Server example</title>
+        <style>
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+
+            tr:nth-child(even) {
+                background-color: #dddddd;
+            }
+        </style>
+    </head>
+    <body>
+        <script>
+            $(document).ready(function ()
+            {
+                loadData();
+            });
+
+            function loadData()
+            {
+                $.ajax(
+                {
+                    data: {},
+                    url: "/ServerExampleUbicomp/GetData",
+                    type: 'post',
+                    async: false,
+                    success: function (response)
+                    {
+                        var resp = JSON.parse(response);
+                        console.log(resp);
+                        $("#dataTable").empty();
+                        var newRow = "";
+                        $.each(resp, function (i, value)
+                        {
+                            newRow += "<tr>";
+                            newRow += "<td>" + value.date + "</td>";
+                            newRow += "<td>" + value.value + " °C</td>";
+                            newRow += "</tr>";
+                        });
+                        $("#dataTable").append(newRow);
+                    }
+                });
+            }
+
+            function insertData()
+            {
+                var value = $('#newValue').val();
+                $.ajax(
+                {
+                    data: {value: value},
+                    url: "/UbicompServerExample/SetData",
+                    type: 'post',
+                    async: false,
+                    success: function (response)
+                    {
+                        loadData();
+                    }
+                });
+            }
+
+        </script>
+        <h1>SERVER EXAMPLE</h1>
+        <br>
+        <label>New value</label>
+        <input type="number" id="newValue"><br>
+        <button onclick="insertData()">Send</button> 
+        <br><br>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Date</th>
+                    <th scope="col">Temperature</th>
+                </tr>
+            </thead>
+            <tbody id="dataTable">
+            </tbody>
+        </table>		
+    </body>
+</html>

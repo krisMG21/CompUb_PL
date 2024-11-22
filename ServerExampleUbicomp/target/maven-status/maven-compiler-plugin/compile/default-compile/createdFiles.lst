@@ -1,0 +1,12 @@
+Database\ConectionDDBB.class
+db\ConnectionDB.class
+logic\Projectinitializer.class
+servlets\GetData.class
+mqtt\MQTTPublisher.class
+logic\Measurement.class
+mqtt\MQTTBroker.class
+logic\Log.class
+mqtt\MQTTSuscriber.class
+db\Topics.class
+logic\Logic.class
+servlets\SetData.class
