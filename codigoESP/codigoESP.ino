@@ -73,6 +73,9 @@ Buzzer buzzer(BUZZER);
 Timer timer(buzzer);
 Servo servo;
 
+long startTime = 0;
+long elapsedTime = 0;
+
 int leds_pomodoro[] = {P_LED1, P_LED2, P_LED3, P_LED4, P_LED5, P_LED_AMARILLO};
 
 bool sala_abierta = false;
@@ -101,17 +104,22 @@ void setup(){
 }
 
 void loop() {
+    elapsedTime = millis() - startTime;
     if (MODE == SALA) {
         std::string topic = "sala/";
         topic += std::to_string(ID);
         topic += "/";
 
-        // Sensor DHT
-        float temp = dht.readTemperature();
-        publish(topic+"temp", std::to_string(temp));
-        float hum = dht.readHumidity();
-        publish(topic+"hum", std::to_string(hum));
+        if (elapsedTime >= 60000) {
+            elapsedTime = 0;
+            startTime = millis();
 
+            // Sensor DHT
+            float temp = dht.readTemperature();
+            publish(topic+"temp", std::to_string(temp));
+            float hum = dht.readHumidity();
+            publish(topic+"hum", std::to_string(hum));
+        }
 
         unsigned long UID = leerTarjeta();
         Serial.print("UID Leída:");
@@ -133,20 +141,26 @@ void loop() {
         topic += std::to_string(ID);
         topic += "/";
 
-        // Sensor de luz
-        int luz = analogRead(SLUZ);
-        publish(topic+"luz", std::to_string(luz));
+        if (elapsedTime >= 60000) {
+            elapsedTime = 0;
+            startTime = millis();
 
-        // Sensor de sonido
-        int sonido = analogRead(SSONIDO);
-        publish(topic+"sonido", std::to_string(sonido));
+            // Sensor de luz
+            int luz = analogRead(SLUZ);
+            publish(topic+"luz", std::to_string(luz));
 
-        delay(100);
-        // Sensor DHT
-        float temp = dht.readTemperature();
-        publish(topic+"temp", std::to_string(temp));
-        float hum = dht.readHumidity();
-        publish(topic+"hum", std::to_string(hum));
+            // Sensor de sonido
+            int sonido = analogRead(SSONIDO);
+            publish(topic+"sonido", std::to_string(sonido));
+
+            delay(100);
+
+            // Sensor DHT
+            float temp = dht.readTemperature();
+            publish(topic+"temp", std::to_string(temp));
+            float hum = dht.readHumidity();
+            publish(topic+"hum", std::to_string(hum));
+        }
 
         // Sensor ultrasonido
         float distancia = get_distance();
