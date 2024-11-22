@@ -18,8 +18,8 @@
 // INFO: MODO DE EJECUCIÓN
 // ==================================================
 typedef enum {SALA, CUBICULO} tipo;
-// #define MODE SALA
-#define MODE CUBICULO
+#define MODE SALA
+// #define MODE CUBICULO
 
 
 // INFO: IDENTIFICADOR DE CIRCUITO
@@ -71,17 +71,20 @@ PubSubClient client(espClient);
 
 Buzzer buzzer(BUZZER);
 Timer timer(buzzer);
+Servo servo;
+
 int leds_pomodoro[] = {P_LED1, P_LED2, P_LED3, P_LED4, P_LED5, P_LED_AMARILLO};
 
 bool sala_abierta = false;
 
-Servo servo;
 
 void setup(){
-    // put your setup code here, to run once:
-    Serial.begin(9600);
+    Serial.begin(115200);
     delay(1000);
     Serial.println("Serial connection initialized"); // Iniciar conexión serial
+
+    // Iniciar pines duh
+    initPines();
 
     // Iniciar MFRC522
     mfrc522.PCD_Init();
@@ -215,9 +218,12 @@ void publish(const std::string topic, const std::string message) {
 }
 
 void initPines() {
+    Serial.println("Iniciando pines...");
+    Serial.println("Leds ocupación");
     pinMode(RED_LED, OUTPUT);
     pinMode(GREEN_LED, OUTPUT);
 
+    Serial.println("Leds de pomodoro");
     pinMode(P_LED1, OUTPUT);
     pinMode(P_LED2, OUTPUT);
     pinMode(P_LED3, OUTPUT);
@@ -225,15 +231,15 @@ void initPines() {
     pinMode(P_LED5, OUTPUT);
     pinMode(P_LED_AMARILLO, OUTPUT);
 
-    pinMode(BUZZER, OUTPUT);
+    Serial.println("Demás componentes");
     pinMode(SERVO, OUTPUT);
     pinMode(SSONIDO, INPUT);
     pinMode(SLUZ, INPUT);
     pinMode(BUTTON, INPUT_PULLDOWN);
 
     pinMode(DHTPIN, INPUT);
-    pinMode(DHTTYPE, INPUT);
     pinMode(TRIG_ULTRASONIC, OUTPUT);
+
     pinMode(ECHO_ULTRASONIC, INPUT);
 }
 
