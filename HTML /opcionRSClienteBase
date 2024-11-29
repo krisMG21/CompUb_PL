@@ -23,6 +23,7 @@
         .sala-container {
             width: 80%;
             margin: 20px 0;
+            display: none; /* Ocultamos las salas hasta que se seleccione una */
         }
         .sala {
             background-color: #fff;
@@ -48,6 +49,10 @@
             color: white;
             cursor: not-allowed;
         }
+        .hora.seleccionada {
+            background-color: #ffc107;
+            color: white;
+        }
         button {
             padding: 10px 20px;
             background-color: #007bff;
@@ -65,9 +70,21 @@
 <body>
     <h1>Reserva de Salas</h1>
 
+    <!-- Menú Desplegable para Seleccionar Sala -->
+    <div>
+        <label for="seleccion-sala">Selecciona una sala: </label>
+        <select id="seleccion-sala" onchange="mostrarFranjas()">
+            <option value="">--Seleccionar--</option>
+            <option value="sala1">Sala 1</option>
+            <option value="sala2">Sala 2</option>
+        </select>
+    </div>
+
+    <!-- Contenedor de las salas (ocultado por defecto) -->
     <div class="sala-container" id="sala1">
         <div class="sala">
             <h2>Sala 1</h2>
+            <!-- Franjas Horarias -->
             <div class="hora disponible" data-hora="08:00-10:00" onclick="reservar('sala1', '08:00-10:00')">08:00 - 10:00</div>
             <div class="hora disponible" data-hora="10:00-12:00" onclick="reservar('sala1', '10:00-12:00')">10:00 - 12:00</div>
             <div class="hora disponible" data-hora="12:00-14:00" onclick="reservar('sala1', '12:00-14:00')">12:00 - 14:00</div>
@@ -80,6 +97,7 @@
     <div class="sala-container" id="sala2">
         <div class="sala">
             <h2>Sala 2</h2>
+            <!-- Franjas Horarias -->
             <div class="hora disponible" data-hora="08:00-10:00" onclick="reservar('sala2', '08:00-10:00')">08:00 - 10:00</div>
             <div class="hora disponible" data-hora="10:00-12:00" onclick="reservar('sala2', '10:00-12:00')">10:00 - 12:00</div>
             <div class="hora disponible" data-hora="12:00-14:00" onclick="reservar('sala2', '12:00-14:00')">12:00 - 14:00</div>
@@ -96,23 +114,51 @@
         const reservas = {
             "sala1": {
                 "08:00-10:00": false,
-                "10:00-12:00": false,
+                "10:00-12:00": true,
                 "12:00-14:00": false,
                 "14:00-16:00": false,
-                "16:00-18:00": false,
+                "16:00-18:00": true,
                 "18:00-20:00": false
             },
             "sala2": {
                 "08:00-10:00": true,
                 "10:00-12:00": false,
-                "12:00-14:00": false,
+                "12:00-14:00": true,
                 "14:00-16:00": false,
                 "16:00-18:00": false,
-                "18:00-20:00": false
+                "18:00-20:00": true
             }
         };
 
-        // Verificar disponibilidad y habilitar reserva
+        // Función para mostrar las franjas horarias según la sala seleccionada
+        function mostrarFranjas() {
+            const salaSeleccionada = document.getElementById('seleccion-sala').value;
+            if (salaSeleccionada) {
+                // Ocultar todos los contenedores de salas
+                document.querySelectorAll('.sala-container').forEach(sala => sala.style.display = 'none');
+                // Mostrar el contenedor de la sala seleccionada
+                document.getElementById(salaSeleccionada).style.display = 'block';
+                // Colorear las franjas horarias basándonos en las reservas
+                colorearFranjas(salaSeleccionada);
+            }
+        }
+
+        // Colorear las franjas horarias según si están disponibles u ocupadas
+        function colorearFranjas(sala) {
+            const franjas = document.querySelectorAll(`#${sala} .hora`);
+            franjas.forEach(franja => {
+                const hora = franja.getAttribute('data-hora');
+                if (reservas[sala][hora]) {
+                    franja.classList.remove('disponible');
+                    franja.classList.add('ocupado');
+                } else {
+                    franja.classList.remove('ocupado');
+                    franja.classList.add('disponible');
+                }
+            });
+        }
+
+        // Función para seleccionar una franja horaria
         function reservar(sala, hora) {
             if (reservas[sala][hora]) {
                 alert('Esta franja horaria ya está ocupada.');
