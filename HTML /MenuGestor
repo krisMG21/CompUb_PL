@@ -48,8 +48,7 @@
 
     <h1>Menú Gestor</h1>
     <div class="menu-container">
-        <button onclick="window.location.href='gestionSalas.html'">Gestión de Salas</button>
-        <button onclick="window.location.href='gestionPuestosLectura.html'">Gestión de Puestos de Lectura</button>
+        <button onclick="window.location.href='gestion.html'">Gestión de Salas y Puestos de Lectura</button>
         <button onclick="window.location.href='estadisticas.html'">Estadísticas</button>
     </div>
 
