@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        h1 {
+            margin-top: 30px;
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin-top: 20px;
+        }
+        select, button {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .result h3 {
+            color: #333;
+        }
+        .result p {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <h1>Estadísticas</h1>
+
+    <div class="container">
+        <!-- Menú para seleccionar Salas o Cubículos -->
+        <label for="tipo">Selecciona el tipo de información:</label>
+        <select id="tipo" onchange="actualizarMenu()">
+            <option value="salas">Salas</option>
+            <option value="cubiculos">Cubículos</option>
+        </select>
+
+        <!-- Menú dependiente para seleccionar Sala o Cubículo -->
+        <label for="elemento">Selecciona la Sala o Cubículo:</label>
+        <select id="elemento">
+            <!-- Las opciones se llenarán dinámicamente -->
+        </select>
+
+        <!-- Botón para mostrar la información -->
+        <button onclick="mostrarEstadisticas()">Mostrar Estadísticas</button>
+        
+        <!-- Sección para mostrar las estadísticas -->
+        <div class="result" id="resultado">
+            <h3>Estadísticas Seleccionadas</h3>
+            <p id="estadisticas">Por favor, selecciona una opción para ver las estadísticas.</p>
+        </div>
+    </div>
+
+    <script>
+        // Simulación de la base de datos
+        const estadisticasBaseDeDatos = {
+            salas: {
+                "1": {
+                    reservas: 5,
+                    tiempo: 12 // horas totales reservadas
+                },
+                "2": {
+                    reservas: 3,
+                    tiempo: 6
+                }
+            },
+            cubiculos: {
+                "1": {
+                    ocupado: "Sí",
+                    ruido: "30%",
+                    humedad: "40%"
+                },
+                "2": {
+                    ocupado: "No",
+                    ruido: "20%",
+                    humedad: "35%"
+                },
+                "3": {
+                    ocupado: "Sí",
+                    ruido: "25%",
+                    humedad: "45%"
+                }
+            }
+        };
+
+        // Función para actualizar el menú dependiente de la selección
+        function actualizarMenu() {
+            const tipo = document.getElementById('tipo').value;
+            const elementoMenu = document.getElementById('elemento');
+            
+            // Limpiar las opciones del menú dependiente
+            elementoMenu.innerHTML = "";
+
+            if (tipo === "salas") {
+                // Añadir opciones para Salas
+                for (let i = 1; i <= 2; i++) {
+                    let option = document.createElement("option");
+                    option.value = i;
+                    option.textContent = `Sala ${i}`;
+                    elementoMenu.appendChild(option);
+                }
+            } else if (tipo === "cubiculos") {
+                // Añadir opciones para Cubículos
+                for (let i = 1; i <= 3; i++) {
+                    let option = document.createElement("option");
+                    option.value = i;
+                    option.textContent = `Cubículo ${i}`;
+                    elementoMenu.appendChild(option);
+                }
+            }
+        }
+
+        // Función para mostrar las estadísticas según la selección
+        function mostrarEstadisticas() {
+            const tipo = document.getElementById('tipo').value;
+            const elemento = document.getElementById('elemento').value;
+            const resultado = document.getElementById('resultado');
+            const estadisticasElemento = estadisticasBaseDeDatos[tipo][elemento];
+
+            let estadisticasText;
+
+            if (tipo === "salas") {
+                // Mostrar estadísticas para salas
+                estadisticasText = `
+                    <strong>Reservas:</strong> ${estadisticasElemento.reservas} veces<br>
+                    <strong>Tiempo Total Reservado:</strong> ${estadisticasElemento.tiempo} horas
+                `;
+            } else if (tipo === "cubiculos") {
+                // Mostrar estadísticas para cubículos
+                estadisticasText = `
+                    <strong>Ocupado:</strong> ${estadisticasElemento.ocupado}<br>
+                    <strong>Porcentaje de Ruido:</strong> ${estadisticasElemento.ruido}<br>
+                    <strong>Porcentaje de Humedad:</strong> ${estadisticasElemento.humedad}
+                `;
+            }
+
+            document.getElementById('estadisticas').innerHTML = estadisticasText;
+        }
+
+        // Inicializar el menú desplegable al cargar la página
+        window.onload = actualizarMenu;
+    </script>
+</body>
+</html>
