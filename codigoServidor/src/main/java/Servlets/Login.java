@@ -11,6 +11,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -54,16 +61,46 @@ public class Login extends HttpServlet {
     // Método para manejar las solicitudes POST (el formulario envía datos por POST)
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Configurar la respuesta en formato JSON
+        
+        try{
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-
+        Connection conexionBD = null;
+        Statement statementSQL = null;
+        ResultSet resultadosConsulta=null;
+        int cnt = 0;
         // Leer los parámetros enviados desde el formulario
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+        String user = request.getParameter("username");
+        String passw = request.getParameter("password");
+        
+        statementSQL = conexionBD.createStatement();
+        resultadosConsulta = statementSQL.executeQuery("SELECT email, passw, tipo FROM Usuarios WHERE UNAME = '"+user+"' AND passw = '"+passw+"'");
 
-        // Variable para guardar el tipo de usuario (si es válido)
-        String userType = null;
+        while (resultadosConsulta.next()){
+                String username = resultadosConsulta.getString(1);
+                String password = resultadosConsulta.getString(2);
+                String userType = resultadosConsulta.getString(3);
+                if(user.equals(username)&&passw.equals(password)){ //si el usuario dado coincide con el de la bbdd y lo mismo con la pass 
+                    cnt++;
+                    response.getWriter().write("{\"result\": \"Inicio de sesión exitoso\"}");
+                    break;
+                }
+            }
+            if (cnt == 0){
+                response.getWriter().write("{\"result\": \"Usuario o contraseña incorrectos\"}");
+            }
 
+        }
+        catch (NumberFormatException e) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write("{\"error\": \"Invalid numbers\"}");
+        } catch (SQLIntegrityConstraintViolationException  ex){
+            response.getWriter().write("{\"result\": " + "\"Error de inicio de sesion.\"" + "}");
+        } catch (SQLException ex) { 
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
         // Validar las credenciales contra los usuarios de la "base de datos"
         for (String[] user : usuariosDB) {
             if (user[0].equals(username) && user[1].equals(password)) {
