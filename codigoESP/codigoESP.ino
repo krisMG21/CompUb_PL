@@ -231,6 +231,22 @@ void publish(const std::string topic, const std::string message) {
     client.publish(topic.c_str(), message.c_str());
 }
 
+void subscribe(const std::string topic) {
+    Serial.print("Subscribiendo a ");
+    Serial.println(topic.c_str());
+    client.subscribe(topic.c_str(), callback);
+}
+
+void callback(char* topic, byte* payload, unsigned int length) {
+    Serial.print("Mensaje recibido: ");
+    Serial.println(topic);
+    Serial.print("Contenido: ");
+    for (int i = 0; i < length; i++) {
+        Serial.print((char)payload[i]);
+    }
+    Serial.println();
+}
+
 void initPines() {
     Serial.println("Iniciando pines...");
     Serial.println("Leds ocupación");

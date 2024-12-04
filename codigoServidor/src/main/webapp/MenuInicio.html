@@ -55,45 +55,13 @@
     <h1>Biblioteca Inteligente</h1>
     <div class="form-container">
         <h2>Inicio de Sesión</h2>
-        <form id="loginForm">
+        <form id="FormularioLogin">
             <input type="text" id="username" placeholder="Nombre de Usuario" required>
             <input type="password" id="password" placeholder="Contraseña" required>
             <button type="submit">Iniciar Sesión</button>
         </form>
         <p class="error" id="errorMessage"></p>
     </div>
-
-    <script>
-        // Simulación de la base de datos de usuarios
-        const usuariosDB = [
-            { username: "estudiante1", password: "1234", tipo: 0 }, // Estudiante
-            { username: "gestor1", password: "abcd", tipo: 1 }     // Gestor
-        ];
-
-        // Función para verificar las credenciales y redirigir según el tipo de usuario
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('errorMessage');
-
-            // Verificar las credenciales
-            const usuario = usuariosDB.find(u => u.username === username && u.password === password);
-
-            if (usuario) {
-                // Redirigir según el tipo de usuario
-                if (usuario.tipo === 0) {
-                    // Estudiante
-                    window.location.href = 'MenuCliente.html';  // Redirigir al menú del estudiante
-                } else if (usuario.tipo === 1) {
-                    // Gestor
-                    window.location.href = 'MenuGestor.html';  // Redirigir al menú del gestor
-                }
-            } else {
-                errorMessage.textContent = "Usuario o contraseña incorrectos";
-            }
-        });
-    </script>
+    <script src="./FormularioLogin.js"></script>
 </body>
 </html>

@@ -93,11 +93,22 @@ public class ConnectionDB {
     }
 
     //************** CALLS TO THE DATABASE ***************************//
-    public static PreparedStatement GetStations(Connection con) {
-        return getStatement(con, "SELECT * FROM WHEATHERSTATION.STATION");
-    }
 
-    public static PreparedStatement GetStationsFromCity(Connection con) {
-        return getStatement(con, "SELECT * FROM WHEATHERSTATION.STATION WHERE CITY_ID=?");
+    public static PreparedStatement GetTarjetaFromUsuario(Connection con) {
+        return getStatement(con, "SELECT idTarjeta FROM Usuarios WHERE email=?");
     }
+    
+    public static PreparedStatement GetOcupacionSala(Connection con) {
+        return getStatement(con, "SELECT ocupada FROM Salas WHERE idSala=?");
+    }
+    
+    public static PreparedStatement GetOcupacionCubiculo(Connection con) {
+        return getStatement(con, "SELECT ocupado FROM Cubiculos WHERE idCubiculo=?");
+    }
+    
+    public static PreparedStatement GetLecturas(Connection con) {
+        return getStatement(con, "SELECT * FROM LecturaSensores");
+    }
+    
+    
 }
