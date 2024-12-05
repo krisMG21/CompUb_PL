@@ -58,7 +58,6 @@ DHT dht(DHTPIN, DHTTYPE);
 #define RFID_RST 4
 #define RFID_SDA 5
 
-#define UID_Valida 0x01020304
 
 // Constructor RFID
 MFRC522DriverPinSimple ss_pin(RFID_SDA);
@@ -69,16 +68,21 @@ MFRC522 mfrc522(driver);
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+// Componentes
 Buzzer buzzer(BUZZER);
 Timer timer(buzzer);
 Servo servo;
 
+// Variables cubiculo
 long startTime = 0;
 long elapsedTime = 0;
 
 int leds_pomodoro[] = {P_LED1, P_LED2, P_LED3, P_LED4, P_LED5, P_LED_AMARILLO};
 
+// Variables sala
+bool sala_reservada = false;
 bool sala_abierta = false;
+unsigned long UID_Valida = 0; //Not set yet
 
 
 void setup(){
@@ -96,6 +100,16 @@ void setup(){
     // Iniciar conexiones
     initWifi();
     initMQTTServer();
+
+    std::string topic;
+    if (MODE == SALA) {
+        topic = "sala/";
+    } else if (MODE == CUBICULO) {
+        topic = "cubiculo/";
+    }
+    topic += std::to_string(ID) + "/#";
+    client.subscribe(topic.c_str()); // [espacio]/[ID]/#
+    client.setCallback(callback);
 
     // Iniciar servo
     ESP32PWM::allocateTimer(0);           // Asigna un temporizador para el PWM del servo
@@ -231,20 +245,22 @@ void publish(const std::string topic, const std::string message) {
     client.publish(topic.c_str(), message.c_str());
 }
 
+/**
 void subscribe(const std::string topic) {
     Serial.print("Subscribiendo a ");
     Serial.println(topic.c_str());
     client.subscribe(topic.c_str(), callback);
-}
+}*/
 
 void callback(char* topic, byte* payload, unsigned int length) {
-    Serial.print("Mensaje recibido: ");
-    Serial.println(topic);
-    Serial.print("Contenido: ");
-    for (int i = 0; i < length; i++) {
-        Serial.print((char)payload[i]);
+    std::string payloadStr(reinterpret_cast<char*>(payload), length);
+    String mytopic(topic);
+
+    if (mytopic.endsWith("uid")) {
+        UID_Valida = std::stoul(payloadStr);
+    } else if (mytopic.endsWith("reservada")) {
+        sala_reservada = std::stoi(payloadStr);
     }
-    Serial.println();
 }
 
 void initPines() {
