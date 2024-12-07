@@ -113,5 +113,9 @@ public class ConnectionDB {
     public static PreparedStatement GetUsuarioPassw(Connection con){
         // user y password o los que correspondan en la BD
         return getStatement(con, "SELECT password FROM Usuarios WHERE user=?");
-    }   
+    }
+    
+    // en vez de leer la contraseña, a lo mejor sería más seguro meter el intento
+    // en la consulta y comprobar que sean iguales en la BD, así la contraseña
+    // no sale de ahí
 }
