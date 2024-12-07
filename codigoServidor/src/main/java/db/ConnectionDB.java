@@ -110,5 +110,8 @@ public class ConnectionDB {
         return getStatement(con, "SELECT * FROM LecturaSensores");
     }
     
-    
+    public static PreparedStatement GetUsuarioPassw(Connection con){
+        // user y password o los que correspondan en la BD
+        return getStatement(con, "SELECT password FROM Usuarios WHERE user=?");
+    }   
 }
