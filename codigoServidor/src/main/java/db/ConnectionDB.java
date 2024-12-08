@@ -113,4 +113,9 @@ public class ConnectionDB {
     public static PreparedStatement GetUsuarioPassw(Connection con){
         return getStatement(con, "SELECT tipo FROM Usuarios WHERE username=? AND password=?");
     }
+    
+    public static PreparedStatement GetVecesReserva(Connection con){
+        return getStatement(con, "SELECT COUNT(*) FROM Reservas WHERE email_usuario=? AND idSala=?");
+    }
+    
 }
