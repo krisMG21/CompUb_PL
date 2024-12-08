@@ -114,8 +114,16 @@ public class ConnectionDB {
         return getStatement(con, "SELECT tipo FROM Usuarios WHERE username=? AND password=?");
     }
     
-    public static PreparedStatement GetVecesReserva(Connection con){
+    public static PreparedStatement GetVecesReserva(Connection con){ 
         return getStatement(con, "SELECT COUNT(*) FROM Reservas WHERE email_usuario=? AND idSala=?");
+        //Si se quiere saber el tiempo total de las reservas en h, multiplicar por 2 el numero de reservas. 
     }
     
+    public static PreparedStatement GetRuidoCubiculo(Connection con){ //Es decir, la última lectura
+        return getStatement(con, "SELECT valor FROM LecturaSensores WHERE idSensor=3 AND idCubiculo=?  ORDER BY fechaHora DESC LIMIT 1;");
+    }
+    
+    public static PreparedStatement GetHumedadCubiculo(Connection con){ //Es decir, la última lectura
+        return getStatement(con, "SELECT valor FROM LecturaSensores WHERE idSensor=1 AND idCubiculo=?  ORDER BY fechaHora DESC LIMIT 1;");
+    }
 }
