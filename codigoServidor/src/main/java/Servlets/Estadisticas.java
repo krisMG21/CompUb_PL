@@ -18,7 +18,9 @@ import java.io.PrintWriter;
  */
 @WebServlet(name = "Estadisticas", urlPatterns = {"/Estadisticas"})
 public class Estadisticas extends HttpServlet {
-
+    
+    private static final long serialVersionUID = 1L;
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,7 +47,7 @@ public class Estadisticas extends HttpServlet {
             out.println("</html>");
         }
     }
-private static final long serialVersionUID = 1L;
+
 
    /* const EstadisticaBBDD = {
             salas: {

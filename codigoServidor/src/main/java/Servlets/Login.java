@@ -20,6 +20,10 @@ import java.util.logging.Logger;
 public class Login extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+    
+    public Login(){
+        super();
+    }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
