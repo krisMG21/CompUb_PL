@@ -98,8 +98,11 @@ public class MQTTSuscriber implements MqttCallback {
     // Método para mapear el nombre del sensor a su id
     private int getSensorId(String sensorName) {
         switch (sensorName) {
-            case "light": return 1;
+            case "hum": return 1;
             // Agregar más casos según los sensores que estés utilizando
+            case "temp": return 2;
+            case "
+                
             default: return 0;
         }
     }
