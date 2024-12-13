@@ -99,10 +99,11 @@ public class MQTTSuscriber implements MqttCallback {
     private int getSensorId(String sensorName) {
         switch (sensorName) {
             case "hum": return 1;
-            // Agregar más casos según los sensores que estés utilizando
             case "temp": return 2;
-            case "
-                
+            case "luz": return 3;
+            case "sonido": return 4;
+            case "distancia": return 5;
+            // Puedes agregar más sensores si es necesario
             default: return 0;
         }
     }
