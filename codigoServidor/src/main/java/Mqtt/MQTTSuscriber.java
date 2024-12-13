@@ -12,13 +12,23 @@ import java.sql.*;
 import db.Topics;
 import logic.Log;
 
+import org.eclipse.paho.client.mqttv3.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import java.sql.*;
+
 public class MQTTSuscriber implements MqttCallback {
+
+    // Logger configurado específicamente para MQTT, tal como está en tu log4j2.xml
+    private static final Logger logger = LogManager.getLogger("logmqtt"); // Log para MQTT
+
     private static Connection connection;
-    private static final Logger logger = LogManager.getLogger(MQTTSuscriber.class); // Instancia del logger de Log4j
+
     public static void main(String[] args) {
         try {
             // Establecer conexión con la base de datos
             connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/biblioteca", "usuario", "contraseña");
+            logger.info("Conexión con la base de datos establecida.");
 
             // Iniciar el suscriptor MQTT
             String broker = "tcp://172.20.10.2:1883";
@@ -29,29 +39,29 @@ public class MQTTSuscriber implements MqttCallback {
             options.setPassword("ubicua".toCharArray());
             client.setCallback(new MQTTSuscriber());
 
+            // Conectar al broker
             client.connect(options);
             logger.info("Conexión al broker MQTT establecida.");
 
             // Suscribirse al tópico de sensores
             client.subscribe("station1/#");
             logger.info("Suscrito al tópico: station1/#");
+
         } catch (MqttException | SQLException e) {
-            e.printStackTrace();
             logger.error("Error en la conexión o en la suscripción: ", e);
         }
     }
 
     @Override
     public void connectionLost(Throwable cause) {
-        System.out.println("Conexión perdida. Intentando reconectar...");
         logger.warn("Conexión perdida. Intentando reconectar...", cause);
     }
 
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         // Mostrar mensaje recibido
-        System.out.println("Tópico: " + topic + " Mensaje: " + message.toString());
         logger.info("Tópico recibido: {} - Mensaje: {}", topic, message.toString());
+
         // Parsear el mensaje recibido
         String sensorData = message.toString();
 
@@ -63,8 +73,7 @@ public class MQTTSuscriber implements MqttCallback {
     public void deliveryComplete(IMqttDeliveryToken token) {
         // No es necesario en este caso
     }
-    // funcion a modificar paraa la bbdd
-    
+
     private void storeDataInDatabase(String topic, String data) {
         try {
             // Preparar la sentencia SQL para insertar los datos
@@ -82,7 +91,6 @@ public class MQTTSuscriber implements MqttCallback {
             preparedStatement.executeUpdate();
             logger.info("Datos insertados en la base de datos con éxito.");
         } catch (SQLException e) {
-            e.printStackTrace();
             logger.error("Error al insertar datos en la base de datos: ", e);
         }
     }
@@ -96,4 +104,3 @@ public class MQTTSuscriber implements MqttCallback {
         }
     }
 }
-
