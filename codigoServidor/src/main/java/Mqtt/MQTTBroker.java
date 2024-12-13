@@ -3,8 +3,8 @@ package mqtt;
 public class MQTTBroker {
 
     private static int qos = 2;
-    private static final String broker = "tcp://localhost:1883";
-    private static final String clientId = "WheatherStationUAH";
+    private static final String broker = "tcp://localhost:1883"; // Ns si hay que cambiarlo
+    private static final String clientId = "BibliotecaUAH"; 
     private static final String username = "ubicua";
     private static final String password = "ubicua";
     
