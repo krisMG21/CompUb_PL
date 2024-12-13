@@ -1,22 +1,22 @@
 package db;
 
+import Database.ConectionDDBB;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Calendar;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import logic.Log;
 
 public class ConnectionDB {
 
     public Connection obtainConnection(boolean autoCommit) throws NullPointerException {
-        Connection con = null;
+        /*Connection con = null;
         int intentos = 5;
         for (int i = 0; i < intentos; i++) {
             Log.logdb.info("Attempt {} to connect to the database", i);
@@ -39,7 +39,20 @@ public class ConnectionDB {
                 Log.logdb.error("ERROR sql getting connection while trying:{ }= {}", i, ex);
                 throw (new NullPointerException("SQL connection is null"));
             }
-        }
+        }*/
+        // Establecer la conexi n con la base de datos
+            Connection con = null;
+            String url = "jdbc:mariadb://192.168.168.250:3306/uah"; //Cambiar ip
+            String usuario = "admintotal"; // oscar
+            //String usuario = "admin"; // leo
+            String contrasena = "admin";
+
+            try {
+                con = DriverManager.getConnection(url, usuario, contrasena);
+            } catch (SQLException ex) {
+                Logger.getLogger(ConectionDDBB.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         return con;
     }
 
