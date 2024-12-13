@@ -100,10 +100,10 @@ public class MQTTSuscriber implements MqttCallback {
         switch (sensorName) {
             case "hum": return 1;
             case "temp": return 2;
-            case "luz": return 3;
-            case "sonido": return 4;
+            case "ruido": return 3;
+            case "luz": return 4;
             case "distancia": return 5;
-            // Puedes agregar más sensores si es necesario
+            // agregar más sensores si es necesario
             default: return 0;
         }
     }
