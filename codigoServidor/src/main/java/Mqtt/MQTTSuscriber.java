@@ -59,7 +59,8 @@ public class MQTTSuscriber implements MqttCallback {
     public void deliveryComplete(IMqttDeliveryToken token) {
         // No es necesario en este caso
     }
-
+    // funcion a modificar paraa la bbdd
+    
     private void storeDataInDatabase(String topic, String data) {
         try {
             // Preparar la sentencia SQL para insertar los datos
