@@ -14,6 +14,7 @@ import logic.Log;
 
 public class MQTTSuscriber implements MqttCallback {
     private static Connection connection;
+    private static final Logger logger = LogManager.getLogger(MQTTSuscriber.class); // Instancia del logger de Log4j
     public static void main(String[] args) {
         try {
             // Establecer conexión con la base de datos
@@ -29,25 +30,28 @@ public class MQTTSuscriber implements MqttCallback {
             client.setCallback(new MQTTSuscriber());
 
             client.connect(options);
+            logger.info("Conexión al broker MQTT establecida.");
 
             // Suscribirse al tópico de sensores
             client.subscribe("station1/#");
-
+            logger.info("Suscrito al tópico: station1/#");
         } catch (MqttException | SQLException e) {
             e.printStackTrace();
+            logger.error("Error en la conexión o en la suscripción: ", e);
         }
     }
 
     @Override
     public void connectionLost(Throwable cause) {
         System.out.println("Conexión perdida. Intentando reconectar...");
+        logger.warn("Conexión perdida. Intentando reconectar...", cause);
     }
 
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         // Mostrar mensaje recibido
         System.out.println("Tópico: " + topic + " Mensaje: " + message.toString());
-
+        logger.info("Tópico recibido: {} - Mensaje: {}", topic, message.toString());
         // Parsear el mensaje recibido
         String sensorData = message.toString();
 
@@ -76,9 +80,10 @@ public class MQTTSuscriber implements MqttCallback {
 
             // Ejecutar la consulta
             preparedStatement.executeUpdate();
-
+            logger.info("Datos insertados en la base de datos con éxito.");
         } catch (SQLException e) {
             e.printStackTrace();
+            logger.error("Error al insertar datos en la base de datos: ", e);
         }
     }
 
