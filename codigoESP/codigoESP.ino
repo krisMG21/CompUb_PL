@@ -84,6 +84,9 @@ bool sala_reservada = false;
 bool sala_abierta = false;
 unsigned long UID_Valida = 0; //Not set yet
 
+// Contador de pulsaciones del botón
+int pulsaciones = 0;
+
 
 void setup(){
     Serial.begin(115200);
@@ -193,6 +196,8 @@ void loop() {
         Serial.println(digitalRead(BUTTON));
         if(digitalRead(BUTTON) == HIGH){
             Serial.println("BOTÓN PRESIONADO");
+            pulsaciones++;
+            publish(topic+"pulsaciones", std::to_string(pulsaciones));
             if(timer.isTimerRunning()){
                 timer.reset();
                 stop_pomodoro();
