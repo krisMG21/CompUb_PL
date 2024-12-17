@@ -127,7 +127,7 @@ void loop() {
         topic += std::to_string(ID);
         topic += "/";
 
-        if (elapsedTime >= 60000) {
+        if (elapsedTime >= 60000) { // Los datos se publican cada 60 segundos
             elapsedTime = 0;
             startTime = millis();
 
@@ -158,7 +158,7 @@ void loop() {
         topic += std::to_string(ID);
         topic += "/";
 
-        if (elapsedTime >= 60000) {
+        if (elapsedTime >= 60000) { // Los datos se publican cada 60 segundos
             elapsedTime = 0;
             startTime = millis();
 
