@@ -24,7 +24,7 @@ public class Reserva extends HttpServlet{
     private static final long serialVersionUID = 1L;
     
     protected boolean reservar(String user, Timestamp inicio, Timestamp fin){
-        return 1;
+        return true;
     }
     
     
@@ -41,8 +41,8 @@ public class Reserva extends HttpServlet{
         try{
             // Obtener la conexión a la base de datos
             conexionBD = connectionDB.obtainConnection(true);
-            
-            
+        } finally {
+            // En vez de esto un catch con el error adecuao
             
         }
     }
