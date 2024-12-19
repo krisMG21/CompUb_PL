@@ -42,10 +42,9 @@ public class ConnectionDB {
         }*/
         // Establecer la conexi n con la base de datos
             Connection con = null;
-            String url = "jdbc:mariadb://192.168.168.250:3306/uah"; //Cambiar ip
-            String usuario = "admintotal"; // oscar
-            //String usuario = "admin"; // leo
-            String contrasena = "admin";
+            String url = "jdbc:mariadb://192.168.168.250:3306/biblioteca"; //Cambiar ip, usando la de la VM
+            String usuario = "ubicua"; 
+            String contrasena = "ubicua";
 
             try {
                 con = DriverManager.getConnection(url, usuario, contrasena);
