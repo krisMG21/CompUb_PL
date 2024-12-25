@@ -27,7 +27,7 @@ public class SetData extends HttpServlet{
             PrintWriter out = response.getWriter();
             try {
                     int value = Integer.parseInt(request.getParameter("value"));
-                    //Logic.setDataToDB(value);
+                    Logic.setDataToDB(value);
             } catch (NumberFormatException nfe){
                     out.println("-1");
                     Log.log.error("Number Format Exception: " + nfe);

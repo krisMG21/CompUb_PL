@@ -23,11 +23,6 @@ public class Reserva extends HttpServlet{
     
     private static final long serialVersionUID = 1L;
     
-    protected boolean reservar(String user, Timestamp inicio, Timestamp fin){
-        return true;
-    }
-    
-    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
@@ -41,6 +36,10 @@ public class Reserva extends HttpServlet{
         try{
             // Obtener la conexión a la base de datos
             conexionBD = connectionDB.obtainConnection(true);
+            
+            // Leer los parámetros enviados desde el formulario
+            String user = request.getParameter("username");
+            String passw = request.getParameter("password");
         } finally {
             // En vez de esto un catch con el error adecuao
             
