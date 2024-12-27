@@ -12,7 +12,6 @@ import java.sql.*;
 import Database.Topics;
 import logic.Log;
 
-import org.eclipse.paho.client.mqttv3.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.sql.*;
@@ -75,25 +74,53 @@ public class MQTTSuscriber implements MqttCallback {
     }
 
     private void storeDataInDatabase(String topic, String data) {
-        try {
-            // Preparar la sentencia SQL para insertar los datos
-            String sql = "INSERT INTO LecturaSensores (idSensor, valor, fechaHora) VALUES (?, ?, NOW())";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            // Extraer idSensor del tópico (asumimos que el tópico es algo como "station1/light")
-            String[] parts = topic.split("/");
-            int sensorId = getSensorId(parts[1]); // Ejemplo: "light" -> 1
-
-            preparedStatement.setInt(1, sensorId);
-            preparedStatement.setInt(2, Integer.parseInt(data));
-
-            // Ejecutar la consulta
-            preparedStatement.executeUpdate();
-            logger.info("Datos insertados en la base de datos con éxito.");
-        } catch (SQLException e) {
-            logger.error("Error al insertar datos en la base de datos: ", e);
+        /*
+        parts[0] : tipo = cubiculo / sala
+        parts[1] : ID   = 0,1,2,...
+        parts[2] : component = temp / hum / light / ocupado / 
+        */
+        
+        String[] parts = topic.split("/");
+        if ("ocupado".equals(parts[2])){
+            try{
+                String tabla = ("cubiculo".equals(parts[0])) ? "Cubiculos" : "Salas";
+                
+                // Preparar sentencia SQL
+                String sql = "INSERT INTO " + tabla + " (idSala, ocupado) VALUES (?, ?)";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+                
+                preparedStatement.setInt(1, Integer.parseInt(parts[1]));
+                preparedStatement.setInt(2, Integer.parseInt(data));
+                
+                // Ejecutar la consulta
+                preparedStatement.executeUpdate();
+                logger.info("Datos insertados en la base de datos con éxito");
+            } catch (SQLException e){
+                logger.error("Error al insertar datos en la base de datos");
+            }
         }
-    }
+        else {
+            try{
+                // Preparar la sentencia SQL para insertar los datos
+                String sql = "INSERT INTO LecturaSensores (idSensor, valor, fechaHora) VALUES (?, ?, NOW())";
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+                // Extraer idSensor del tópico (asumimos que el tópico es algo como "station1/light")
+                
+                int sensorId = getSensorId(parts[2]); // Ejemplo: "light" -> 1
+
+                preparedStatement.setInt(1, sensorId);
+                preparedStatement.setInt(2, Integer.parseInt(data));
+
+                // Ejecutar la consulta
+                preparedStatement.executeUpdate();
+                logger.info("Datos insertados en la base de datos con éxito.");
+            } catch (SQLException e) {
+                logger.error("Error al insertar datos en la base de datos: ", e);
+            }
+        }
+        
+   }
 
     // Método para mapear el nombre del sensor a su id
     private int getSensorId(String sensorName) {

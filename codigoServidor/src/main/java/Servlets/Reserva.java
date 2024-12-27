@@ -23,6 +23,10 @@ public class Reserva extends HttpServlet{
     
     private static final long serialVersionUID = 1L;
     
+    public Reserva(){
+        super();
+    }
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");

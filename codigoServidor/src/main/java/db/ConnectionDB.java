@@ -123,7 +123,7 @@ public class ConnectionDB {
     }
     
     public static PreparedStatement GetUsuarioPassw(Connection con){
-        return getStatement(con, "SELECT tipo FROM Usuarios WHERE username=? AND password=?");
+        return getStatement(con, "SELECT tipo FROM Usuarios WHERE email=? AND passw=?");
     }
     
     public static PreparedStatement GetVecesReserva(Connection con){ 
