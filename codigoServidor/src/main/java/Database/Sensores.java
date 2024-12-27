@@ -4,10 +4,32 @@
  */
 package Database;
 
-/**
- *
- * @author fatim
- */
+
+// Clase para la tabla Sensores
 public class Sensores {
-    
+    private int idSensor;
+    private String nombre;
+
+    public Sensores() {}
+
+    public Sensores(int idSensor, String nombre) {
+        this.idSensor = idSensor;
+        this.nombre = nombre;
+    }
+
+    public int getIdSensor() {
+        return idSensor;
+    }
+
+    public void setIdSensor(int idSensor) {
+        this.idSensor = idSensor;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 }

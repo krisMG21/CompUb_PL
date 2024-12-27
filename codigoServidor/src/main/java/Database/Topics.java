@@ -1,4 +1,4 @@
-package db;
+package Database;
 
 public class Topics {
 

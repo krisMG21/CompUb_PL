@@ -4,10 +4,31 @@
  */
 package Database;
 
-/**
- *
- * @author fatim
- */
+// Clase para la tabla Cubiculos
 public class Cubiculos {
-    
+    private int idCubiculo;
+    private byte[] ocupada;
+
+    public Cubiculos() {}
+
+    public Cubiculos(int idCubiculo, byte[] ocupada) {
+        this.idCubiculo = idCubiculo;
+        this.ocupada = ocupada;
+    }
+
+    public int getIdCubiculo() {
+        return idCubiculo;
+    }
+
+    public void setIdCubiculo(int idCubiculo) {
+        this.idCubiculo = idCubiculo;
+    }
+
+    public byte[] getOcupada() {
+        return ocupada;
+    }
+
+    public void setOcupada(byte[] ocupada) {
+        this.ocupada = ocupada;
+    }
 }

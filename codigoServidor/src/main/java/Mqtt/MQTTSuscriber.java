@@ -9,7 +9,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.eclipse.paho.client.mqttv3.*;
 import java.sql.*;
-import db.Topics;
+import Database.Topics;
 import logic.Log;
 
 import org.eclipse.paho.client.mqttv3.*;
