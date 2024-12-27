@@ -7,6 +7,7 @@
     const reservaSalasButton = document.getElementById("reservaSalas");
     const reservaPuestosButton = document.getElementById("reservaPuestos");
     const estadisticasButton = document.getElementById("estadisticas");
+    const MapaButton = document.getElementById("Mapa");
 
     // Añadir eventos de clic para redirigir
     reservaSalasButton.addEventListener("click", function () {
@@ -20,4 +21,9 @@
     estadisticasButton.addEventListener("click", function () {
         window.location.href = "Estadisticas.html";//añadir esta opcion 
     });
+    
+    MapaButton.addEventListener("click", function () {
+        window.location.href = "MapaBiblioteca.html";//añadir esta opcion 
+    });
+
 });
