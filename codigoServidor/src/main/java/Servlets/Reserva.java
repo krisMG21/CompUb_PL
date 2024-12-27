@@ -4,7 +4,7 @@
  */
 package Servlets;
 
-import db.ConnectionDB;
+import Database.ConnectionDB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,6 +1,6 @@
 package Servlets;
 
-import db.ConnectionDB;
+import Database.ConnectionDB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;

@@ -77,49 +77,63 @@ public class MQTTSuscriber implements MqttCallback {
         /*
         parts[0] : tipo = cubiculo / sala
         parts[1] : ID   = 0,1,2,...
-        parts[2] : component = temp / hum / light / ocupado / 
+        parts[2] : component = temp / hum / ruido / luz / ocupado / 
         */
         
         String[] parts = topic.split("/");
-        if ("ocupado".equals(parts[2])){
-            try{
-                String tabla = ("cubiculo".equals(parts[0])) ? "Cubiculos" : "Salas";
-                
+        String topic_espacio = parts[0]; // e.g., "cubiculo" or "sala"
+        String topic_ID = parts[1];       // e.g., "1" (the ID)
+        String topic_comp = parts[2];      // e.g., "ocupado" or "light"
+
+        if ("ocupado".equals(topic_comp)) {
+            try {
+                String tabla = ("cubiculo".equals(topic_espacio)) ? "Cubiculos" : "Salas";
+
                 // Preparar sentencia SQL
                 String sql = "INSERT INTO " + tabla + " (idSala, ocupado) VALUES (?, ?)";
                 PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                
-                preparedStatement.setInt(1, Integer.parseInt(parts[1]));
-                preparedStatement.setInt(2, Integer.parseInt(data));
-                
-                // Ejecutar la consulta
-                preparedStatement.executeUpdate();
-                logger.info("Datos insertados en la base de datos con éxito");
-            } catch (SQLException e){
-                logger.error("Error al insertar datos en la base de datos");
-            }
-        }
-        else {
-            try{
-                // Preparar la sentencia SQL para insertar los datos
-                String sql = "INSERT INTO LecturaSensores (idSensor, valor, fechaHora) VALUES (?, ?, NOW())";
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-                // Extraer idSensor del tópico (asumimos que el tópico es algo como "station1/light")
-                
-                int sensorId = getSensorId(parts[2]); // Ejemplo: "light" -> 1
-
-                preparedStatement.setInt(1, sensorId);
+                preparedStatement.setInt(1, Integer.parseInt(topic_ID));
                 preparedStatement.setInt(2, Integer.parseInt(data));
 
                 // Ejecutar la consulta
                 preparedStatement.executeUpdate();
-                logger.info("Datos insertados en la base de datos con éxito.");
+                logger.info("Ocupación de {} {} insertado en la base de datos con éxito",
+                        topic_espacio,
+                        topic_ID);
             } catch (SQLException e) {
-                logger.error("Error al insertar datos en la base de datos: ", e);
+                logger.error("Error al insertar ocupación en la base de datos");
+                logger.error("Espacio:{}, ID:{}", topic_espacio, topic_ID);
             }
         }
-        
+
+        try {
+            // Preparar la sentencia SQL para insertar los datos
+            String sql = "INSERT INTO LecturaSensores (idSensor, valor, idCubiculo, idSala, fechaHora) VALUES (?, ?, ?, ?, NOW())";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            // Extraer idSensor del tópico (asumimos que el tópico es algo como "station1/light")
+            int sensorId = getSensorId(topic_comp); // Ejemplo: "light" -> 1
+
+            preparedStatement.setInt(1, sensorId);
+            preparedStatement.setInt(2, Integer.parseInt(data));
+
+            if ("cubiculo".equals(topic_espacio)) {
+                preparedStatement.setInt(3, Integer.parseInt(topic_ID));
+                preparedStatement.setInt(4, 0);
+            } else {
+                preparedStatement.setInt(3, 0);
+                preparedStatement.setInt(4, Integer.parseInt(topic_ID));
+            }
+
+            // Ejecutar la consulta
+            preparedStatement.executeUpdate();
+            logger.info("Lectura de {} {} insertada en la base de datos con éxito.",
+                    topic_espacio,
+                    topic_ID);
+        } catch (SQLException e) {
+            logger.error("Error al insertar lectura en la base de datos: ", e);
+        }
    }
 
     // Método para mapear el nombre del sensor a su id
@@ -129,7 +143,7 @@ public class MQTTSuscriber implements MqttCallback {
             case "temp": return 2;
             case "ruido": return 3;
             case "luz": return 4;
-            case "distancia": return 5;
+            case "ocupado": return 5;
             // agregar más sensores si es necesario
             default: return 0;
         }

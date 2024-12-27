@@ -1,6 +1,5 @@
-package db;
+package Database;
 
-import Database.ConectionDDBB;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -48,8 +47,9 @@ public class ConnectionDB {
 
             try {
                 con = DriverManager.getConnection(url, usuario, contrasena);
+                con.setAutoCommit(autoCommit);
             } catch (SQLException ex) {
-                Logger.getLogger(ConectionDDBB.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ConnectionDB.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         return con;
@@ -102,6 +102,17 @@ public class ConnectionDB {
         }
 
         return ps;
+    }
+    
+    // ESTO DE AQUI LO UTILIZA LOGIC; NO SE QUE COÑO HACE LOGIC
+    public static PreparedStatement GetDataBD(Connection con)
+    {
+    	return getStatement(con,"SELECT * FROM UBICOMP.MEASUREMENT");  	
+    }
+    
+    public static PreparedStatement SetDataBD(Connection con)
+    {
+    	return getStatement(con,"INSERT INTO UBICOMP.MEASUREMENT VALUES (?,?)");  	
     }
 
     //************** CALLS TO THE DATABASE ***************************//

@@ -11,7 +11,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `biblioteca`.`Cubiculos` (
   `idCubiculo` INT NOT NULL,
-  `ocupado` BLOB NOT NULL,
+  `ocupado` INT NOT NULL,
   PRIMARY KEY (`idCubiculo`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb3;
 
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `biblioteca`.`Cubiculos` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `biblioteca`.`Salas` (
   `idSala` INT NOT NULL,
-  `ocupada` BLOB NOT NULL,
+  `ocupada` INT NOT NULL,
   PRIMARY KEY (`idSala`)
 ) ENGINE = InnoDB DEFAULT CHARACTER SET = utf8mb3;
 
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `biblioteca`.`Usuarios` (
   `idUsuario` INT NOT NULL AUTO_INCREMENT,
   `passw` VARCHAR(45) NOT NULL,
   `email` VARCHAR(45) NOT NULL,
-  `tipo` BLOB NOT NULL,
+  `tipo` VARCHAR(20) NOT NULL,
   `idTarjeta` INT NOT NULL,
   PRIMARY KEY (`idUsuario`),
   UNIQUE INDEX `unique_email` (`email`),
