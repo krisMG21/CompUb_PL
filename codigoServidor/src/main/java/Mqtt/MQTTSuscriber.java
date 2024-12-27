@@ -107,4 +107,8 @@ public class MQTTSuscriber implements MqttCallback {
             default: return 0;
         }
     }
+
+    public void suscribeTopic(MQTTBroker broker, String test) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
