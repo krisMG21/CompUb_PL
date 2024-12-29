@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva de Salas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+        h1 {
+            margin-top: 30px;
+            color: #333;
+        }
+        .sala-container {
+            width: 80%;
+            margin: 20px 0;
+            display: none; /* Ocultamos las salas hasta que se seleccione una */
+        }
+        .sala {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .hora {
+            margin: 5px 0;
+            padding: 8px;
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .hora.disponible {
+            background-color: #28a745;
+            color: white;
+        }
+        .hora.ocupado {
+            background-color: #dc3545;
+            color: white;
+            cursor: not-allowed;
+        }
+        .hora.seleccionada {
+            background-color: #ffc107;
+            color: white;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Reserva de Salas</h1>
+
+    <!-- Menú Desplegable para Seleccionar Sala -->
+    <div>
+        <label for="seleccion-sala">Selecciona una sala: </label>
+        <select id="seleccion-sala" onchange="mostrarFranjas()">
+            <option value="">--Seleccionar--</option>
+            <option value="sala1">Sala 1</option>
+            <option value="sala2">Sala 2</option>
+        </select>
+    </div>
+
+    <!-- Contenedor de las salas (ocultado por defecto) -->
+    <div class="sala-container" id="sala1">
+        <div class="sala">
+            <h2>Sala 1</h2>
+            <!-- Franjas Horarias -->
+            <div class="hora disponible" data-hora="08:00-10:00" onclick="reservar('sala1', '08:00-10:00')">08:00 - 10:00</div>
+            <div class="hora disponible" data-hora="10:00-12:00" onclick="reservar('sala1', '10:00-12:00')">10:00 - 12:00</div>
+            <div class="hora disponible" data-hora="12:00-14:00" onclick="reservar('sala1', '12:00-14:00')">12:00 - 14:00</div>
+            <div class="hora disponible" data-hora="14:00-16:00" onclick="reservar('sala1', '14:00-16:00')">14:00 - 16:00</div>
+            <div class="hora disponible" data-hora="16:00-18:00" onclick="reservar('sala1', '16:00-18:00')">16:00 - 18:00</div>
+            <div class="hora disponible" data-hora="18:00-20:00" onclick="reservar('sala1', '18:00-20:00')">18:00 - 20:00</div>
+        </div>
+    </div>
+
+    <div class="sala-container" id="sala2">
+        <div class="sala">
+            <h2>Sala 2</h2>
+            <!-- Franjas Horarias -->
+            <div class="hora disponible" data-hora="08:00-10:00" onclick="reservar('sala2', '08:00-10:00')">08:00 - 10:00</div>
+            <div class="hora disponible" data-hora="10:00-12:00" onclick="reservar('sala2', '10:00-12:00')">10:00 - 12:00</div>
+            <div class="hora disponible" data-hora="12:00-14:00" onclick="reservar('sala2', '12:00-14:00')">12:00 - 14:00</div>
+            <div class="hora disponible" data-hora="14:00-16:00" onclick="reservar('sala2', '14:00-16:00')">14:00 - 16:00</div>
+            <div class="hora disponible" data-hora="16:00-18:00" onclick="reservar('sala2', '16:00-18:00')">16:00 - 18:00</div>
+            <div class="hora disponible" data-hora="18:00-20:00" onclick="reservar('sala2', '18:00-20:00')">18:00 - 20:00</div>
+        </div>
+    </div>
+
+    <button id="reservarBtn" disabled onclick="realizarReserva()">Reservar</button>
+
+    <script>src="./OpcionRSCliente.js"</script>
+</body>
+</html>

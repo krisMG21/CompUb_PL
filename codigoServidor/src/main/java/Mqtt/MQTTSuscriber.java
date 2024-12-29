@@ -6,15 +6,10 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-import org.eclipse.paho.client.mqttv3.*;
 import java.sql.*;
-import Database.Topics;
-import logic.Log;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.sql.*;
 
 public class MQTTSuscriber implements MqttCallback {
 
@@ -26,11 +21,11 @@ public class MQTTSuscriber implements MqttCallback {
     public static void main(String[] args) {
         try {
             // Establecer conexión con la base de datos
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/biblioteca", "usuario", "contraseña");
+            connection = DriverManager.getConnection("jdbc:mysql://192.168.10.134:3306/BibliotecaUAH", "ubicua", "ubicua");
             logger.info("Conexión con la base de datos establecida.");
 
             // Iniciar el suscriptor MQTT
-            String broker = "tcp://172.20.10.2:1883";
+            String broker = "tcp://192.168.10.134:1883";
             String clientId = MqttClient.generateClientId();
             MqttClient client = new MqttClient(broker, clientId);
             MqttConnectOptions options = new MqttConnectOptions();
