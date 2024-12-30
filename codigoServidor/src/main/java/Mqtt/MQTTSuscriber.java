@@ -15,8 +15,8 @@ public class MQTTSuscriber implements MqttCallback {
 
     // Logger configurado específicamente para MQTT, tal como está en tu log4j2.xml
     private static final Logger logger = LogManager.getLogger("logmqtt"); // Log para MQTT
-
     private static Connection connection;
+    private static MqttClient client;
 
     public static void main(String[] args) {
         try {
@@ -144,7 +144,13 @@ public class MQTTSuscriber implements MqttCallback {
         }
     }
 
-    public void suscribeTopic(MQTTBroker broker, String test) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void suscribeTopic(MQTTBroker broker, String topic) {
+        try {
+            // Subscribe to the specified topic using the MQTT client
+            client.subscribe(topic);
+            logger.info("Suscrito al tópico: {}", topic);
+        } catch (MqttException e) {
+            logger.error("Error al suscribirse al tópico {}: ", topic, e);
     }
+}
 }

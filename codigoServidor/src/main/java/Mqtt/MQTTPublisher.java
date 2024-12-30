@@ -20,20 +20,20 @@ public class MQTTPublisher {
         MemoryPersistence persistence = new MemoryPersistence();
         try {
             // Log de intento de conexión al broker MQTT
-            Log.logmqtt.info("Intentando conectar al broker: {}", MQTTBroker.getBroker());
-            MqttClient sampleClient = new MqttClient(MQTTBroker.getBroker(), MQTTBroker.getClientId(), persistence);
+            Log.logmqtt.info("Intentando conectar al broker: {}", broker.getBroker());
+            MqttClient sampleClient = new MqttClient(broker.getBroker(), broker.getClientId(), persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
-            connOpts.setUserName(MQTTBroker.getUsername());
-            connOpts.setPassword(MQTTBroker.getPassword().toCharArray());
+            connOpts.setUserName(broker.getUsername());
+            connOpts.setPassword(broker.getPassword().toCharArray());
             connOpts.setCleanSession(true);
 
             // Conexión al broker MQTT
             sampleClient.connect(connOpts);
-            Log.logmqtt.info("Conexión establecida con el broker: {}", MQTTBroker.getBroker());
+            Log.logmqtt.info("Conexión establecida con el broker: {}", broker.getBroker());
 
             // Creación del mensaje MQTT
             MqttMessage message = new MqttMessage(content.getBytes());
-            message.setQos(MQTTBroker.getQos());
+            message.setQos(broker.getQos());
 
             // Publicación del mensaje en el tópico
             sampleClient.publish(topic, message);
