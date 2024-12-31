@@ -5,21 +5,21 @@
    version="6.0">
     <display-name>BibliotecaEPS</display-name>
     <welcome-file-list>
-      <welcome-file>MapaBiblioteca.html</welcome-file>
+      <welcome-file>MenuInicio.html</welcome-file>
     </welcome-file-list>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
-    </session-config><!--  Declaración del servlet  -->
-<servlet>
-<servlet-name>Login</servlet-name>
-<servlet-class>Servlets.Login</servlet-class>
-</servlet>
-<!--  Mapeo del servlet  -->
-<servlet-mapping>
-<servlet-name>Login</servlet-name>
-<url-pattern>/Login</url-pattern>
-</servlet-mapping>
-    
+    </session-config>
+        <!--  Declaración del servlet  -->
+    <servlet>
+    <servlet-name>Login</servlet-name>
+    <servlet-class>Servlets.Login</servlet-class>
+    </servlet>
+    <!--  Mapeo del servlet  -->
+    <servlet-mapping>
+    <servlet-name>Login</servlet-name>
+    <url-pattern>/Login</url-pattern>
+    </servlet-mapping>
 </web-app>
