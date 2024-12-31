@@ -6,7 +6,7 @@ document.getElementById('FormularioLogin').addEventListener('submit', function (
     const errorMessage = document.getElementById('errorMessage');
 
     // Realizar la solicitud POST al servlet
-    fetch('LoginServlet', {
+    fetch('/Login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -15,11 +15,12 @@ document.getElementById('FormularioLogin').addEventListener('submit', function (
     })
     .then(response => response.json())
     .then(data => {
+        console.log(data);  // Verifica los datos que vienen de la respuesta del servlet
         if (data.status === "success") {
             // Redirigir según el tipo de usuario
-            if (data.userType === 0) {
+            if (data.userType === 'admin') {
                 window.location.href = 'MenuCliente.html';
-            } else if (data.userType === 1) {
+            } else if (data.userType === 'cliente') {
                 window.location.href = 'MenuGestor.html';
             }
         } else {
