@@ -18,10 +18,11 @@ public class MQTTPublisher {
      */
     public static void publish(MQTTBroker broker, String topic, String content) {
         MemoryPersistence persistence = new MemoryPersistence();
+        MqttClient sampleClient = null;
         try {
             // Log de intento de conexión al broker MQTT
             Log.logmqtt.info("Intentando conectar al broker: {}", broker.getBroker());
-            MqttClient sampleClient = new MqttClient(broker.getBroker(), broker.getClientId(), persistence);
+            sampleClient = new MqttClient(broker.getBroker(), broker.getClientId(), persistence);
             MqttConnectOptions connOpts = new MqttConnectOptions();
             connOpts.setUserName(broker.getUsername());
             connOpts.setPassword(broker.getPassword().toCharArray());
@@ -49,6 +50,15 @@ public class MQTTPublisher {
         } catch (Exception e) {
             // Log de error si ocurre una excepción general
             Log.logmqtt.error("Error inesperado al publicar el mensaje: {}", e.getMessage(), e);
+        } finally {
+            if (sampleClient != null) {
+                try {
+                    sampleClient.disconnect();
+                    Log.logmqtt.info("Disconnected from broker");
+                } catch (MqttException e) {
+                    Log.logmqtt.error("Error disconnecting from broker: {}", e.getMessage());
+                }
+            }
         }
     }
 }

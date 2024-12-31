@@ -6,10 +6,10 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import java.sql.*;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.sql.*;
 
 public class MQTTSuscriber implements MqttCallback {
 
@@ -25,12 +25,12 @@ public class MQTTSuscriber implements MqttCallback {
             logger.info("Conexión con la base de datos establecida.");
 
             // Iniciar el suscriptor MQTT
-            String broker = "tcp://192.168.10.134:1883";
+            MQTTBroker broker = new MQTTBroker();
             String clientId = MqttClient.generateClientId();
-            MqttClient client = new MqttClient(broker, clientId);
+            client = new MqttClient(broker.getBroker(), clientId);
             MqttConnectOptions options = new MqttConnectOptions();
-            options.setUserName("ubicua");
-            options.setPassword("ubicua".toCharArray());
+            options.setUserName(broker.getUsername());
+            options.setPassword(broker.getPassword().toCharArray());
             client.setCallback(new MQTTSuscriber());
 
             // Conectar al broker
@@ -38,8 +38,8 @@ public class MQTTSuscriber implements MqttCallback {
             logger.info("Conexión al broker MQTT establecida.");
 
             // Suscribirse al tópico de sensores
-            client.subscribe("station1/#");
-            logger.info("Suscrito al tópico: station1/#");
+            client.subscribe("#");
+            logger.info("Suscrito al todos los tópicos");
 
         } catch (MqttException | SQLException e) {
             logger.error("Error en la conexión o en la suscripción: ", e);
@@ -69,39 +69,38 @@ public class MQTTSuscriber implements MqttCallback {
     }
 
     private void storeDataInDatabase(String topic, String data) {
-        /*
-        parts[0] : tipo = cubiculo / sala
-        parts[1] : ID   = 0,1,2,...
-        parts[2] : component = temp / hum / ruido / luz / ocupado / 
-        */
-        
         String[] parts = topic.split("/");
         String topic_espacio = parts[0]; // e.g., "cubiculo" or "sala"
         String topic_ID = parts[1];       // e.g., "1" (the ID)
         String topic_comp = parts[2];      // e.g., "ocupado" or "light"
 
         if ("ocupado".equals(topic_comp)) {
-            try {
-                String tabla = ("cubiculo".equals(topic_espacio)) ? "Cubiculos" : "Salas";
-
-                // Preparar sentencia SQL
-                String sql = "INSERT INTO " + tabla + " (idSala, ocupado) VALUES (?, ?)";
-                PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-                preparedStatement.setInt(1, Integer.parseInt(topic_ID));
-                preparedStatement.setInt(2, Integer.parseInt(data));
-
-                // Ejecutar la consulta
-                preparedStatement.executeUpdate();
-                logger.info("Ocupación de {} {} insertado en la base de datos con éxito",
-                        topic_espacio,
-                        topic_ID);
-            } catch (SQLException e) {
-                logger.error("Error al insertar ocupación en la base de datos");
-                logger.error("Espacio:{}, ID:{}", topic_espacio, topic_ID);
-            }
+            insertDataOcupacion(topic_espacio, topic_ID, data);
+        } else {
+            insertLectura(topic_espacio, topic_ID, topic_comp, data);
         }
+        
+    }
+    
+    private void insertDataOcupacion(String topic_espacio, String topic_ID, String data){
+        String tabla = "cubiculo".equals(topic_espacio) ? "Cubiculos" : "Salas";
+        String sql = "INSERT INTO " + tabla + " (idSala, ocupado) VALUES (?, ?)";
+        
+        try(PreparedStatement preparedStatement = connection.prepareStatement(sql)){
+            preparedStatement.setInt(1, Integer.parseInt(topic_ID));
+            preparedStatement.setInt(2, Integer.parseInt(data));
 
+            // Ejecutar la consulta
+            preparedStatement.executeUpdate();
+            logger.info("Ocupación de {} {} insertado en la base de datos con éxito",
+                    topic_espacio,
+                    topic_ID);
+        } catch (SQLException e){
+            logger.error("Error al insertar ocupaciones en la base de datos");
+        }
+    }
+    
+    private void insertLectura(String topic_espacio, String topic_ID, String topic_comp, String data){
         try {
             // Preparar la sentencia SQL para insertar los datos
             String sql = "INSERT INTO LecturaSensores (idSensor, valor, idCubiculo, idSala, fechaHora) VALUES (?, ?, ?, ?, NOW())";
@@ -129,7 +128,7 @@ public class MQTTSuscriber implements MqttCallback {
         } catch (SQLException e) {
             logger.error("Error al insertar lectura en la base de datos: ", e);
         }
-   }
+    }
 
     // Método para mapear el nombre del sensor a su id
     private int getSensorId(String sensorName) {
