@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+        .form-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        input {
+            width: 100%; /* Mantener el ancho al 100% del contenedor */
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+        }
+        button {
+            width: 100%; /* Mantener el ancho al 100% del contenedor */
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px; /* Aumentar el espacio entre el input y el botón */
+        }
+        button:disabled {
+            background-color: #ccc;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Biblioteca Inteligente</h1>
+    <div class="form-container">
+        <h2>Inicio de Sesión</h2>
+        <form id="FormularioLogin">
+            <input type="text" id="username" placeholder="Nombre de Usuario" required>
+            <input type="password" id="password" placeholder="Contraseña" required>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+        <p class="error" id="errorMessage"></p>
+    </div>
+    <script src="./FormularioLogin.js"></script>
+</body>
+</html>
