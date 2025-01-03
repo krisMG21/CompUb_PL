@@ -6,30 +6,29 @@ document.getElementById('FormularioLogin').addEventListener('submit', function (
     const errorMessage = document.getElementById('errorMessage');
 
     // Realizar la solicitud POST al servlet
-    fetch('/Login', {
+    fetch('/BibliotecaEPS/Login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         },
         body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);  // Verifica los datos que vienen de la respuesta del servlet
-        if (data.status === "success") {
-            // Redirigir según el tipo de usuario
-            if (data.userType === 'admin') {
-                window.location.href = 'MenuCliente.html';
-            } else if (data.userType === 'cliente') {
-                window.location.href = 'MenuGestor.html';
-            }
-        } else {
-            // Mostrar mensaje de error
-            errorMessage.textContent = data.message;
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        errorMessage.textContent = "Ocurrió un error al procesar la solicitud.";
-    });
+            .then(response => response.json())  // Aseguramos que la respuesta sea en JSON
+            .then(data => {
+                console.log('Tipo de usuario:', data.userType);
+                if (data.userType === 'admin') {
+                    console.log('Redirigiendo a MenuGestor.html');
+                    window.location.href = 'MenuGestor.html';
+                } else if (data.userType === 'cliente') {
+                    console.log('Redirigiendo a MenuCliente.html');
+                    window.location.href = 'MenuCliente.html';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                errorMessage.textContent = error.message || "Ocurrió un error al procesar la solicitud.";
+            });
 });
+
+
+
