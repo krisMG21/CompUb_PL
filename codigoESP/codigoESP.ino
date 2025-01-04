@@ -79,6 +79,8 @@ long elapsedTime = 0;
 
 int leds_pomodoro[] = {P_LED1, P_LED2, P_LED3, P_LED4, P_LED5, P_LED_AMARILLO};
 
+bool ocupado = false;
+
 // Variables sala
 bool sala_reservada = false;
 bool sala_abierta = false;
@@ -181,16 +183,18 @@ void loop() {
 
         // Sensor ultrasonido
         float distancia = get_distance();
-        publish(topic+"distancia", std::to_string(distancia));
-        if (distancia < 15){
-            publish(topic+"ocupado", std::to_string(true));
-            digitalWrite(RED_LED, HIGH);
-            digitalWrite(GREEN_LED, LOW);
-        } else {
-            publish(topic+"ocupado", std::to_string(false));
-            digitalWrite(RED_LED, LOW);
-            digitalWrite(GREEN_LED, HIGH);
-        }
+        //publish(topic+"distancia", std::to_string(distancia));
+        bool ocupado_temp = distancia < 15;
+        if (ocupado_temp != ocupado){
+            ocupado = ocupado_temp;
+            publish(topic+"ocupado", std::to_string(ocupado));
+            if (ocupado){
+                digitalWrite(RED_LED, HIGH);
+                digitalWrite(GREEN_LED, LOW);
+            } else {
+                digitalWrite(RED_LED, LOW);
+                digitalWrite(GREEN_LED, HIGH);
+            }
 
         Serial.print("Button digital read:");
         Serial.println(digitalRead(BUTTON));
