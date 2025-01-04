@@ -82,5 +82,38 @@ public class Logic
 		return values;
 	}
 	
-	
+        // ConnectionDB
+        public static boolean ConnectionDB(String username, String password) 
+	{
+                boolean conectado = false;
+		ConnectionDB conector = new ConnectionDB();
+		Connection con = null;
+		try
+		{
+			con = conector.obtainConnection(true);
+			Log.log.info("Conexion establecida con la base de datos");
+			
+			PreparedStatement ps = ConnectionDB.ConnectionDB(con);
+                        ps.setString(1, username);
+                        ps.setString(2, password);
+                        
+			Log.log.info("Sentencia SQL=>" + ps.toString());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next())
+			{
+                                conectado = true;
+			}	
+		} catch (SQLException e)
+		{
+			Log.log.error("Error: " + e);
+		} catch (NullPointerException e)
+		{
+			Log.log.error("Error: " + e);
+		} catch (Exception e)
+		{
+			Log.log.error("Error:" + e);
+		}
+		conector.closeConnection(con);
+		return conectado;
+	}
 }

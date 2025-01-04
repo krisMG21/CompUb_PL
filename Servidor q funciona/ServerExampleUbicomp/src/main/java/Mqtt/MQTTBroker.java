@@ -3,7 +3,7 @@ package Mqtt;
 public class MQTTBroker {
 
     private int qos = 2;
-    private final String broker = "tcp://192.168.10.134:1883";
+    private final String broker = "tcp://172.20.10.3:1883";
     private final String clientId = "BibliotecaUAH"; 
     private final String username = "ubicua";
     private final String password = "ubicua";

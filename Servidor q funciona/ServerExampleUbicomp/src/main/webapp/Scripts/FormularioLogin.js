@@ -5,6 +5,9 @@ document.getElementById('FormularioLogin').addEventListener('submit', function (
     const password = document.getElementById('password').value;
     const errorMessage = document.getElementById('errorMessage');
 
+    // Limpiar mensajes de error anteriores
+    errorMessage.textContent = '';
+
     // Realizar la solicitud POST al servlet
     fetch('/BibliotecaEPS/Login', {
         method: 'POST',
@@ -13,22 +16,22 @@ document.getElementById('FormularioLogin').addEventListener('submit', function (
         },
         body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
     })
-            .then(response => response.json())  // Aseguramos que la respuesta sea en JSON
-            .then(data => {
-                console.log('Tipo de usuario:', data.userType);
-                if (data.userType === 'admin') {
-                    console.log('Redirigiendo a MenuGestor.html');
-                    window.location.href = 'MenuGestor.html';
-                } else if (data.userType === 'cliente') {
-                    console.log('Redirigiendo a MenuCliente.html');
-                    window.location.href = 'MenuCliente.html';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                errorMessage.textContent = error.message || "Ocurrió un error al procesar la solicitud.";
-            });
+    .then(response => response.json())  // Aseguramos que la respuesta sea en JSON
+    .then(data => {
+        if (data.status === 'success') {
+            // Redirigir según el tipo de usuario
+            if (data.userType === 'admin') {
+                window.location.href = 'MenuGestor.jsp';
+            } else if (data.userType === 'cliente') {
+                window.location.href = 'MenuCliente.html';
+            }
+        } else {
+            // Si hay error, mostramos el mensaje
+            throw new Error(data.message);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        errorMessage.textContent = error.message || "Ocurrió un error al procesar la solicitud.";
+    });
 });
-
-
-

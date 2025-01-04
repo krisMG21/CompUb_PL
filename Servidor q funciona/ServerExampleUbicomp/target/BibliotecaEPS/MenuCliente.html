@@ -5,42 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú de Opciones</title>
     <style>
+        /* Estilos generales */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            background-color: #f5f5f5;
+            background-color: #e3f2fd; /* Fondo azul pastel */
+            box-sizing: border-box;
         }
+
+        /* Título */
         h1 {
-            color: #333;
-            margin-bottom: 20px;
+            color: #0288d1; /* Azul más oscuro */
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            font-weight: 600;
         }
+
+        /* Contenedor de los botones */
         .menu-container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
         }
+
+        /* Estilo de los botones */
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #007bff;
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #81d4fa; /* Azul pastel para los botones */
             color: white;
-            border: none;
-            border-radius: 5px;
+            border: 2px solid #4fc3f7;
+            border-radius: 12px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            width: 280px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+
+        /* Efecto hover */
         button:hover {
-            background-color: #0056b3;
+            background-color: #4fc3f7;
+            transform: translateY(-3px); /* Efecto de elevación */
+        }
+
+        /* Efecto de clic */
+        button:active {
+            background-color: #0288d1;
+            transform: translateY(1px);
+        }
+
+        /* Estilo responsivo para dispositivos móviles */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            button {
+                width: 220px;
+            }
         }
     </style>
 </head>
 <body>
+
     <h1>Menú de Opciones</h1>
    
     <div class="menu-container">
@@ -49,6 +83,7 @@
         <button onclick="window.location.href='opcionEClienteBase.html'">Estadísticas</button>
         <button onclick="window.location.href='opcionMapaCliente.html'">Mapa</button> 
     </div>
-   <script src="Scripts/OpcionesMenuCliente.js" defer></script>
+
+    <script src="Scripts/OpcionesMenuCliente.js" defer></script>
 </body>
 </html>

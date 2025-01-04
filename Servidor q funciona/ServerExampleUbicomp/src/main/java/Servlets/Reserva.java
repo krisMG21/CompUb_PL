@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import org.json.JSONObject;
 import Logic.Log;
 
-@WebServlet(name = "Reserva", urlPatterns = {"/Reserva"})
+//@WebServlet(name = "Reserva", urlPatterns = {"/Reserva"})
 public class Reserva extends HttpServlet {
     
     private static final long serialVersionUID = 1L;

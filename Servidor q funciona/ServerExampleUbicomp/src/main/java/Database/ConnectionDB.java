@@ -122,6 +122,10 @@ public class ConnectionDB
     }
     
     //************** CALLS TO THE DATABASE ***************************//
+    
+    public static PreparedStatement ConnectionDB(Connection con) {
+        return getStatement(con, "SELECT * FROM biblioteca.Usuarios WHERE email = ? AND passw = ?");
+    }
 
     public static PreparedStatement GetTarjetaFromUsuario(Connection con) {
         return getStatement(con, "SELECT idTarjeta FROM Usuarios WHERE email=?");
