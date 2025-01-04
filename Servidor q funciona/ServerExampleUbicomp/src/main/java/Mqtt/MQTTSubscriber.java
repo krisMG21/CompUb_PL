@@ -1,46 +1,21 @@
 package Mqtt;
 
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-
-//import Database.Topics;
 import Logic.Log;
-import java.sql.PreparedStatement;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import Database.ConnectionDB;
+
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class MQTTSubscriber implements MqttCallback {
     
     private static MqttClient client;
-    private static Connection connection;
-    
-    public MQTTSubscriber(String dbUrl, String dbUser, String dbPassword) {
-        try {
-            // Establecer la conexión a la base de datos
-            connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-            Log.logmqtt.info("Conexión a la base de datos establecida con éxito.");
-        } catch (SQLException e) {
-            Log.logmqtt.error("Error al establecer la conexión con la base de datos: {}", e.getMessage());
-            throw new RuntimeException("No se pudo establecer la conexión con la base de datos", e);
-        }
-    }
+    private ConnectionDB dbConnection;
 
-    // Método para cerrar la conexión
-    public void closeConnection() {
-        if (connection != null) {
-            try {
-                connection.close();
-                Log.logmqtt.info("Conexión a la base de datos cerrada con éxito.");
-            } catch (SQLException e) {
-                Log.logmqtt.error("Error al cerrar la conexión con la base de datos: {}", e.getMessage());
-            }
-        }
+    public MQTTSubscriber() {
+        this.dbConnection = new ConnectionDB();
     }
 
     public void subscribeTopic(MQTTBroker broker, String topic) {
@@ -61,7 +36,7 @@ public class MQTTSubscriber implements MqttCallback {
         }
     }
     
-    private static void connectClient(MQTTBroker broker) throws MqttException{
+    private static void connectClient(MQTTBroker broker) throws MqttException {
         MemoryPersistence persistence = new MemoryPersistence();
         client = new MqttClient(broker.getBroker(), broker.getClientId(), persistence);
         MqttConnectOptions connOpts = new MqttConnectOptions();
@@ -84,87 +59,79 @@ public class MQTTSubscriber implements MqttCallback {
     }
     
     @Override
-    public void messageArrived(String topic, MqttMessage message) throws Exception {
-        // Mostrar mensaje recibido
+    public void messageArrived(String topic, MqttMessage message) {
         Log.logmqtt.info("Tópico recibido: {} - Mensaje: {}", topic, message.toString());
-
-        // Parsear el mensaje recibido
         String sensorData = message.toString();
-
-        // Insertar en la base de datos
-        storeDataInDatabase(topic, sensorData);
+        Connection connection = null;
+        try {
+            connection = dbConnection.obtainConnection(true);
+            storeDataInDatabase(connection, topic, sensorData);
+            dbConnection.closeTransaction(connection);
+        } catch (Exception e) {
+            Log.logmqtt.error("Error processing message: {}", e.getMessage());
+            if (connection != null) {
+                dbConnection.cancelTransaction(connection);
+            }
+        } finally {
+            if (connection != null) {
+                dbConnection.closeConnection(connection);
+            }
+        }
     }
     
-    private void storeDataInDatabase(String topic, String data) {
+    private void storeDataInDatabase(Connection connection, String topic, String data) throws SQLException {
         String[] parts = topic.split("/");
-        String topic_espacio = parts[0]; // e.g., "cubiculo" or "sala"
-        String topic_ID = parts[1];       // e.g., "1" (the ID)
-        String topic_comp = parts[2];      // e.g., "ocupado" or "light"
+        if (parts.length != 3) {
+            Log.logmqtt.warn("Invalid topic format: {}", topic);
+            return;
+        }
+        String topic_espacio = parts[0];
+        String topic_ID = parts[1];
+        String topic_comp = parts[2];
 
         if ("ocupado".equals(topic_comp)) {
-            updateDataOcupacion(topic_espacio, topic_ID, data);
+            updateDataOcupacion(connection, topic_espacio, topic_ID, data);
         } else {
-            insertLectura(topic_espacio, topic_ID, topic_comp, data);
+            insertLectura(connection, topic_espacio, topic_ID, topic_comp, data);
         }
-        
     }
     
-    private void updateDataOcupacion(String topic_espacio, String topic_ID, String data) {
-        String sql = "UPDATE Cubiculos SET ocupado = ? WHERE idCubiculo = ?";
+    private void updateDataOcupacion(Connection connection, String topic_espacio, String topic_ID, String data) throws SQLException {
+        String sql = "cubiculo".equals(topic_espacio) 
+            ? "UPDATE Cubiculos SET ocupado = ? WHERE idCubiculo = ?"
+            : "UPDATE Salas SET ocupada = ? WHERE idSala = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, Integer.parseInt(data));
             preparedStatement.setInt(2, Integer.parseInt(topic_ID));
 
-            // Ejecutar la consulta
             int rowsAffected = preparedStatement.executeUpdate();
-
             if (rowsAffected > 0) {
-                Log.logmqtt.info("Ocupación de {} {} actualizada en la base de datos con éxito",
-                        topic_espacio,
-                        topic_ID);
+                Log.logmqtt.info("Ocupación de {} {} actualizada en la base de datos con éxito", topic_espacio, topic_ID);
             } else {
-                Log.logmqtt.warn("No se encontró el {} con ID {} para actualizar",
-                        topic_espacio,
-                        topic_ID);
+                Log.logmqtt.warn("No se encontró el {} con ID {} para actualizar", topic_espacio, topic_ID);
             }
-        } catch (SQLException e) {
-            Log.logmqtt.error("Error al actualizar ocupaciones en la base de datos: {}", e.getMessage());
         }
     }
 
-    
-    private void insertLectura(String topic_espacio, String topic_ID, String topic_comp, String data){
-        try {
-            // Preparar la sentencia SQL para insertar los datos
-            String sql = "INSERT INTO LecturaSensores (idSensor, valor, idCubiculo, idSala, fechaHora) VALUES (?, ?, ?, ?, NOW())";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-
-            // Extraer idSensor del tópico (asumimos que el tópico es algo como "station1/light")
-            int sensorId = getSensorId(topic_comp); // Ejemplo: "light" -> 1
-
+    private void insertLectura(Connection connection, String topic_espacio, String topic_ID, String topic_comp, String data) throws SQLException {
+        String sql = "INSERT INTO LecturaSensores (idSensor, valor, idCubiculo, idSala, fechaHora) VALUES (?, ?, ?, ?, NOW())";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            int sensorId = getSensorId(topic_comp);
             preparedStatement.setInt(1, sensorId);
             preparedStatement.setInt(2, Integer.parseInt(data));
-
             if ("cubiculo".equals(topic_espacio)) {
                 preparedStatement.setInt(3, Integer.parseInt(topic_ID));
-                preparedStatement.setInt(4, 0);
+                preparedStatement.setNull(4, java.sql.Types.INTEGER);
             } else {
-                preparedStatement.setInt(3, 0);
+                preparedStatement.setNull(3, java.sql.Types.INTEGER);
                 preparedStatement.setInt(4, Integer.parseInt(topic_ID));
             }
-
-            // Ejecutar la consulta
             preparedStatement.executeUpdate();
-            Log.logmqtt.info("Lectura de {} {} insertada en la base de datos con éxito.",
-                    topic_espacio,
-                    topic_ID);
-        } catch (SQLException e) {
-            Log.logmqtt.error("Error al insertar lectura en la base de datos: ", e);
+            Log.logmqtt.info("Lectura de {} {} insertada en la base de datos con éxito.", topic_espacio, topic_ID);
         }
     }
 
-    // Método para mapear el nombre del sensor a su id
     private int getSensorId(String sensorName) {
         return switch (sensorName) {
             case "hum" -> 1;
@@ -173,11 +140,11 @@ public class MQTTSubscriber implements MqttCallback {
             case "luz" -> 4;
             case "ocupado" -> 5;
             default -> 0;
-        }; // agregar más sensores si es necesario
+        };
     }
 
     @Override
     public void deliveryComplete(IMqttDeliveryToken token) {
-        // No necesario en nuestro caso
+        // No es necesario implementar para un suscriptor
     }
 }

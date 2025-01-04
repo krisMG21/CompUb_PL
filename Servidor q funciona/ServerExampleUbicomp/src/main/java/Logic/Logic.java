@@ -1,6 +1,6 @@
 package Logic;
 
-import Database.ConectionDDBB;
+import Database.ConnectionDB;
 import java.util.ArrayList;
 import java.util.Date;
 import java.sql.Connection;
@@ -15,14 +15,14 @@ public class Logic
 	{
 		ArrayList<Measurement> values = new ArrayList<Measurement>();
 		
-		ConectionDDBB conector = new ConectionDDBB();
+		ConnectionDB conector = new ConnectionDB();
 		Connection con = null;
 		try
 		{
 			con = conector.obtainConnection(true);
 			Log.log.info("Database Connected");
 			
-			PreparedStatement ps = ConectionDDBB.GetDataBD(con);
+			PreparedStatement ps = ConnectionDB.GetDataBD(con);
 			Log.log.info("Query=>" + ps.toString());
 			ResultSet rs = ps.executeQuery();
 			while (rs.next())
@@ -53,14 +53,14 @@ public class Logic
 	{
 		ArrayList<Measurement> values = new ArrayList<Measurement>();
 		
-		ConectionDDBB conector = new ConectionDDBB();
+		ConnectionDB conector = new ConnectionDB();
 		Connection con = null;
 		try
 		{
 			con = conector.obtainConnection(true);
 			Log.log.info("Database Connected");
 
-			PreparedStatement ps = ConectionDDBB.SetDataBD(con);
+			PreparedStatement ps = ConnectionDB.SetDataBD(con);
 			ps.setInt(1, value);
 			ps.setTimestamp(2, new Timestamp((new Date()).getTime()));
 			Log.log.info("Query=>" + ps.toString());

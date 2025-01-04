@@ -1,6 +1,6 @@
 package Servlets;
 
-import Database.ConectionDDBB;
+import Database.ConnectionDB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -30,7 +30,7 @@ public class Login extends HttpServlet {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
 
-        ConectionDDBB connectionDB = new ConectionDDBB();
+        ConnectionDB connectionDB = new ConnectionDB();
         Connection conexionBD = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultadosConsulta = null;

@@ -4,7 +4,7 @@
  */
 package Servlets;
 
-import Database.ConectionDDBB;
+import Database.ConnectionDB;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,7 +32,7 @@ public class Reserva extends HttpServlet{
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         
-        ConectionDDBB connectionBD = new ConectionDDBB();
+        ConnectionDB connectionBD = new ConnectionDB();
         Connection conexionBD = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultadosConsulta = null;

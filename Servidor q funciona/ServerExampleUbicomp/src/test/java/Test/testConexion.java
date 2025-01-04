@@ -1,11 +1,11 @@
 package Test;
 
-import Database.ConectionDDBB;
+import Database.ConnectionDB;
 import java.sql.Connection;
 
 public class testConexion {
     public static void main(String[] args) {
-        ConectionDDBB db = new ConectionDDBB();
+        ConnectionDB db = new ConnectionDB();
         try (Connection con = db.obtainConnection(false)) {
             if (con != null) {
                 System.out.println("Connection successful: " + con);

@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 import Logic.Log;
 
 
-public class ConectionDDBB
+public class ConnectionDB
 {
 	public Connection obtainConnection(boolean autoCommit) throws NullPointerException
     {
