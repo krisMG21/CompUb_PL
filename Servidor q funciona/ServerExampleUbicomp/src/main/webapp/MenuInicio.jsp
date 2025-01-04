@@ -3,12 +3,16 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <!-- Se define el conjunto de caracteres a UTF-8, que soporta caracteres especiales. -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- La etiqueta meta viewport ayuda a que la página sea responsiva en dispositivos móviles. -->
     <title>Iniciar sesión</title>
+    <!-- Título que se muestra en la pestaña del navegador. -->
     <style>
+        /* Estilos CSS para dar formato y diseño a la página. */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f0f8ff; /* Azul pastel */
+            background-color: #f0f8ff; 
             color: #333;
             margin: 0;
             padding: 0;
@@ -20,10 +24,10 @@
         }
         h2 {
             text-align: center;
-            color: #4682b4; /* Azul acero */
+            color: #4682b4;
         }
         form {
-            background-color: #ffffff; /* Fondo blanco */
+            background-color: #ffffff; 
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -68,29 +72,33 @@
     </style>
 </head>
 <body>
-    <!-- Imagen decorativa -->
+    <!-- Imagen decorativa, se muestra en la esquina superior derecha -->
     <img src="Fotos/LogoUAH.png" alt="Logo" class="header-image">
 
     <div>
+        <!-- Título de la página -->
         <h2>Iniciar sesión</h2>
-        <!--<form id="FormularioLogin" method="POST">-->
+        
+        <!-- Formulario para ingresar las credenciales -->
         <form action="LoginServlet" method="POST">
+            <!-- Campo para el email del usuario -->
             <label for="username">Email:</label>
             <input type="text" id="username" name="username" required><br>
 
+            <!-- Campo para la contraseña del usuario -->
             <label for="password">Contraseña:</label>
             <input type="password" id="password" name="password" required><br>
 
+            <!-- Botón para enviar el formulario -->
             <button type="submit">Iniciar sesión</button>
         </form>
 
-        <!-- Área para mostrar mensajes de error -->
+        <!-- Área para mostrar mensajes de error, si el servlet genera alguno -->
         <div id="errorMessage">
-            <!-- Si el servlet manda un error, se muestra aquí -->
+            <!-- Aquí se muestra el error si existe (en caso de que el servlet lo mande) -->
             <%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>
         </div>
     </div>
 
-    <!--<script src="./Scripts/FormularioLogin.js"></script>-->
 </body>
 </html>

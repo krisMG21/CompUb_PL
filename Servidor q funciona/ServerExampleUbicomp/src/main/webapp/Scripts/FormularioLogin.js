@@ -1,3 +1,5 @@
+
+//No se usa
 document.getElementById('FormularioLogin').addEventListener('submit', function (event) {
     event.preventDefault(); // Evitar recargar la página
 
