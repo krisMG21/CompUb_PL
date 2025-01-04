@@ -1,55 +1,45 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
 package Servlets;
 
-import Database.ConnectionDB;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.io.PrintWriter;
 
-import jakarta.servlet.annotation.WebServlet;
-import java.sql.Timestamp;
-
-@WebServlet(name = "Reserva", urlPatterns = {"/Reserva"})
-public class Reserva extends HttpServlet{
+/**
+ *
+ * @author fatim
+ */
+@WebServlet(name = "Estadisticas", urlPatterns = {"/Estadisticas"})
+public class AccesoSala extends HttpServlet {
     
     private static final long serialVersionUID = 1L;
     
-    public Reserva(){
-        super();
-    }
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
     
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        
-        ConnectionDB connectionDB = new ConnectionDB();
-        Connection conexionBD = null;
-        PreparedStatement preparedStatement = null;
-        ResultSet resultadosConsulta = null;
-        
-        try{
-            // Obtener la conexión a la base de datos
-            conexionBD = connectionDB.obtainConnection(true);
-            
-            // Leer los parámetros enviados desde el formulario
-            String user = request.getParameter("username");
-            String passw = request.getParameter("password");
-        } finally {
-            // En vez de esto un catch con el error adecuao
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
             
         }
     }
-    
-        // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
      *

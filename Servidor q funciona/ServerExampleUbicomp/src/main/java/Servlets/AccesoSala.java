@@ -4,23 +4,21 @@
  */
 package Servlets;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
- *
- * @author fatim
+ * Servlet para asignar a cada circuito de sala el UID correspondiente???
+ * @author crist
  */
-@WebServlet(name = "Estadisticas", urlPatterns = {"/Estadisticas"})
-public class Estadisticas extends HttpServlet {
-    
-    private static final long serialVersionUID = 1L;
-    
+@WebServlet(name = "AccesoSala", urlPatterns = {"/AccesoSala"})
+public class AccesoSala extends HttpServlet {
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -30,7 +28,6 @@ public class Estadisticas extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -39,46 +36,15 @@ public class Estadisticas extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Estadisticas</title>");
+            out.println("<title>Servlet AccesoSala</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Estadisticas at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet AccesoSala at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
     }
 
-
-   /* const EstadisticaBBDD = {
-            salas: {
-                "1": {
-                    reservas: 5,
-                    tiempo: 12 // horas totales reservadas
-                },
-                "2": {
-                    reservas: 3,
-                    tiempo: 6
-                }
-            },
-            cubiculos: {
-                "1": {
-                    ocupado: "Sí",
-                    ruido: "30%",
-                    humedad: "40%"
-                },
-                "2": {
-                    ocupado: "No",
-                    ruido: "20%",
-                    humedad: "35%"
-                },
-                "3": {
-                    ocupado: "Sí",
-                    ruido: "25%",
-                    humedad: "45%"
-                }
-            }
-        };
-*/
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.
@@ -115,8 +81,7 @@ public class Estadisticas extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Servlet dedicado a realización y envío de estadísticas "
-                + "a partir de los datos de lecturas almacenados.";
+        return "Short description";
     }// </editor-fold>
 
 }

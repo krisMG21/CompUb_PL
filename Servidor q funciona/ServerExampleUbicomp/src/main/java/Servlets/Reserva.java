@@ -18,7 +18,7 @@ import java.sql.ResultSet;
 import jakarta.servlet.annotation.WebServlet;
 import java.sql.Timestamp;
 
-//@WebServlet(name = "Reserva", urlPatterns = {"/Reserva"})
+@WebServlet(name = "Reserva", urlPatterns = {"/Reserva"})
 public class Reserva extends HttpServlet{
     
     private static final long serialVersionUID = 1L;

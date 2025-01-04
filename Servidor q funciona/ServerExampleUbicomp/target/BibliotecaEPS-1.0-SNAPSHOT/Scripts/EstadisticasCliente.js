@@ -89,5 +89,6 @@
         }
 
         // Inicializar el menú desplegable al cargar la página
-        window.onload = actualizarMenu;
-    
+        window.onload = function(){
+            actualizarMenu();
+        };

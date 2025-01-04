@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <link rel="stylesheet" href="styles.css" type="text/css">
+ 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estadísticas</title>
@@ -16,19 +18,18 @@
             justify-content: flex-start;
             min-height: 100vh;
         }
+        
         h1 {
             margin-top: 30px;
             color: #333;
         }
-        .container {
-            width: 80%;
-            margin-top: 20px;
-        }
+
         select, button {
             padding: 10px;
             font-size: 16px;
             margin-top: 10px;
         }
+
         .result {
             margin-top: 20px;
             padding: 20px;
@@ -36,9 +37,11 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+
         .result h3 {
             color: #333;
         }
+
         .result p {
             color: #555;
         }
@@ -48,21 +51,25 @@
     <h1>Estadísticas</h1>
 
     <div class="container">
-        <!-- Menú para seleccionar Salas o Cubículos -->
-        <label for="tipo">Selecciona el tipo de información:</label>
-        <select id="tipo" onchange="actualizarMenu()">
-            <option value="salas">Salas</option>
-            <option value="cubiculos">Cubículos</option>
-        </select>
+        <div>
+            <!-- Menú para seleccionar Salas o Cubículos -->
+            <label for="tipo">Selecciona el tipo de información:</label>
+            <select id="tipo" onchange="actualizarMenu()">
+                <option value="salas">Salas</option>
+                <option value="cubiculos">Cubículos</option>
+            </select>
+        </div>
 
-        <!-- Menú dependiente para seleccionar Sala o Cubículo -->
-        <label for="elemento">Selecciona la Sala o Cubículo:</label>
-        <select id="elemento">
-            <!-- Las opciones se llenarán dinámicamente -->
-        </select>
+        <div>
+            <!-- Menú dependiente para seleccionar Sala o Cubículo -->
+            <label for="elemento">Selecciona la Sala o Cubículo:</label>
+            <select id="elemento">
+                <!-- Las opciones se llenarán dinámicamente -->
+            </select>
 
-        <!-- Botón para mostrar la información -->
-        <button onclick="mostrarEstadisticas()">Mostrar Estadísticas</button>
+            <!-- Botón para mostrar la información -->
+            <button onclick="mostrarEstadisticas()">Mostrar Estadísticas</button>
+        </div>
         
         <!-- Sección para mostrar las estadísticas -->
         <div class="result" id="resultado">
@@ -71,6 +78,6 @@
         </div>
     </div>
 
-    <script>src="./EstadisticasCliente.js"</script>
+    <script src="./Scripts/EstadisticasCliente.js"></script>
 </body>
 </html>

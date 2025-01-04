@@ -6,7 +6,7 @@ import jakarta.servlet.annotation.WebListener;
 
 import Mqtt.MQTTBroker;
 import Mqtt.MQTTPublisher;
-import Mqtt.MQTTSuscriber;
+import Mqtt.MQTTSubscriber;
 
 /**
  * ES: Clase encargada de inicializar el sistema y de lanzar el hilo de
@@ -32,9 +32,9 @@ public class Projectinitializer implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
         Log.log.info("-->Suscribe Topics<--");
         MQTTBroker broker = new MQTTBroker();
-        MQTTSuscriber suscriber = new MQTTSuscriber();
+        MQTTSubscriber suscriber = new MQTTSubscriber();
         //suscriber.suscribeTopic(broker, "otraPrueba");
-        suscriber.suscribeTopic(broker, "#");
+        suscriber.subscribeTopic(broker, "#");
         //MQTTPublisher.publish(broker, "test", "Hello from Tomcat :)");
     }
 }
