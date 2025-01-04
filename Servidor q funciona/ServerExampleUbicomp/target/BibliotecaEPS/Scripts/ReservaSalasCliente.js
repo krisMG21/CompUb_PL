@@ -24,11 +24,11 @@ function mostrarFranjas() {
 }
 
 // Función que maneja la selección de una franja horaria
-function reservar(sala, franja) {
+function reservar(sala, franja, event) {
     // Si la franja está disponible, marcamos la selección
-    if (event.target.classList.contains("disponible")) {
+    if (event.target.classList.contains("hora-disponible")) {
         // Limpiamos la selección anterior, si la había
-        const horas = document.querySelectorAll(".hora");
+        const horas = document.querySelectorAll(".hora-disponible");
         horas.forEach(hora => hora.classList.remove("seleccionada"));
 
         // Marcamos la franja horaria seleccionada
@@ -42,6 +42,7 @@ function reservar(sala, franja) {
         document.getElementById("reservarBtn").disabled = false;
     }
 }
+
 
 // Función que realiza la reserva
 function realizarReserva() {

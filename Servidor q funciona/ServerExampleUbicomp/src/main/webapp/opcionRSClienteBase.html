@@ -89,12 +89,12 @@
         <div class="sala">
             <h2>Sala 1</h2>
             <!-- Franjas Horarias -->
-            <div class="hora-disponible" data-hora="08:00-10:00" onclick="reservar('sala1', '08:00-10:00')">08:00 - 10:00</div>
-            <div class="hora-disponible" data-hora="10:00-12:00" onclick="reservar('sala1', '10:00-12:00')">10:00 - 12:00</div>
-            <div class="hora-disponible" data-hora="12:00-14:00" onclick="reservar('sala1', '12:00-14:00')">12:00 - 14:00</div>
-            <div class="hora-disponible" data-hora="14:00-16:00" onclick="reservar('sala1', '14:00-16:00')">14:00 - 16:00</div>
-            <div class="hora-disponible" data-hora="16:00-18:00" onclick="reservar('sala1', '16:00-18:00')">16:00 - 18:00</div>
-            <div class="hora-disponible" data-hora="18:00-20:00" onclick="reservar('sala1', '18:00-20:00')">18:00 - 20:00</div>
+            <div class="hora-disponible" data-hora="08:00-10:00" onclick="reservar('sala1', '08:00-10:00', event)">08:00 - 10:00</div>
+            <div class="hora-disponible" data-hora="10:00-12:00" onclick="reservar('sala1', '10:00-12:00', event)">10:00 - 12:00</div>
+            <div class="hora-disponible" data-hora="12:00-14:00" onclick="reservar('sala1', '12:00-14:00', event)">12:00 - 14:00</div>
+            <div class="hora-disponible" data-hora="14:00-16:00" onclick="reservar('sala1', '14:00-16:00', event)">14:00 - 16:00</div>
+            <div class="hora-disponible" data-hora="16:00-18:00" onclick="reservar('sala1', '16:00-18:00', event)">16:00 - 18:00</div>
+            <div class="hora-disponible" data-hora="18:00-20:00" onclick="reservar('sala1', '18:00-20:00', event)">18:00 - 20:00</div>
         </div>
     </div>
 
@@ -102,17 +102,17 @@
         <div class="sala">
             <h2>Sala 2</h2>
             <!-- Franjas Horarias -->
-            <div class="hora-disponible" data-hora="08:00-10:00" onclick="reservar('sala2', '08:00-10:00')">08:00 - 10:00</div>
-            <div class="hora-disponible" data-hora="10:00-12:00" onclick="reservar('sala2', '10:00-12:00')">10:00 - 12:00</div>
-            <div class="hora-disponible" data-hora="12:00-14:00" onclick="reservar('sala2', '12:00-14:00')">12:00 - 14:00</div>
-            <div class="hora-disponible" data-hora="14:00-16:00" onclick="reservar('sala2', '14:00-16:00')">14:00 - 16:00</div>
-            <div class="hora-disponible" data-hora="16:00-18:00" onclick="reservar('sala2', '16:00-18:00')">16:00 - 18:00</div>
-            <div class="hora-disponible" data-hora="18:00-20:00" onclick="reservar('sala2', '18:00-20:00')">18:00 - 20:00</div>
+            <div class="hora-disponible" data-hora="08:00-10:00" onclick="reservar('sala2', '08:00-10:00', event)">08:00 - 10:00</div>
+            <div class="hora-disponible" data-hora="10:00-12:00" onclick="reservar('sala2', '10:00-12:00', event)">10:00 - 12:00</div>
+            <div class="hora-disponible" data-hora="12:00-14:00" onclick="reservar('sala2', '12:00-14:00', event)">12:00 - 14:00</div>
+            <div class="hora-disponible" data-hora="14:00-16:00" onclick="reservar('sala2', '14:00-16:00', event)">14:00 - 16:00</div>
+            <div class="hora-disponible" data-hora="16:00-18:00" onclick="reservar('sala2', '16:00-18:00', event)">16:00 - 18:00</div>
+            <div class="hora-disponible" data-hora="18:00-20:00" onclick="reservar('sala2', '18:00-20:00', event)">18:00 - 20:00</div>
         </div>
     </div>
 
     <button id="reservarBtn" disabled onclick="realizarReserva()">Reservar</button>
 
-    <script src="./Scripts/OpcionRSCliente.js"></script>
+    <script src="./Scripts/ReservaSalasCliente.js"></script>
 </body>
 </html>
