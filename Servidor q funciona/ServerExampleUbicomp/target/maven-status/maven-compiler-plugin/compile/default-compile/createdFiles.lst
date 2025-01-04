@@ -3,7 +3,9 @@ Database\Topics.class
 Logic\Log.class
 Servlets\PerfilUsuarioServlet.class
 Database\ConectionDDBB.class
+Servlets\AccesoSala.class
 Database\Sensores.class
+Mqtt\MQTTSubscriber.class
 Mqtt\MQTTBroker.class
 Database\Cubiculos.class
 Database\LecturaSensores.class
@@ -18,4 +20,3 @@ Servlets\GetData.class
 Logic\Measurement.class
 Mqtt\MQTTPublisher.class
 Database\Salas.class
-Mqtt\MQTTSuscriber.class

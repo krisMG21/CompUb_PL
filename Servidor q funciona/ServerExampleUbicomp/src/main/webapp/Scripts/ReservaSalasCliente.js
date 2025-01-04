@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/JavaScript.js to edit this template
  */
 
-/*
+
 // Variable para almacenar la sala y franja seleccionada
 let salaSeleccionada = "";
 let franjaSeleccionada = "";
@@ -61,4 +61,4 @@ function realizarReserva() {
         const salas = document.querySelectorAll(".sala-container");
         salas.forEach(salaContainer => salaContainer.style.display = "none");
     }
-}*/
+}

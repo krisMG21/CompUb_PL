@@ -21,7 +21,7 @@ public class MQTTSuscriber implements MqttCallback {
     public static void main(String[] args) {
         try {
             // Establecer conexión con la base de datos
-            connection = DriverManager.getConnection("jdbc:mysql://192.168.10.134:3306/BibliotecaUAH", "ubicua", "ubicua");
+            connection = DriverManager.getConnection("jdbc:mysql://192.168.1.50:3306/biblioteca", "ubicua", "ubicua");
             logger.info("Conexión con la base de datos establecida.");
 
             // Iniciar el suscriptor MQTT
