@@ -15,7 +15,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-//@WebServlet(name = "EstadisticasCliente", urlPatterns = {"/EstadisticasCliente"})
+@WebServlet(name = "EstadisticasCliente", urlPatterns = {"/EstadisticasCliente"})
 public class EstadisticasCliente extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -38,9 +38,13 @@ public class EstadisticasCliente extends HttpServlet {
             // Obtener salas libres
             JSONArray salasLibres = getSalasLibres(connection);
 
+            // Obtener grado de ocupación
+            JSONObject ocupacionCubiculos = getOcupacionCubiculos(connection);
+
             // Construir la respuesta JSON
             jsonResponse.put("cubiculos", cubiculosLibres);
             jsonResponse.put("salas", salasLibres);
+            jsonResponse.put("ocupacion", ocupacionCubiculos); // Incluir ocupación en la respuesta
 
             response.getWriter().write(jsonResponse.toString());
         } catch (SQLException e) {
@@ -86,5 +90,32 @@ public class EstadisticasCliente extends HttpServlet {
             }
         }
         return salasLibres;
+    }
+
+    private JSONObject getOcupacionCubiculos(Connection connection) throws SQLException {
+        JSONObject ocupacion = new JSONObject();
+
+        // Consulta para obtener el número de cubículos ocupados
+        String queryOcupados = "SELECT COUNT(*) AS ocupados FROM biblioteca.Cubiculos WHERE ocupado = 1";
+        try (PreparedStatement stmt = connection.prepareStatement(queryOcupados);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                ocupacion.put("ocupados", rs.getInt("ocupados"));
+            }
+        }
+
+        // Consulta para obtener el número total de cubículos
+        String queryTotal = "SELECT COUNT(*) AS total FROM biblioteca.Cubiculos";
+        try (PreparedStatement stmt = connection.prepareStatement(queryTotal);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                ocupacion.put("total", rs.getInt("total"));
+                ocupacion.put("disponibles", rs.getInt("total") - ocupacion.getInt("ocupados"));
+            }
+        }
+
+        return ocupacion;
     }
 }

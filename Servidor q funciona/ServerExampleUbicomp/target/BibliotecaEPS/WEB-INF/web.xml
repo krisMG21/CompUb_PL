@@ -52,4 +52,15 @@
         <servlet-name>EstadisticasCliente</servlet-name>
         <url-pattern>/EstadisticasCliente</url-pattern>
     </servlet-mapping>
+    
+        <!--  Declaración del servlet  -->
+    <servlet>
+        <servlet-name>EstadisticasGestor</servlet-name>
+        <servlet-class>Servlets.EstadisticasGestor</servlet-class>
+    </servlet>
+    <!--  Mapeo del servlet  -->
+    <servlet-mapping>
+        <servlet-name>EstadisticasGestor</servlet-name>
+        <url-pattern>/EstadisticasGestor</url-pattern>
+    </servlet-mapping>
 </web-app>
