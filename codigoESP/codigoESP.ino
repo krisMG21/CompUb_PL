@@ -149,9 +149,11 @@ void loop() {
             if (sala_abierta){
                 servo.write(0);
                 sala_abierta = false;
+                publish(topic+"ocupado", std::to_string(false));
             } else {
                 servo.write(180);
                 sala_abierta = true;
+                publish(topic+"ocupado", std::to_string(true));
             }
         }
 

@@ -98,8 +98,8 @@ public class MQTTSubscriber implements MqttCallback {
     
     private void updateDataOcupacion(Connection connection, String topic_espacio, String topic_ID, String data) throws SQLException {
         String sql = "cubiculo".equals(topic_espacio) 
-            ? "UPDATE Cubiculos SET ocupado = ? WHERE idCubiculo = ?"
-            : "UPDATE Salas SET ocupada = ? WHERE idSala = ?";
+            ? "UPDATE biblioteca.Cubiculos SET ocupado = ? WHERE idCubiculo = ?"
+            : "UPDATE biblioteca.Salas SET ocupada = ? WHERE idSala = ?";
 
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             preparedStatement.setInt(1, Integer.parseInt(data));
@@ -115,7 +115,7 @@ public class MQTTSubscriber implements MqttCallback {
     }
 
     private void insertLectura(Connection connection, String topic_espacio, String topic_ID, String topic_comp, String data) throws SQLException {
-        String sql = "INSERT INTO LecturaSensores (idSensor, valor, idCubiculo, idSala, fechaHora) VALUES (?, ?, ?, ?, NOW())";
+        String sql = "INSERT INTO biblioteca.LecturaSensores (idSensor, valor, idCubiculo, idSala, fechaHora) VALUES (?, ?, ?, ?, NOW())";
         try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
             int sensorId = getSensorId(topic_comp);
             preparedStatement.setInt(1, sensorId);
