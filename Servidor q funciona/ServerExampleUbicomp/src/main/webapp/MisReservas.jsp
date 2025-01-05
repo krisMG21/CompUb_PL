@@ -1,6 +1,8 @@
-<%@ page import="java.util.ArrayList, java.util.Calendar, java.text.SimpleDateFormat, java.util.Date" %>
-<%@ page import="Logic.Logic" %>
-<%@ page import="Database.Reservas" %>
+<%@page import="java.util.Set"%>
+<%@page import="java.util.HashSet"%>
+<%@page import="java.util.ArrayList, java.util.Calendar, java.text.SimpleDateFormat, java.util.Date" %>
+<%@page import="Logic.Logic" %>
+<%@page import="Database.Reservas" %>
 
 <%
     // Verifica si el usuario está autenticado, redirige si no
@@ -103,6 +105,10 @@
                     // Obtén las reservas del usuario desde la clase Logic
                     ArrayList<Reservas> reservas = Logic.getReservasPorEmail(email);
 
+                    // Elimina posibles duplicados (si alguna vez se producen)
+                    Set<Reservas> reservasUnicas = new HashSet<>(reservas);  // Set eliminará duplicados
+                    reservas = new ArrayList<>(reservasUnicas);
+
                     if (reservas.isEmpty()) {
                 %>
                 <p class="alert">No tienes reservas.</p>
@@ -125,7 +131,7 @@
                         <%
                             if (puedeCancelar) {
                         %>
-                        <button class="cancelarReserva" data-id="<%= reserva.getIdSala() %>" data-hora="<%= sdf.format(reserva.getHoraReserva()) %>">Cancelar</button>
+                        <button class="cancelarReserva" data-id="<%= reserva.getIdSala() %>" data-hora="<%= sdf.format(reserva.getHoraReserva()) %>" data-email="<%= email %>">Cancelar</button>
                         <%
                             } else {
                         %>
@@ -148,27 +154,22 @@
             $(document).on('click', '.cancelarReserva', function () {
                 var idSala = $(this).data('id');
                 var horaReserva = $(this).data('hora');
-                var email = '<%= session.getAttribute("email") != null ? session.getAttribute("email") : "" %>';
-
-                if (email === "") {
-                    alert("Debes estar logueado para cancelar una reserva.");
-                    return;
-                }
+                var email = $(this).data('email');  // Obtén el email desde el atributo de data-email
 
                 $.ajax({
-                    url: 'CancelarReserva',
+                    url: 'CancelarReserva',  // El Servlet sigue igual
                     type: 'POST',
                     data: {
-                        email: email,
+                        emailReserva: email,  // Envia el email correctamente con el nombre de parámetro adecuado
                         idSala: idSala,
                         horaReserva: horaReserva
                     },
                     success: function (response) {
                         if (response.success) {
                             alert(response.message);
-                            location.reload();
+                            location.reload();  // Recarga la página para reflejar la cancelación
                         } else {
-                            alert(response.message);
+                            alert(response.message);  // Muestra el error
                         }
                     },
                     error: function (xhr, status, error) {

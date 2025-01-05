@@ -196,6 +196,51 @@ public static boolean cancelarReserva(String email, int idSala, Timestamp horaRe
 
     return exito;
 }
+public static ArrayList<Reservas> getReservas(String filtroEmail, String filtroFecha) {
+    ArrayList<Reservas> reservas = new ArrayList<>();
+    ConnectionDB conector = new ConnectionDB();
+    Connection con = null;
+
+    try {
+        con = conector.obtainConnection(true);
+        
+        // Construcción de la consulta con los filtros
+        StringBuilder sql = new StringBuilder("SELECT idSala_sala, horaReserva, email_usuario FROM biblioteca.Reservas WHERE 1=1 ");
+        
+        if (filtroEmail != null && !filtroEmail.isEmpty()) {
+            sql.append("AND email_usuario LIKE ? ");
+        }
+        if (filtroFecha != null && !filtroFecha.isEmpty()) {
+            sql.append("AND DATE(horaReserva) = ? ");
+        }
+        
+        PreparedStatement ps = con.prepareStatement(sql.toString());
+        
+        int index = 1;
+        if (filtroEmail != null && !filtroEmail.isEmpty()) {
+            ps.setString(index++, "%" + filtroEmail + "%");
+        }
+        if (filtroFecha != null && !filtroFecha.isEmpty()) {
+            ps.setString(index++, filtroFecha);  // Asegúrate de que el formato de fecha sea correcto
+        }
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Reservas reserva = new Reservas();
+            reserva.setIdSala(rs.getInt("idSala_sala"));
+            reserva.setHoraReserva(rs.getTimestamp("horaReserva"));
+            reserva.setEmailUsuario(rs.getString("email_usuario"));
+            reservas.add(reserva);
+        }
+    } catch (SQLException e) {
+        Log.log.error("Error al obtener reservas: " + e);
+    } finally {
+        conector.closeConnection(con);
+    }
+
+    return reservas;
+}
 
 
 }

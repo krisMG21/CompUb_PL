@@ -137,6 +137,13 @@
         </header>
 
         <div class="container">
+            <!-- Botón para eliminar reservas -->
+            <div style="text-align: center; margin-bottom: 20px;">
+                <a href="EliminarReservas.jsp">
+                    <button>Eliminar Reservas</button>
+                </a>
+            </div>
+
             <!-- Formulario para realizar una nueva reserva -->
             <h2>Realizar Reserva</h2>
             <form id="reservaForm">
