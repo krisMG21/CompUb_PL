@@ -163,109 +163,6 @@
         <img src="Fotos/MapaBibliotecaN.png" alt="Imagen Lateral" class="imagen-lateral">
     </div>
 
-    <script>
-        $(function() {
-            var diasNoLaborables = ["2025-01-01", "2025-12-25"]; // Días festivos
-
-            $("#fecha").datepicker({
-                dateFormat: "yy-mm-dd",
-                minDate: 0, // Solo permitir fechas futuras
-                beforeShowDay: function(date) {
-                    var day = date.getDay();
-                    var formattedDate = $.datepicker.formatDate('yy-mm-dd', date);
-                    if (day === 0 || day === 6 || diasNoLaborables.includes(formattedDate)) {
-                        return [false, "disabled-date", "No disponible"];
-                    }
-                    return [true, "enabled-date", "Disponible"];
-                }
-            });
-
-            $("#reservaForm").on('submit', function(e) {
-                e.preventDefault();
-                var sala = $("#sala").val();
-                var fecha = $("#fecha").val();
-                var hora = $("#hora").val();
-                var email = '<%= session.getAttribute("email") != null ? session.getAttribute("email") : "" %>';
-
-                if (!sala || !fecha || !hora) {
-                    $("#mensajeReserva").html("Por favor, completa todos los campos.")
-                        .removeClass("exito").addClass("error").fadeIn();
-                    return;
-                }
-
-                var horaReserva = fecha + " " + hora + ":00";
-
-                $.ajax({
-                    url: 'Reserva',
-                    type: 'POST',
-                    data: { email, idSala: sala, horaReserva },
-                    success: function(response) {
-                        if (response.success) {
-                            $("#mensajeReserva").html(response.message)
-                                .removeClass("error").addClass("exito").fadeIn();
-                        } else {
-                            $("#mensajeReserva").html(response.message)
-                                .removeClass("exito").addClass("error").fadeIn();
-                        }
-                    },
-                    error: function(jqXHR, textStatus) {
-                        var errorMessage = textStatus === 'timeout' ? 
-                            "La solicitud tardó demasiado tiempo." : 
-                            "Error al procesar la reserva.";
-                        $("#mensajeReserva").html(errorMessage)
-                            .removeClass("exito").addClass("error").fadeIn();
-                    }
-                });
-            });
-
-            $("#verReservas").on('click', function() {
-                var email = '<%= session.getAttribute("email") != null ? session.getAttribute("email") : "" %>';
-                $.ajax({
-                    url: 'Reserva',
-                    type: 'GET',
-                    data: { email },
-                    success: function(response) {
-                        var html = '<ul>';
-                        response.forEach(function(reserva) {
-                            html += `<li>
-                                Sala ${reserva.idSala}, Fecha: ${reserva.horaReserva}
-                                <button class="cancelarReserva" data-id="${reserva.idSala}" data-hora="${reserva.horaReserva}">Cancelar</button>
-                            </li>`;
-                        });
-                        html += '</ul>';
-                        $("#listaReservas").html(html);
-                    },
-                    error: function() {
-                        $("#listaReservas").html("Error al cargar las reservas.");
-                    }
-                });
-            });
-
-            $(document).on('click', '.cancelarReserva', function() {
-                var idSala = $(this).data('id');
-                var horaReserva = $(this).data('hora');
-                var email = '<%= session.getAttribute("email") != null ? session.getAttribute("email") : "" %>';
-                $.ajax({
-                    url: 'Reserva',
-                    type: 'DELETE',
-                    data: { email, idSala, horaReserva },
-                    success: function(response) {
-                        if (response.success) {
-                            alert(response.message);
-                            $("#verReservas").click(); // Recargar las reservas
-                        } else {
-                            alert("Error al cancelar la reserva.");
-                        }
-                    },
-                    error: function() {
-                        alert("Error al procesar la cancelación.");
-                    }
-                });
-            });
-        });
-    </script>
-</body>
-</html>
 <script>
     $(function() {
         var diasNoLaborables = ["2025-01-01", "2025-12-25"]; // Días festivos
@@ -326,26 +223,9 @@
             window.location.href = "MisReservas.jsp";  // Redirigir a MisReservas.jsp
         });
 
-        $(document).on('click', '.cancelarReserva', function() {
-            var idSala = $(this).data('id');
-            var horaReserva = $(this).data('hora');
-            var email = '<%= session.getAttribute("email") != null ? session.getAttribute("email") : "" %>';
-            $.ajax({
-                url: 'Reserva',
-                type: 'DELETE',
-                data: { email, idSala, horaReserva },
-                success: function(response) {
-                    if (response.success) {
-                        alert(response.message);
-                        $("#verReservas").click(); // Recargar las reservas
-                    } else {
-                        alert("Error al cancelar la reserva.");
-                    }
-                },
-                error: function() {
-                    alert("Error al procesar la cancelación.");
-                }
-            });
-        });
+        
     });
 </script>
+
+</body>
+</html>
