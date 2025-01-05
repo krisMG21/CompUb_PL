@@ -16,4 +16,5 @@ Logic\Logic.class
 Database\Tarjetas.class
 Logic\Measurement.class
 Mqtt\MQTTPublisher.class
+Servlets\EstadisticasCliente.class
 Database\Salas.class

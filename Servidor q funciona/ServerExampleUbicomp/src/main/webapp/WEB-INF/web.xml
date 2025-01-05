@@ -42,4 +42,14 @@
         <servlet-name>PerfilUsuarioServlet</servlet-name>
         <url-pattern>/PerfilUsuarioServlet</url-pattern>
     </servlet-mapping>
+        <!--  Declaración del servlet  -->
+    <servlet>
+        <servlet-name>EstadisticasCliente</servlet-name>
+        <servlet-class>Servlets.EstadisticasCliente</servlet-class>
+    </servlet>
+    <!--  Mapeo del servlet  -->
+    <servlet-mapping>
+        <servlet-name>EstadisticasCliente</servlet-name>
+        <url-pattern>/EstadisticasCliente</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -89,12 +89,11 @@
         <h1>Bienvenido,<%= session.getAttribute("email") %></h1> <!--CAMBIAR POR EL  VERDADERO NOMBRE DEL USUUARIO-->
 
         <div class="menu-container">
-            <button onclick="window.location.href='gestion.html'">Perfil</button>
+            <button onclick="window.location.href='Perfil.jsp'">Perfil</button>
             <button onclick="window.location.href='ReservaSala.jsp'"> Reservar sala </button>
             <button onclick="window.location.href='MapaBiblioteca.jsp'">Mapa de la bilioteca </button>
-            <button onclick="window.location.href='gestion.html'">Estadisticas </button>
             <button onclick="window.location.href='https://uah.es/es/'">Información </button>
-            <button onclick="window.location.href='estadisticas.html'">Estadísticas</button>
+            <button onclick="window.location.href='EstadisticasCliente.jsp'">Estadísticas</button>
         </div>
 
 </body>
