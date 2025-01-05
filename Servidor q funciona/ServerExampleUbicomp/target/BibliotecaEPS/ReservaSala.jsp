@@ -183,7 +183,7 @@
 
             $("#fecha").datepicker({
                 dateFormat: "yy-mm-dd",
-                minDate: 0,
+                minDate: 0, // Solo permitir fechas futuras
                 beforeShowDay: function(date) {
                     var day = date.getDay();
                     var formattedDate = $.datepicker.formatDate('yy-mm-dd', date);

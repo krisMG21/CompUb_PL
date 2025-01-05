@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.Timestamp" %>
+<%@ page import="java.util.Calendar" %>
+<%@ page import="java.util.List" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 <%
     String username = (String) session.getAttribute("email");
     if (username == null) {
@@ -14,6 +17,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Gestión de Reservas de Salas</title>
+        <!-- jQuery UI -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -55,7 +63,7 @@
                 color: #3b6a92;
             }
 
-            input[type="email"], input[type="number"], input[type="datetime-local"], input[type="date"] {
+            input[type="email"], input[type="text"], input[type="date"], select {
                 width: 100%;
                 padding: 10px;
                 margin: 5px 0 10px 0;
@@ -111,19 +119,6 @@
                 text-align: center;
                 color: #999;
             }
-
-            #reservas button {
-                background-color: #5a92bb;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                cursor: pointer;
-                border-radius: 5px;
-            }
-
-            #reservas button:hover {
-                background-color: #3b6a92;
-            }
         </style>
     </head>
     <body>
@@ -134,32 +129,46 @@
         <div class="container">
             <!-- Formulario para realizar una nueva reserva -->
             <h2>Realizar Reserva</h2>
-            <form action="Reserva" method="post">
+            <form id="reservaForm" action="Reserva" method="post">
                 <div class="form-group">
                     <label for="email">Correo Electrónico:</label>
-                    <input type="email" id="email" name="email" required />
+                    <input type="email" id="email" name="email" value="<%= username %>" required />
                 </div>
                 <div class="form-group">
                     <label for="idSala">ID de la Sala:</label>
-                    <input type="number" id="idSala" name="idSala" required />
+                    <select id="idSala" name="idSala" required>
+                        <option value="">--Selecciona una sala--</option>
+                        <option value="1">Sala 1</option>
+                        <option value="2">Sala 2</option>
+                    </select>
                 </div>
                 <div class="form-group">
-                    <label for="horaReserva">Hora de la Reserva:</label>
-                    <input type="datetime-local" id="horaReserva" name="horaReserva" required />
+                    <label for="fecha">Fecha de la Reserva:</label>
+                    <input type="text" id="fecha" name="fecha" required />
+                </div>
+                <div class="form-group">
+                    <label for="hora">Hora de la Reserva:</label>
+                    <select id="hora" name="hora" required>
+                        <option value="">--Selecciona una hora--</option>
+                        <option value="08:00">08:00</option>
+                        <option value="09:00">09:00</option>
+                        <option value="10:00">10:00</option>
+                        <option value="11:00">11:00</option>
+                        <option value="12:00">12:00</option>
+                        <option value="13:00">13:00</option>
+                        <option value="14:00">14:00</option>
+                        <option value="15:00">15:00</option>
+                        <option value="16:00">16:00</option>
+                        <option value="17:00">17:00</option>
+                        <option value="18:00">18:00</option>
+                        <option value="19:00">19:00</option>
+                        <option value="20:00">20:00</option>
+                    </select>
                 </div>
                 <button type="submit">Realizar Reserva</button>
             </form>
 
             <hr>
-
-            <div class="form-group">
-                <label for="filtroEmail">Filtrar por Email:</label>
-                <input type="email" id="filtroEmail" name="filtroEmail">
-            </div>
-            <div class="form-group">
-                <label for="filtroFecha">Filtrar por Fecha:</label>
-                <input type="date" id="filtroFecha" name="filtroFecha">
-            </div>
 
             <!-- Consultar Reservas Futuras -->
             <h2>Consultar Reservas Futuras</h2>
@@ -186,49 +195,38 @@
         </div>
 
         <script>
-            function fetchReservas() {
-                let filtroEmail = document.getElementById('filtroEmail').value;
-                let filtroFecha = document.getElementById('filtroFecha').value;
+            $(function() {
+                $("#fecha").datepicker({
+                    dateFormat: "yy-mm-dd",
+                    minDate: 0
+                });
 
-                let url = 'Reserva';
-                let params = [];
-                if (filtroEmail) {
-                    // Correctamente codificando en JavaScript (fuera de la expresión JSP)
-                    params.push('email_usuario=' + encodeURIComponent(filtroEmail));
-                }
-                if (filtroFecha) {
-                    // Correctamente codificando en JavaScript (fuera de la expresión JSP)
-                    params.push('fecha=' + encodeURIComponent(filtroFecha));
-                }
-                if (params.length > 0) {
-                    url += '?' + params.join('&');
-                }
+                $("#reservaForm").on('submit', function(e) {
+                    e.preventDefault();
+                    var email = $("#email").val();
+                    var idSala = $("#idSala").val();
+                    var fecha = $("#fecha").val();
+                    var hora = $("#hora").val();
+                    var horaReserva = fecha + " " + hora + ":00";
 
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        let reservasTable = document.getElementById('reservasTable').getElementsByTagName('tbody')[0];
-                        reservasTable.innerHTML = ''; // Limpiar el contenido previo
-                        if (data.length > 0) {
-                            data.forEach(reserva => {
-                                let row = reservasTable.insertRow();
-                                let cellEmail = row.insertCell(0);
-                                let cellIdSala = row.insertCell(1);
-                                let cellHoraReserva = row.insertCell(2);
+                    if (!email || !idSala || !fecha || !hora) {
+                        alert("Por favor, completa todos los campos.");
+                        return;
+                    }
 
-                                cellEmail.textContent = reserva.email;
-                                cellIdSala.textContent = reserva.idSala;
-                                cellHoraReserva.textContent = reserva.horaReserva;
-                            });
-                        } else {
-                            let row = reservasTable.insertRow();
-                            let cell = row.insertCell(0);
-                            cell.colSpan = 3;
-                            cell.textContent = 'No hay reservas futuras que coincidan con los filtros.';
+                    $.ajax({
+                        url: 'Reserva',
+                        type: 'POST',
+                        data: { email: email, idSala: idSala, horaReserva: horaReserva },
+                        success: function(response) {
+                            alert(response.message);
+                        },
+                        error: function() {
+                            alert("Error al realizar la reserva.");
                         }
-                    })
-                    .catch(error => console.error('Error al obtener las reservas:', error));
-            }
+                    });
+                });
+            });
         </script>
 
     </body>
