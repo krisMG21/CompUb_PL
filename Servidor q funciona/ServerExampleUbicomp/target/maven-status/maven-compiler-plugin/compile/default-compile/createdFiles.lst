@@ -1,4 +1,3 @@
-Servlets\SetData.class
 Database\Topics.class
 Logic\Log.class
 Servlets\PerfilUsuarioServlet.class
@@ -15,8 +14,6 @@ Servlets\Reserva.class
 Logic\Projectinitializer.class
 Logic\Logic.class
 Database\Tarjetas.class
-Servlets\GetData.class
 Logic\Measurement.class
 Mqtt\MQTTPublisher.class
-Servlets\LoginServlet.class
 Database\Salas.class

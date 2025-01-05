@@ -20,8 +20,10 @@ public class Login extends HttpServlet {
             String email = request.getParameter("username"); // Asumiendo que el campo se llama "username" en el formulario
             String password = request.getParameter("password");
             
+            boolean acceso = Logic.ConnectionDB(request.getParameter("username"), request.getParameter("password"));
+            
             String userType = Logic.authenticateUser(email, password);
-
+            if (acceso){
             if (userType != null) {
                 HttpSession session = request.getSession();
                 session.setAttribute("email", email);
@@ -36,13 +38,13 @@ public class Login extends HttpServlet {
                     request.setAttribute("error", "Tipo de usuario no reconocido.");
                     request.getRequestDispatcher("MenuInicio.jsp").forward(request, response);
                 }
-            } else {
+            } }else {
                 request.setAttribute("error", "Email o contraseña incorrectos.");
                 request.getRequestDispatcher("MenuInicio.jsp").forward(request, response);
             }
         } catch (Exception e) {
             request.setAttribute("error", "Error en el sistema. Por favor, inténtelo más tarde.");
             request.getRequestDispatcher("MenuInicio.jsp").forward(request, response);
-        }
+        }}
     }
-}
+

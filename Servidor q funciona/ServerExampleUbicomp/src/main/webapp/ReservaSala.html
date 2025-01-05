@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva de Salas</title>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 500px;
+            margin: 20px auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Reserva de Salas</h1>
+        <form id="reservaForm" action="ReservaSala" method="post">
+            <label for="sala">Selecciona una sala:</label>
+            <select id="sala" name="sala" required>
+                <option value="">--Selecciona una sala--</option>
+                <option value="1">Sala 1</option>
+                <option value="2">Sala 2</option>
+            </select>
+
+            <label for="fecha">Selecciona una fecha:</label>
+            <input type="text" id="fecha" name="fecha" required>
+
+            <label for="hora">Selecciona una hora:</label>
+            <select id="hora" name="hora" required>
+                <option value="">--Selecciona una hora--</option>
+                <option value="08:00">08:00</option>
+                <option value="09:00">09:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+                <option value="18:00">18:00</option>
+                <option value="19:00">19:00</option>
+                <option value="20:00">20:00</option>
+            </select>
+
+            <input type="submit" value="Reservar Sala">
+        </form>
+    </div>
+
+    <script>
+        $(function() {
+            // Definir días festivos o no laborables (ejemplo)
+            var diasNoLaborables = [
+                "2024-01-01", // Año Nuevo
+                "2024-01-06", // Reyes Magos
+                "2024-03-28", // Jueves Santo
+                "2024-03-29", // Viernes Santo
+                "2024-05-01", // Día del Trabajo
+                // Añade más fechas según el calendario académico
+            ];
+
+            $("#fecha").datepicker({
+                dateFormat: "yy-mm-dd",
+                minDate: 0, // No permite fechas pasadas
+                beforeShowDay: function(date) {
+                    var day = date.getDay();
+                    var formattedDate = $.datepicker.formatDate('yy-mm-dd', date);
+                    
+                    // Solo permite días entre semana (lunes a viernes)
+                    // y excluye días festivos
+                    if (day === 0 || day === 6 || 
+                        diasNoLaborables.includes(formattedDate)) {
+                        return [false, ""];
+                    }
+                    return [true, ""];
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -80,7 +80,7 @@
         <h2>Iniciar sesión</h2>
         
         <!-- Formulario para ingresar las credenciales -->
-        <form action="LoginServlet" method="POST">
+        <form action="Login" method="POST">
             <!-- Campo para el email del usuario -->
             <label for="username">Email:</label>
             <input type="text" id="username" name="username" required><br>
@@ -93,7 +93,7 @@
             <button type="submit">Iniciar sesión</button>
         </form>
 
-        <!-- Área para mostrar mensajes de error, si el servlet genera alguno -->
+        <!-- para mostrar mensajes de error, si el servlet genera alguno -->
         <div id="errorMessage">
             <!-- Aquí se muestra el error si existe (en caso de que el servlet lo mande) -->
             <%= request.getAttribute("error") != null ? request.getAttribute("error") : "" %>

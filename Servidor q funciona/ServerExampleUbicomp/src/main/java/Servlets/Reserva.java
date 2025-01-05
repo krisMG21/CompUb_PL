@@ -50,7 +50,7 @@ public class Reserva extends HttpServlet {
             int idSala = Integer.parseInt(request.getParameter("idSala"));
             Timestamp horaReserva = Timestamp.valueOf(request.getParameter("horaReserva"));
             
-            String sql = "INSERT INTO Reservas (email_usuario, idSala_sala, horaReserva) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO biblioteca.Reservas (email_usuario, idSala_sala, horaReserva) VALUES (?, ?, ?)";
             preparedStatement = ConnectionDB.getStatement(conexionBD, sql);
             preparedStatement.setString(1, email);
             preparedStatement.setInt(2, idSala);

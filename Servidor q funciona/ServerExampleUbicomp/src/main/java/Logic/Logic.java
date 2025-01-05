@@ -100,35 +100,48 @@ public class Logic {
         return conectado;
     }
 
-    public static String authenticateUser(String email, String password) {
-        String userType = null;
-        ConnectionDB Conexion = new ConnectionDB();
-        Connection con = null;
-        try {
-            con = Conexion.obtainConnection(true);
-            Log.log.info("Conexión establecida con la base de datos");
+  public static String authenticateUser(String email, String password) {
+    String userType = null;
+    ConnectionDB Conexion = new ConnectionDB();
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
 
-            String sql = "SELECT tipo FROM biblioteca.Usuarios WHERE email = ? AND passw = ?";
-            PreparedStatement ps = con.prepareStatement(sql);
-            ps.setString(1, email);
-            ps.setString(2, password);
+    try {
+        con = Conexion.obtainConnection(true);
+        Log.log.info("Conexión establecida con la base de datos para usuario: " + email);
 
-            Log.log.info("Sentencia SQL => " + ps.toString());
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                userType = rs.getString("tipo");
-            }
-        } catch (SQLException e) {
-            Log.log.error("Error SQL: " + e);
-        } catch (NullPointerException e) {
-            Log.log.error("Error de puntero nulo: " + e);
-        } catch (Exception e) {
-            Log.log.error("Error general: " + e);
-        } finally {
-            if (con != null) {
-                Conexion.closeConnection(con);
-            }
+        String sql = "SELECT tipo FROM biblioteca.Usuarios WHERE email = ? AND passw = ?";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, email);
+        ps.setString(2, password);
+
+        Log.log.info("Sentencia SQL preparada: " + ps.toString());
+
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            userType = rs.getString("tipo");
+            Log.log.info("Usuario autenticado con éxito. Tipo: " + userType);
+        } else {
+            Log.log.info("Credenciales incorrectas para el usuario: " + email);
         }
-        return userType;
+    } catch (SQLException e) {
+        Log.log.error("Error SQL: " + e);
+    } catch (NullPointerException e) {
+        Log.log.error("Error de puntero nulo al autenticar: " + e);
+    } catch (Exception e) {
+        Log.log.error("Error general: " + e);
+    } finally {
+        try {
+            if (ps != null) ps.close();
+            if (rs != null) rs.close();
+            if (con != null) Conexion.closeConnection(con);
+        } catch (SQLException e) {
+            Log.log.error("Error al cerrar recursos: " + e);
+        }
     }
+
+    return userType;
+}
+
 }
