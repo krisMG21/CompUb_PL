@@ -14,6 +14,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Gestión de Reservas de Salas</title>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
         <style>
             body {
                 font-family: Arial, sans-serif;
@@ -55,7 +56,7 @@
                 color: #3b6a92;
             }
 
-            input[type="email"], input[type="number"], input[type="datetime-local"], input[type="date"] {
+            input[type="email"], select, input[type="text"], input[type="date"] {
                 width: 100%;
                 padding: 10px;
                 margin: 5px 0 10px 0;
@@ -112,17 +113,21 @@
                 color: #999;
             }
 
-            #reservas button {
-                background-color: #5a92bb;
-                color: white;
-                padding: 10px 20px;
-                border: none;
-                cursor: pointer;
+            #mensajeReserva {
+                margin-top: 15px;
+                padding: 10px;
                 border-radius: 5px;
+                font-size: 14px;
             }
 
-            #reservas button:hover {
-                background-color: #3b6a92;
+            .exito {
+                background-color: #d4edda;
+                color: #155724;
+            }
+
+            .error {
+                background-color: #f8d7da;
+                color: #721c24;
             }
         </style>
     </head>
@@ -134,21 +139,38 @@
         <div class="container">
             <!-- Formulario para realizar una nueva reserva -->
             <h2>Realizar Reserva</h2>
-            <form action="Reserva" method="post">
+            <form id="reservaForm">
                 <div class="form-group">
-                    <label for="email">Correo Electrónico:</label>
+                    <label for="email">Correo Electrónico del Solicitante:</label>
                     <input type="email" id="email" name="email" required />
                 </div>
                 <div class="form-group">
                     <label for="idSala">ID de la Sala:</label>
-                    <input type="number" id="idSala" name="idSala" required />
+                    <select id="idSala" name="idSala" required>
+                        <option value="">--Selecciona una sala--</option>
+                        <option value="1">Sala 1</option>
+                        <option value="2">Sala 2</option>
+                        <!-- Más opciones según las salas disponibles -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="fecha">Selecciona una fecha:</label>
+                    <input type="text" id="fecha" name="fecha" required />
                 </div>
                 <div class="form-group">
                     <label for="horaReserva">Hora de la Reserva:</label>
-                    <input type="datetime-local" id="horaReserva" name="horaReserva" required />
+                    <select id="horaReserva" name="horaReserva" required>
+                        <option value="">--Selecciona una hora--</option>
+                        <% for (int i = 8; i <= 20; i++) { 
+                            String hora = String.format("%02d:00", i);
+                        %>
+                            <option value="<%= hora %>"><%= hora %></option>
+                        <% } %>
+                    </select>
                 </div>
                 <button type="submit">Realizar Reserva</button>
             </form>
+            <div id="mensajeReserva"></div>
 
             <hr>
 
@@ -186,9 +208,67 @@
             </table>
         </div>
 
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
         <script>
+            $(function () {
+                // Deshabilitar fines de semana y días festivos
+                const diasNoLaborables = ["2025-01-01", "2025-12-25"];
+
+                $("#fecha").datepicker({
+                    dateFormat: "yy-mm-dd",
+                    minDate: 0,
+                    beforeShowDay: function (date) {
+                        const day = date.getDay();
+                        const formattedDate = $.datepicker.formatDate('yy-mm-dd', date);
+
+                        if (day === 0 || day === 6 || diasNoLaborables.includes(formattedDate)) {
+                            return [false, "disabled-date", "No disponible"];
+                        }
+                        return [true, "enabled-date", "Disponible"];
+                    }
+                });
+
+                // Manejar el envío del formulario
+                $("#reservaForm").on("submit", function (e) {
+                    e.preventDefault();
+                    const email = $("#email").val();
+                    const idSala = $("#idSala").val();
+                    const fecha = $("#fecha").val();
+                    const hora = $("#horaReserva").val();
+
+                    if (!email || !idSala || !fecha || !hora) {
+                        $("#mensajeReserva").html("Por favor, completa todos los campos.")
+                            .removeClass("exito").addClass("error").fadeIn();
+                        return;
+                    }
+
+                    const horaReserva = fecha + " " + hora + ":00";
+
+                    $.ajax({
+                        url: 'Reserva',
+                        type: 'POST',
+                        data: { email, idSala, horaReserva },
+                        success: function (response) {
+                            if (response.success) {
+                                $("#mensajeReserva").html(response.message)
+                                    .removeClass("error").addClass("exito").fadeIn();
+                            } else {
+                                $("#mensajeReserva").html(response.message)
+                                    .removeClass("exito").addClass("error").fadeIn();
+                            }
+                        },
+                        error: function () {
+                            $("#mensajeReserva").html("Error al procesar la reserva.")
+                                .removeClass("exito").addClass("error").fadeIn();
+                        }
+                    });
+                });
+            });
+
+            // Fetch de reservas
             function fetchReservas() {
-                let filtroEmail = document.getElementById('filtroEmail').value;
+                 let filtroEmail = document.getElementById('filtroEmail').value;
                 let filtroFecha = document.getElementById('filtroFecha').value;
 
                 let url = 'Reserva';
@@ -229,6 +309,5 @@
                     .catch(error => console.error('Error al obtener las reservas:', error));
             }
         </script>
-
     </body>
 </html>

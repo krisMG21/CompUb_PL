@@ -2,7 +2,6 @@ package Servlets;
 
 import Database.ConnectionDB;
 import Mqtt.MQTTBroker;
-import Mqtt.MQTTPublisher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,14 +19,12 @@ import java.sql.*;
 public class Reserva extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private MQTTBroker mqttBroker;
 
     public Reserva() {
         super();
-        mqttBroker = new MQTTBroker(); // Asume que tienes un constructor por defecto o configura según sea necesario
     }
 
-    // Método POST para realizar una reserva (ya existente)
+    // Método POST para realizar una reserva (modificado con validación)
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
@@ -44,6 +41,23 @@ public class Reserva extends HttpServlet {
             int idSala = Integer.parseInt(request.getParameter("idSala"));
             Timestamp horaReserva = Timestamp.valueOf(request.getParameter("horaReserva"));
 
+            // Comprobar si ya existe una reserva en la misma sala a la misma hora
+            String checkSql = "SELECT COUNT(*) AS conflictCount FROM biblioteca.Reservas WHERE idSala_sala = ? AND horaReserva = ?";
+            try (PreparedStatement checkStmt = conexionBD.prepareStatement(checkSql)) {
+                checkStmt.setInt(1, idSala);
+                checkStmt.setTimestamp(2, horaReserva);
+                try (ResultSet rs = checkStmt.executeQuery()) {
+                    if (rs.next() && rs.getInt("conflictCount") > 0) {
+                        JSONObject jsonResponse = new JSONObject();
+                        jsonResponse.put("success", false);
+                        jsonResponse.put("message", "Ya existe una reserva en esta sala para la fecha y hora especificada.");
+                        response.getWriter().write(jsonResponse.toString());
+                        return;
+                    }
+                }
+            }
+
+            // Insertar nueva reserva
             String sql = "INSERT INTO biblioteca.Reservas (email_usuario, idSala_sala, horaReserva) VALUES (?, ?, ?)";
             preparedStatement = ConnectionDB.getStatement(conexionBD, sql);
             preparedStatement.setString(1, email);
@@ -56,9 +70,6 @@ public class Reserva extends HttpServlet {
                 JSONObject jsonResponse = new JSONObject();
                 jsonResponse.put("success", true);
                 jsonResponse.put("message", "Reserva realizada con éxito");
-
-                
-
                 response.getWriter().write(jsonResponse.toString());
             } else {
                 JSONObject jsonResponse = new JSONObject();
@@ -146,20 +157,8 @@ public class Reserva extends HttpServlet {
         return reservasJson;
     }
 
-    private void closeResources(AutoCloseable... resources) {
-        for (AutoCloseable resource : resources) {
-            try {
-                if (resource != null) {
-                    resource.close();
-                }
-            } catch (Exception e) {
-                Log.log.error("Error al cerrar recursos", e);
-            }
-        }
-    }
-
     @Override
     public void destroy() {
-       
+        // Limpiar recursos, si es necesario
     }
 }
