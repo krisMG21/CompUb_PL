@@ -63,4 +63,14 @@
         <servlet-name>EstadisticasGestor</servlet-name>
         <url-pattern>/EstadisticasGestor</url-pattern>
     </servlet-mapping>
+            <!--  Declaración del servlet  -->
+    <servlet>
+        <servlet-name>CancelarReserva</servlet-name>
+        <servlet-class>Servlets.CancelarReserva</servlet-class>
+    </servlet>
+    <!--  Mapeo del servlet  -->
+    <servlet-mapping>
+        <servlet-name>CancelarReserva</servlet-name>
+        <url-pattern>/CancelarReserva</url-pattern>
+    </servlet-mapping>
 </web-app>

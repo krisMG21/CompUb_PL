@@ -1,11 +1,5 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Database;
 
-
-// Clase para la tabla Reservas
 import java.util.Date;
 
 public class Reservas {
@@ -14,8 +8,10 @@ public class Reservas {
     private int idSala;
     private Date horaReserva;
 
+    // Constructor vacío
     public Reservas() {}
 
+    // Constructor con parámetros
     public Reservas(int idReservas, String emailUsuario, int idSala, Date horaReserva) {
         this.idReservas = idReservas;
         this.emailUsuario = emailUsuario;
@@ -23,6 +19,7 @@ public class Reservas {
         this.horaReserva = horaReserva;
     }
 
+    // Getters y setters
     public int getIdReservas() {
         return idReservas;
     }
@@ -53,5 +50,21 @@ public class Reservas {
 
     public void setHoraReserva(Date horaReserva) {
         this.horaReserva = horaReserva;
+    }
+
+    // Método para representar la horaReserva como String
+    public String getHoraReservaString() {
+        return new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(horaReserva);
+    }
+
+    // Método toString para la depuración
+    @Override
+    public String toString() {
+        return "Reservas{" +
+                "idReservas=" + idReservas +
+                ", emailUsuario='" + emailUsuario + '\'' +
+                ", idSala=" + idSala +
+                ", horaReserva=" + getHoraReservaString() +
+                '}';
     }
 }

@@ -1,6 +1,8 @@
 package Logic;
 
 import Database.ConnectionDB;
+import Database.Reservas;
+import Servlets.Reserva;
 import java.util.ArrayList;
 import java.util.Date;
 import java.sql.Connection;
@@ -8,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
 
 public class Logic {
 
@@ -143,5 +146,56 @@ public class Logic {
 
     return userType;
 }
+public static ArrayList<Reservas> getReservasPorEmail(String email) {
+    ArrayList<Reservas> reservas = new ArrayList<>();
+    ConnectionDB conector = new ConnectionDB();
+    Connection con = null;
+    
+    try {
+        con = conector.obtainConnection(true);
+        String sql = "SELECT idSala_sala, horaReserva FROM biblioteca.Reservas WHERE email_usuario = ?";
+        PreparedStatement ps = con.prepareStatement(sql);
+        ps.setString(1, email);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            Reservas reserva = new Reservas();
+            reserva.setIdSala(rs.getInt("idSala_sala"));
+            reserva.setHoraReserva(rs.getTimestamp("horaReserva"));  // Cambié esto para que sea un Date
+            reservas.add(reserva);
+        }
+    } catch (SQLException e) {
+        Log.log.error("Error al obtener reservas: " + e);
+    } finally {
+        conector.closeConnection(con);
+    }
+
+    return reservas;
+}
+
+public static boolean cancelarReserva(String email, int idSala, Timestamp horaReserva) {
+    boolean exito = false;
+    ConnectionDB conector = new ConnectionDB();
+    Connection con = null;
+
+    try {
+        con = conector.obtainConnection(true);
+        String sql = "DELETE FROM biblioteca.Reservas WHERE email_usuario = ? AND idSala_sala = ? AND horaReserva = ?";
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setInt(2, idSala);
+            ps.setTimestamp(3, horaReserva);
+            int filasAfectadas = ps.executeUpdate();
+            exito = filasAfectadas > 0;
+        }
+    } catch (SQLException e) {
+        Log.log.error("Error al cancelar reserva: " + e);
+    } finally {
+        conector.closeConnection(con);
+    }
+
+    return exito;
+}
+
 
 }

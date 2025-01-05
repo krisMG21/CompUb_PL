@@ -19,3 +19,4 @@ Mqtt\MQTTPublisher.class
 Servlets\EstadisticasCliente.class
 Servlets\EstadisticasGestor.class
 Database\Salas.class
+Servlets\CancelarReserva.class

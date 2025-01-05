@@ -7,15 +7,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.annotation.WebServlet;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import Logic.Log;
+import Logic.Logic;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
+import org.json.JSONArray;
 
-@WebServlet(name = "Reserva", urlPatterns = {"/Reserva"})
+@WebServlet(name = "Reserva", urlPatterns = {"/Reserva", "/Reserva/*"})
 public class Reserva extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -24,7 +25,7 @@ public class Reserva extends HttpServlet {
         super();
     }
 
-    // Método POST para realizar una reserva (modificado con validación)
+    // Método POST para realizar una reserva
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
@@ -98,31 +99,24 @@ public class Reserva extends HttpServlet {
     // Método GET para obtener las reservas filtradas
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Obtener parámetros de la solicitud (filtros)
         String email = request.getParameter("email");
         String fecha = request.getParameter("fecha");
 
-        // Obtener las reservas filtradas desde la base de datos
         JSONArray reservas = getReservasFiltradas(email, fecha);
 
-        // Configurar la respuesta como JSON
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // Enviar el resultado como respuesta JSON
         PrintWriter out = response.getWriter();
         out.print(reservas.toString());
         out.flush();
     }
 
-    // Método para obtener las reservas filtradas desde la base de datos
     private JSONArray getReservasFiltradas(String email, String fecha) {
         JSONArray reservasJson = new JSONArray();
 
-        // Cadena SQL básica
-        String sql = "SELECT email_usuario, idSala_sala, horaReserva FROM biblioteca.Reservas WHERE 1=1";
+        String sql = "SELECT idReserva, email_usuario, idSala_sala, horaReserva FROM biblioteca.Reservas WHERE 1=1";
 
-        // Añadir condiciones si existen los filtros
         if (email != null && !email.isEmpty()) {
             sql += " AND email_usuario = ?";
         }
@@ -130,8 +124,7 @@ public class Reserva extends HttpServlet {
             sql += " AND DATE(horaReserva) = ?";
         }
 
-        try (Connection conn = new ConnectionDB().obtainConnection(true);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = new ConnectionDB().obtainConnection(true); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             int index = 1;
             if (email != null && !email.isEmpty()) {
@@ -144,6 +137,7 @@ public class Reserva extends HttpServlet {
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     JSONObject reserva = new JSONObject();
+                    reserva.put("idReserva", rs.getInt("idReserva"));
                     reserva.put("email", rs.getString("email_usuario"));
                     reserva.put("idSala", rs.getInt("idSala_sala"));
                     reserva.put("horaReserva", rs.getTimestamp("horaReserva").toString());
@@ -155,6 +149,30 @@ public class Reserva extends HttpServlet {
         }
 
         return reservasJson;
+    }
+
+    // Método DELETE para cancelar una reserva
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        String email = request.getParameter("email");
+        int idSala = Integer.parseInt(request.getParameter("idSala"));
+        Timestamp horaReserva = Timestamp.valueOf(request.getParameter("horaReserva"));
+
+        boolean success = Logic.cancelarReserva(email, idSala, horaReserva);
+
+        JSONObject jsonResponse = new JSONObject();
+        if (success) {
+            jsonResponse.put("success", true);
+            jsonResponse.put("message", "Reserva cancelada con éxito.");
+        } else {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Error al cancelar la reserva.");
+        }
+
+        response.getWriter().write(jsonResponse.toString());
     }
 
     @Override
