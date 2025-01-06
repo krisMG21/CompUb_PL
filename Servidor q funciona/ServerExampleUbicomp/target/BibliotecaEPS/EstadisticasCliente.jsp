@@ -117,6 +117,14 @@
         button:hover {
             background-color: #5a9bd6;
         }
+
+        .button-container {
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            margin-right: 15px;
+        }
     </style>
 </head>
 <body>
@@ -161,6 +169,12 @@
         <div id="alertMessage" class="alert" style="display:none;">
             <span class="emoji">😅</span> Ufff, ¡Cuánta gente! <span class="emoji">📚</span><br>
             Entendemos que quizás quieras ir a otra biblioteca, ¡ánimo!
+        </div>
+
+        <!-- Botones -->
+        <div class="button-container">
+                <button onclick="location.href='infSala.jsp'">Más Información sobre Salas</button>
+            <button onclick="location.href='infCubiculo.jsp'">Más Información sobre Cubículos</button>
         </div>
     </div>
 
