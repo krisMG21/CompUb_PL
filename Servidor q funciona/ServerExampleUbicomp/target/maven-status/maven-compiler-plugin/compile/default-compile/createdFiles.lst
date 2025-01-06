@@ -14,6 +14,7 @@ Database\Salas.class
 Servlets\CancelarReserva.class
 Logic\Log.class
 Servlets\PerfilUsuarioServlet.class
+Servlets\InfCubiculo.class
 Servlets\Temperatura.class
 Database\Sensores.class
 Mqtt\MQTTSubscriber.class

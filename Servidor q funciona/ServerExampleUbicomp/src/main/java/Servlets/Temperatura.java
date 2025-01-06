@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -15,59 +16,59 @@ public class Temperatura extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Establecer el tipo de contenido de la respuesta como JSON
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        // Obtener la temperatura de la Sala 1
-        JSONObject temperaturaData = obtenerTemperaturaSala1();
+        JSONArray sensoresData = obtenerDatosSensores();
 
-        // Mostrar el contenido de temperaturaData en la consola
-        System.out.println("Datos de la temperatura: " + temperaturaData.toString());
+        System.out.println("Datos de sensores: " + sensoresData.toString());
 
-        // Escribir la respuesta como JSON
         PrintWriter out = response.getWriter();
-        out.print(temperaturaData.toString());
+        out.print(sensoresData.toString());
         out.flush();
     }
 
-    private JSONObject obtenerTemperaturaSala1() {
-        JSONObject temperaturaData = new JSONObject();
+    private JSONArray obtenerDatosSensores() {
+        JSONArray sensoresData = new JSONArray();
         ConnectionDB connectionDB = new ConnectionDB();
         
-        // Usar try-with-resources para asegurar el cierre de recursos automáticamente
         try (Connection connection = connectionDB.obtainConnection(true)) {
-
             if (connection == null) {
                 throw new SQLException("No database connection available.");
             }
 
-            // Consulta para obtener la temperatura de la Sala 1
-            String query = "SELECT l.fechaHora, l.valor AS temperatura, s.idSala " +
-                           "FROM biblioteca.LecturaSensores l " +
-                           "LEFT JOIN biblioteca.Salas s ON l.idSala = s.idSala " +
-                           "WHERE l.idSensor = 1 AND s.idSala = 1 " +  // Filtrar por Sala 1
-                           "ORDER BY l.fechaHora DESC LIMIT 1"; // Obtener solo la última lectura
+            String query = "SELECT s.idSala, " +
+                           "MAX(CASE WHEN l.idSensor = 1 THEN l.valor END) AS temperatura, " +
+                           "MAX(CASE WHEN l.idSensor = 2 THEN l.valor END) AS humedad, " +
+                           "MAX(CASE WHEN l.idSensor = 3 THEN l.valor END) AS sonido, " +
+                           "MAX(CASE WHEN l.idSensor = 4 THEN l.valor END) AS luz, " +
+                           "MAX(l.fechaHora) AS fechaHora " +
+                           "FROM biblioteca.Salas s " +
+                           "LEFT JOIN biblioteca.LecturaSensores l ON s.idSala = l.idSala " +
+                           "GROUP BY s.idSala";
 
             try (PreparedStatement stmt = connection.prepareStatement(query);
                  ResultSet rs = stmt.executeQuery()) {
 
-                if (rs.next()) {
-                    // Crear el objeto JSON con los datos de la Sala 1
-                    temperaturaData.put("idSala", rs.getInt("idSala"));
-                    temperaturaData.put("temperatura", rs.getInt("temperatura"));
-                    temperaturaData.put("fechaHora", rs.getString("fechaHora"));
-                } else {
-                    // Si no se encuentra la lectura de temperatura, enviar un mensaje adecuado
-                    temperaturaData.put("error", "No se encontraron datos de temperatura para la Sala 1.");
+                while (rs.next()) {
+                    JSONObject salaData = new JSONObject();
+                    salaData.put("idSala", rs.getInt("idSala"));
+                    salaData.put("temperatura", rs.getObject("temperatura"));
+                    salaData.put("humedad", rs.getObject("humedad"));
+                    salaData.put("sonido", rs.getObject("sonido"));
+                    salaData.put("luz", rs.getObject("luz"));
+                    salaData.put("fechaHora", rs.getString("fechaHora"));
+                    sensoresData.put(salaData);
                 }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            temperaturaData.put("error", "Error en la base de datos: " + e.getMessage());
+            JSONObject errorData = new JSONObject();
+            errorData.put("error", "Error en la base de datos: " + e.getMessage());
+            sensoresData.put(errorData);
         }
 
-        return temperaturaData;
+        return sensoresData;
     }
 }

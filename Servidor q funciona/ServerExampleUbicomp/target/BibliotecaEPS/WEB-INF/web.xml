@@ -42,7 +42,7 @@
         <servlet-name>PerfilUsuarioServlet</servlet-name>
         <url-pattern>/PerfilUsuarioServlet</url-pattern>
     </servlet-mapping>
-        <!--  Declaración del servlet  -->
+    <!--  Declaración del servlet  -->
     <servlet>
         <servlet-name>EstadisticasCliente</servlet-name>
         <servlet-class>Servlets.EstadisticasCliente</servlet-class>
@@ -53,7 +53,7 @@
         <url-pattern>/EstadisticasCliente</url-pattern>
     </servlet-mapping>
     
-        <!--  Declaración del servlet  -->
+    <!--  Declaración del servlet  -->
     <servlet>
         <servlet-name>EstadisticasGestor</servlet-name>
         <servlet-class>Servlets.EstadisticasGestor</servlet-class>
@@ -63,7 +63,7 @@
         <servlet-name>EstadisticasGestor</servlet-name>
         <url-pattern>/EstadisticasGestor</url-pattern>
     </servlet-mapping>
-            <!--  Declaración del servlet  -->
+    <!--  Declaración del servlet  -->
     <servlet>
         <servlet-name>CancelarReserva</servlet-name>
         <servlet-class>Servlets.CancelarReserva</servlet-class>
@@ -74,7 +74,7 @@
         <url-pattern>/CancelarReserva</url-pattern>
     </servlet-mapping>
     
-        <servlet>
+    <servlet>
         <servlet-name>Temperatura</servlet-name>
         <servlet-class>Servlets.Temperatura</servlet-class>
     </servlet>
@@ -83,4 +83,18 @@
         <servlet-name>Temperatura</servlet-name>
         <url-pattern>/Temperatura</url-pattern>
     </servlet-mapping>
+    
+    
+    <servlet>
+        <servlet-name>InfCubiculo</servlet-name>
+        <servlet-class>Servlets.InfCubiculo</servlet-class>
+    </servlet>
+    <!--  Mapeo del servlet  -->
+    <servlet-mapping>
+        <servlet-name>InfCubiculo</servlet-name>
+        <url-pattern>/InfCubiculo</url-pattern>
+    </servlet-mapping>
+
+    
+    
 </web-app>
