@@ -27,14 +27,17 @@ public class PerfilUsuarioServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Configuración de la respuesta
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
+        // Variables para la conexión a la base de datos
         ConnectionDB connectionDB = new ConnectionDB();
         Connection conexionBD = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultadosConsulta = null;
 
+        // Obtener el escritor de respuesta
         PrintWriter out = response.getWriter();
 
         try {
@@ -42,16 +45,17 @@ public class PerfilUsuarioServlet extends HttpServlet {
             conexionBD = connectionDB.obtainConnection(true);
 
             // Leer el correo electrónico del usuario autenticado desde la sesión
-            String emailUsuario = (String) request.getSession().getAttribute("emailUsuario");
+            String emailUsuario = (String) request.getSession().getAttribute("email");
 
             if (emailUsuario == null || emailUsuario.isEmpty()) {
+                // Usuario no autenticado
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 out.write("{\"error\": \"No hay un usuario autenticado.\"}");
                 return;
             }
 
-            // Crear la consulta SQL para obtener los datos del usuario
-            String sql = "SELECT nombreApellido, email FROM Usuarios WHERE email = ?";
+            // Consulta SQL para obtener los datos del usuario
+            String sql = "SELECT nombreApellido, email FROM bibliotecaUsuarios WHERE email = ?";
             preparedStatement = conexionBD.prepareStatement(sql);
 
             // Asignar el valor al parámetro
@@ -65,9 +69,10 @@ public class PerfilUsuarioServlet extends HttpServlet {
                 String nombreApellido = resultadosConsulta.getString("nombreApellido");
                 String correo = resultadosConsulta.getString("email");
 
+                // Construcción del JSON de respuesta
                 out.write("{");
-                out.write("\"nombre\": \"" + nombreApellido + "\",");
-                out.write("\"correo\": \"" + correo + "\"");
+                out.write("\"nombre\": \"" + escapeJson(nombreApellido) + "\",");
+                out.write("\"correo\": \"" + escapeJson(correo) + "\"");
                 out.write("}");
             } else {
                 // Usuario no encontrado
@@ -79,10 +84,6 @@ public class PerfilUsuarioServlet extends HttpServlet {
             Logger.getLogger(PerfilUsuarioServlet.class.getName()).log(Level.SEVERE, null, ex);
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             out.write("{\"error\": \"Error en el servidor. Por favor, inténtelo más tarde.\"}");
-        } catch (NullPointerException ex) {
-            Logger.getLogger(PerfilUsuarioServlet.class.getName()).log(Level.SEVERE, null, ex);
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            out.write("{\"error\": \"Error inesperado en el servidor.\"}");
         } finally {
             // Liberar recursos
             try {
@@ -99,5 +100,18 @@ public class PerfilUsuarioServlet extends HttpServlet {
                 Logger.getLogger(PerfilUsuarioServlet.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    /**
+     * Método para escapar caracteres especiales en JSON.
+     * 
+     * @param value Texto a escapar.
+     * @return Texto escapado para JSON.
+     */
+    private String escapeJson(String value) {
+        if (value == null) {
+            return "";
+        }
+        return value.replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
     }
 }
