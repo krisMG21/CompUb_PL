@@ -73,4 +73,14 @@
         <servlet-name>CancelarReserva</servlet-name>
         <url-pattern>/CancelarReserva</url-pattern>
     </servlet-mapping>
+    
+        <servlet>
+        <servlet-name>Temperatura</servlet-name>
+        <servlet-class>Servlets.Temperatura</servlet-class>
+    </servlet>
+    <!--  Mapeo del servlet  -->
+    <servlet-mapping>
+        <servlet-name>Temperatura</servlet-name>
+        <url-pattern>/Temperatura</url-pattern>
+    </servlet-mapping>
 </web-app>

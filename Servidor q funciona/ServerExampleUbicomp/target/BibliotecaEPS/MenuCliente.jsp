@@ -91,7 +91,7 @@
         <h1>Bienvenido,<%= session.getAttribute("nombre") %></h1> 
 
         <div class="menu-container">
-            <button onclick="window.location.href='Perfil.jsp'">Perfil</button>
+            <button onclick="window.location.href='temperatura.jsp'">Perfil</button>
             <button onclick="window.location.href='ReservaSala.jsp'"> Reservar sala </button>
             <button onclick="window.location.href='MapaBiblioteca.jsp'">Mapa de la bilioteca </button>
             <button onclick="window.location.href='https://uah.es/es/'">Información </button>
