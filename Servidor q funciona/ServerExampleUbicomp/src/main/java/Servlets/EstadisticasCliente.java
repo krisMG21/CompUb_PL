@@ -8,17 +8,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebServlet(name = "EstadisticasCliente", urlPatterns = {"/EstadisticasCliente"})
 public class EstadisticasCliente extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
+    private static final Logger LOGGER = Logger.getLogger(EstadisticasCliente.class.getName());
+
+    private static final String CUBICULOS_TABLE = "biblioteca.Cubiculos";
+    private static final String SALAS_TABLE = "biblioteca.Salas";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -32,23 +37,10 @@ public class EstadisticasCliente extends HttpServlet {
         try {
             connection = connectionDB.obtainConnection(true);
 
-            // Obtener cubículos libres
-            JSONArray cubiculosLibres = getCubiculosLibres(connection);
-
-            // Obtener salas libres
-            JSONArray salasLibres = getSalasLibres(connection);
-
-            // Obtener grado de ocupación
-            JSONObject ocupacionCubiculos = getOcupacionCubiculos(connection);
-
-            // Construir la respuesta JSON
-            jsonResponse.put("cubiculos", cubiculosLibres);
-            jsonResponse.put("salas", salasLibres);
-            jsonResponse.put("ocupacion", ocupacionCubiculos); // Incluir ocupación en la respuesta
-
-            response.getWriter().write(jsonResponse.toString());
+            JSONObject estadisticas = getEstadisticas(connection);
+            response.getWriter().write(estadisticas.toString());
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Error al obtener los datos", e);
             jsonResponse.put("error", "Error al obtener los datos: " + e.getMessage());
             response.getWriter().write(jsonResponse.toString());
         } finally {
@@ -58,64 +50,51 @@ public class EstadisticasCliente extends HttpServlet {
         }
     }
 
-    private JSONArray getCubiculosLibres(Connection connection) throws SQLException {
-        JSONArray cubiculosLibres = new JSONArray();
-        String query = "SELECT idCubiculo FROM biblioteca.Cubiculos WHERE ocupado = 0";
+    private JSONObject getEstadisticas(Connection connection) throws SQLException {
+        JSONObject estadisticas = new JSONObject();
 
-        try (PreparedStatement stmt = connection.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
+        String queryCubiculos = "SELECT COUNT(*) AS total, SUM(ocupado) AS ocupados FROM " + CUBICULOS_TABLE;
+        String queryCubiculosLibres = "SELECT idCubiculo FROM " + CUBICULOS_TABLE + " WHERE ocupado = 0";
+        String querySalas = "SELECT idSala FROM " + SALAS_TABLE + " WHERE ocupada = 0";
 
-            while (rs.next()) {
+        try (PreparedStatement stmtCubiculos = connection.prepareStatement(queryCubiculos);
+             PreparedStatement stmtCubiculosLibres = connection.prepareStatement(queryCubiculosLibres);
+             PreparedStatement stmtSalas = connection.prepareStatement(querySalas);
+             ResultSet rsCubiculos = stmtCubiculos.executeQuery();
+             ResultSet rsCubiculosLibres = stmtCubiculosLibres.executeQuery();
+             ResultSet rsSalas = stmtSalas.executeQuery()) {
+
+            JSONObject ocupacionCubiculos = new JSONObject();
+            if (rsCubiculos.next()) {
+                int total = rsCubiculos.getInt("total");
+                int ocupados = rsCubiculos.getInt("ocupados");
+                ocupacionCubiculos.put("total", total);
+                ocupacionCubiculos.put("ocupados", ocupados);
+                ocupacionCubiculos.put("disponibles", total - ocupados);
+            }
+
+            JSONArray cubiculosLibres = new JSONArray();
+            while (rsCubiculosLibres.next()) {
                 JSONObject cubiculo = new JSONObject();
-                cubiculo.put("id", rs.getInt("idCubiculo"));
-                cubiculo.put("nombre", "Cubículo " + rs.getInt("idCubiculo")); // Personaliza el nombre si es necesario
+                cubiculo.put("id", rsCubiculosLibres.getInt("idCubiculo"));
+                cubiculo.put("nombre", "Cubículo " + rsCubiculosLibres.getInt("idCubiculo"));
                 cubiculosLibres.put(cubiculo);
             }
-        }
-        return cubiculosLibres;
-    }
 
-    private JSONArray getSalasLibres(Connection connection) throws SQLException {
-        JSONArray salasLibres = new JSONArray();
-        String query = "SELECT idSala FROM biblioteca.Salas WHERE ocupada = 0";
-
-        try (PreparedStatement stmt = connection.prepareStatement(query);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
+            JSONArray salasLibres = new JSONArray();
+            while (rsSalas.next()) {
                 JSONObject sala = new JSONObject();
-                sala.put("id", rs.getInt("idSala"));
-                sala.put("nombre", "Sala " + rs.getInt("idSala")); // Personaliza el nombre si es necesario
+                sala.put("id", rsSalas.getInt("idSala"));
+                sala.put("nombre", "Sala " + rsSalas.getInt("idSala"));
                 salasLibres.put(sala);
             }
+
+            estadisticas.put("cubiculos", cubiculosLibres);
+            estadisticas.put("salas", salasLibres);
+            estadisticas.put("ocupacion", ocupacionCubiculos);
         }
-        return salasLibres;
+
+        return estadisticas;
     }
 
-    private JSONObject getOcupacionCubiculos(Connection connection) throws SQLException {
-        JSONObject ocupacion = new JSONObject();
-
-        // Consulta para obtener el número de cubículos ocupados
-        String queryOcupados = "SELECT COUNT(*) AS ocupados FROM biblioteca.Cubiculos WHERE ocupado = 1";
-        try (PreparedStatement stmt = connection.prepareStatement(queryOcupados);
-             ResultSet rs = stmt.executeQuery()) {
-
-            if (rs.next()) {
-                ocupacion.put("ocupados", rs.getInt("ocupados"));
-            }
-        }
-
-        // Consulta para obtener el número total de cubículos
-        String queryTotal = "SELECT COUNT(*) AS total FROM biblioteca.Cubiculos";
-        try (PreparedStatement stmt = connection.prepareStatement(queryTotal);
-             ResultSet rs = stmt.executeQuery()) {
-
-            if (rs.next()) {
-                ocupacion.put("total", rs.getInt("total"));
-                ocupacion.put("disponibles", rs.getInt("total") - ocupacion.getInt("ocupados"));
-            }
-        }
-
-        return ocupacion;
-    }
 }
