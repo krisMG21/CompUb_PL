@@ -39,7 +39,16 @@ function displayAlertIfNeeded(ocupados, disponibles) {
 
 // Create a doughnut chart
 function createDoughnutChart(canvasId, ocupados, disponibles) {
-    const ctx = document.getElementById(canvasId).getContext('2d');
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) {
+        console.error(`Canvas con ID "${canvasId}" no encontrado.`);
+        return;
+    }
+    if (typeof ocupados !== 'number' || typeof disponibles !== 'number') {
+        console.error('Datos no válidos para el gráfico:', { ocupados, disponibles });
+        return;
+    }
+    const ctx = canvas.getContext('2d');
     const chartData = {
         labels: ['Ocupado', 'Disponible'],
         datasets: [{
