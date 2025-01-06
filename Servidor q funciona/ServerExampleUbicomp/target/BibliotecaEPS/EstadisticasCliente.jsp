@@ -9,111 +9,113 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <link rel="icon" href="Fotos/favicon.png" type="image/png">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Estadísticas de la Biblioteca</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
     <style>
-        /* Estilo Global */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f0f8ff; /* Azul pastel */
+            background-color: #f0f8ff; /* Azul pastel suave */
+            color: #333;
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex-direction: column;
+            min-height: 100vh; /* Garantiza que el body tenga al menos el tamaño de la ventana */
+            overflow-x: hidden; /* Evitar desplazamiento horizontal */
         }
+
         .container {
+            width: 90%;
             max-width: 1200px;
-            margin: 0 auto;
             padding: 20px;
-            background-color: #ffffff; /* Blanco para el contenido */
+            background-color: #ffffff;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
-            color: #4682b4; /* Azul acero */
-            font-size: 36px;
+            margin-bottom: 20px; /* Deja espacio para scroll */
+            overflow: hidden;
+        }
+
+        h1 {
+            color: #4682b4; /* Azul pastel */
+            font-size: 2rem;
+            margin-bottom: 20px;
         }
 
         h2, h3 {
-            color: #4682b4; /* Azul pastel para títulos secundarios */
-            font-size: 28px;
+            color: #4682b4;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
         }
 
-        /* Tablas */
         table {
             width: 100%;
-            margin: 20px 0;
             border-collapse: collapse;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #b0e0e6; /* Azul pálido */
-            color: #ffffff;
-        }
-        tr:nth-child(even) {
-            background-color: #f1f1f1;
-        }
-
-        /* Contenedor del gráfico */
-        .chart-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 40px;
-            flex-direction: column; /* Asegura que el gráfico y título estén alineados correctamente */
-        }
-        canvas {
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 100%; /* Hace que el gráfico sea responsivo */
-        }
-
-        /* Alertas */
-        .alert {
-            background-color: #ffeb3b;
-            color: #555555;
-            padding: 15px;
-            border-radius: 10px;
             margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 18px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #c6d9f1;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        th {
+            background-color: #e6f0ff; /* Azul pastel claro */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f7f7f7;
+        }
+
+        tr:hover {
+            background-color: #e1f0ff; /* Azul pastel suave al pasar el ratón */
+        }
+
+        .chart-container {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f7f7f7;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert {
+            display: none;
+            background-color: #ffcccc;
+            color: #ff0000;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            font-size: 1.2rem;
         }
 
         .emoji {
-            font-size: 24px;
-            margin-right: 10px;
+            font-size: 2rem;
         }
 
-        /* Estilo para la disponibilidad */
-        .availability {
-            margin-bottom: 40px;
-        }
-
-        /* Botones */
-        .button {
+        button {
             background-color: #4682b4;
-            color: #fff;
-            padding: 10px 20px;
-            border-radius: 5px;
+            color: white;
             border: none;
-            font-size: 16px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 5px;
             cursor: pointer;
-            text-align: center;
+            margin-top: 20px;
         }
 
-        .button:hover {
-            background-color: #5f9ea0; /* Azul más oscuro */
+        button:hover {
+            background-color: #5a9bd6;
         }
     </style>
 </head>
@@ -160,10 +162,86 @@
             <span class="emoji">😅</span> Ufff, ¡Cuánta gente! <span class="emoji">📚</span><br>
             Entendemos que quizás quieras ir a otra biblioteca, ¡ánimo!
         </div>
-
-        <!-- Botón de acción (opcional) -->
-        <button class="button" onclick="location.href='MenuInicio.jsp'">Regresar al Menú Principal</button>
     </div>
-    <script src="Scripts/EstadisticasCliente.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Fetch data from the servlet
+            fetch("/BibliotecaEPS/EstadisticasCliente")
+                .then(response => response.json())
+                .then(data => {
+                    // Llenar la tabla de cubículos con los datos recibidos
+                    populateTable('cubiculosTable', data.cubiculos);
+                    populateTable('salasTable', data.salas);
+
+                    const ocupados = data.ocupacion.ocupados;
+                    const disponibles = data.ocupacion.disponibles;
+                    displayAlertIfNeeded(ocupados, disponibles);
+                    createDoughnutChart('ocupacionRosco', ocupados, disponibles);
+                })
+                .catch(error => {
+                    console.error('Error al obtener las estadísticas:', error);
+                    alert('Ocurrió un error al cargar las estadísticas.');
+                });
+        });
+
+        // Populate table with data
+        function populateTable(tableId, items) {
+            const tableBody = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ""; // Limpiar tabla
+            items.forEach(item => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = item.id;
+                row.insertCell(1).textContent = item.nombre;
+            });
+        }
+
+        // Display alert if occupancy is too high
+        function displayAlertIfNeeded(ocupados, disponibles) {
+            const total = ocupados + disponibles;
+            const porcentajeOcupado = (ocupados / total) * 100;
+            if (porcentajeOcupado > 90) {
+                document.getElementById('alertMessage').style.display = 'block';
+            }
+        }
+
+        // Create a doughnut chart
+        function createDoughnutChart(canvasId, ocupados, disponibles) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            const chartData = {
+                labels: ['Ocupado', 'Disponible'],
+                datasets: [{
+                    data: [ocupados, disponibles],
+                    backgroundColor: ['#FF6347', '#90EE90'],
+                    hoverBackgroundColor: ['#FF4500', '#32CD32'],
+                    borderWidth: 1
+                }]
+            };
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (tooltipItem) {
+                                    const dataset = tooltipItem.dataset;
+                                    const total = dataset.data.reduce((sum, value) => sum + value, 0);
+                                    const currentValue = dataset.data[tooltipItem.dataIndex];
+                                    const percentage = Math.round((currentValue / total) * 100);
+                                    return currentValue + ' (' + percentage + '%)';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>

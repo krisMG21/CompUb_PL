@@ -55,7 +55,7 @@ public class PerfilUsuarioServlet extends HttpServlet {
             }
 
             // Consulta SQL para obtener los datos del usuario
-            String sql = "SELECT nombreApellido, email FROM bibliotecaUsuarios WHERE email = ?";
+            String sql = "SELECT nombreApellido, email FROM biblioteca.Usuarios WHERE email = ?";
             preparedStatement = conexionBD.prepareStatement(sql);
 
             // Asignar el valor al parámetro

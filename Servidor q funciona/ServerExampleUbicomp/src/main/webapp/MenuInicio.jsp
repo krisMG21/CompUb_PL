@@ -71,6 +71,8 @@
         }
     </style>
 </head>
+<link rel="icon" href="Fotos/favicon.png" type="image/png">
+
 <body>
     <!-- Imagen decorativa, se muestra en la esquina superior derecha -->
     <img src="Fotos/LogoUAH.png" alt="Logo" class="header-image">

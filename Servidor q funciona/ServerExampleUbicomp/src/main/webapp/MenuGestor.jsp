@@ -11,6 +11,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <link rel="icon" href="Fotos/favicon.png" type="image/png">
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú Gestor</title>
@@ -90,7 +92,7 @@
 
         <div class="menu-container">
             <button onclick="window.location.href='GestionSalas.jsp'">Gestión de Salas </button>
-            <button onclick="window.location.href='PuestosLectura.jsp'">Gestión de puestos de lectura </button>
+            <button onclick="window.location.href='PuestosDeLectura.jsp'">Gestión de puestos de lectura </button>
             <button onclick="window.location.href='MapaBiblioteca.jsp'">Mapa de la bilioteca </button>
             <button onclick="window.location.href='https://uah.es/es/'">Información </button>
             <button onclick="window.location.href='EstadisticasGestor.jsp'">Estadísticas</button>
