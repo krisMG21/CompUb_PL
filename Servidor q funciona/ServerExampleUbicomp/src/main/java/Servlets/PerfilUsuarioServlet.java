@@ -51,7 +51,7 @@ public class PerfilUsuarioServlet extends HttpServlet {
             }
 
             // Crear la consulta SQL para obtener los datos del usuario
-            String sql = "SELECT nombre, apellidos, email FROM Usuarios WHERE email = ?";
+            String sql = "SELECT nombreApellido, email FROM Usuarios WHERE email = ?";
             preparedStatement = conexionBD.prepareStatement(sql);
 
             // Asignar el valor al parámetro
@@ -62,13 +62,11 @@ public class PerfilUsuarioServlet extends HttpServlet {
 
             if (resultadosConsulta.next()) {
                 // Usuario encontrado, devolver los datos en formato JSON
-                String nombre = resultadosConsulta.getString("nombre");
-                String apellidos = resultadosConsulta.getString("apellidos");
+                String nombreApellido = resultadosConsulta.getString("nombreApellido");
                 String correo = resultadosConsulta.getString("email");
 
                 out.write("{");
-                out.write("\"nombre\": \"" + nombre + "\",");
-                out.write("\"apellidos\": \"" + apellidos + "\",");
+                out.write("\"nombre\": \"" + nombreApellido + "\",");
                 out.write("\"correo\": \"" + correo + "\"");
                 out.write("}");
             } else {

@@ -146,6 +146,50 @@ public class Logic {
 
     return userType;
 }
+  
+public static String getNombre(String email) {
+    String nombre = null;
+    ConnectionDB Conexion = new ConnectionDB();
+    Connection con = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+
+    try {
+        con = Conexion.obtainConnection(true);
+        Log.log.info("Conexión establecida con la base de datos para usuario: " + email);
+
+        String sql = "SELECT nombreApellido FROM biblioteca.Usuarios WHERE email = ?";
+        ps = con.prepareStatement(sql);
+        ps.setString(1, email);
+
+        Log.log.info("Sentencia SQL preparada: " + ps.toString());
+
+        rs = ps.executeQuery();
+        if (rs.next()) {
+            nombre = rs.getString("nombreApellido");
+            Log.log.info("Nombre de usuario encontrado con éxito: " + nombre);
+        } else {
+            Log.log.info("Nombre no encontrado para el usuario: " + email);
+        }
+    } catch (SQLException e) {
+        Log.log.error("Error SQL: " + e);
+    } catch (NullPointerException e) {
+        Log.log.error("Error de puntero nulo al autenticar: " + e);
+    } catch (Exception e) {
+        Log.log.error("Error general: " + e);
+    } finally {
+        try {
+            if (ps != null) ps.close();
+            if (rs != null) rs.close();
+            if (con != null) Conexion.closeConnection(con);
+        } catch (SQLException e) {
+            Log.log.error("Error al cerrar recursos: " + e);
+        }
+    }
+
+    return nombre;
+}
+  
 public static ArrayList<Reservas> getReservasPorEmail(String email) {
     ArrayList<Reservas> reservas = new ArrayList<>();
     ConnectionDB conector = new ConnectionDB();

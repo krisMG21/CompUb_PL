@@ -11,7 +11,6 @@ fetch('PerfilUsuarioServlet')
             console.error('Error del servidor:', data.error);
         } else {
             document.getElementById('nombre').textContent = data.nombre || 'No disponible';
-            document.getElementById('apellidos').textContent = data.apellidos || 'No disponible';
             document.getElementById('correo').textContent = data.correo || 'No disponible';
         }
     })

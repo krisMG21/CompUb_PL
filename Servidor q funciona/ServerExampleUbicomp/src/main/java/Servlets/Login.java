@@ -23,10 +23,14 @@ public class Login extends HttpServlet {
             boolean acceso = Logic.ConnectionDB(request.getParameter("username"), request.getParameter("password"));
             
             String userType = Logic.authenticateUser(email, password);
+            
+            String nombreApellido = Logic.getNombre(email);
+            
             if (acceso){
             if (userType != null) {
                 HttpSession session = request.getSession();
                 session.setAttribute("email", email);
+                session.setAttribute("nombre", nombreApellido);
                 session.setAttribute("userType", userType);
 
                 if ("admin".equals(userType)) {

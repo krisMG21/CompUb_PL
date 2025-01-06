@@ -86,7 +86,7 @@
 </head>
 <body>
 
-        <h1>Bienvenido,<%= session.getAttribute("email") %></h1> <!--CAMBIAR POR EL  VERDADERO NOMBRE DEL USUUARIO-->
+        <h1>Bienvenido,<%= session.getAttribute("nombre") %></h1> 
 
         <div class="menu-container">
             <button onclick="window.location.href='Perfil.jsp'">Perfil</button>
