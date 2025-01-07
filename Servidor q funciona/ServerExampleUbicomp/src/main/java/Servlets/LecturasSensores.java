@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 
-public class Temperatura extends HttpServlet {
+public class LecturasSensores extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -55,8 +55,8 @@ public class Temperatura extends HttpServlet {
                     salaData.put("idSala", rs.getInt("idSala"));
                     salaData.put("temperatura", rs.getObject("temperatura"));
                     salaData.put("humedad", rs.getObject("humedad"));
-                    salaData.put("sonido", rs.getObject("sonido"));
-                    salaData.put("luz", rs.getObject("luz"));
+                    salaData.put("sonido", categorizarRuido(rs.getInt("sonido")));
+                    salaData.put("luz", categorizarLuminosidad(rs.getInt("luz")));
                     salaData.put("fechaHora", rs.getString("fechaHora"));
                     sensoresData.put(salaData);
                 }
@@ -70,5 +70,25 @@ public class Temperatura extends HttpServlet {
         }
 
         return sensoresData;
+    }
+
+    private String categorizarRuido(int valor) {
+        if (valor < 30) {
+            return "Bajo";
+        } else if (valor <= 60) {
+            return "Medio";
+        } else {
+            return "Alto";
+        }
+    }
+    
+    private String categorizarLuminosidad(int valor) {
+        if (valor < 100) {
+            return "Bajo";
+        } else if (valor <= 300) {
+            return "Medio";
+        } else {
+            return "Alto";
+        }
     }
 }

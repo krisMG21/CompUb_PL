@@ -52,7 +52,6 @@
         <servlet-name>EstadisticasCliente</servlet-name>
         <url-pattern>/EstadisticasCliente</url-pattern>
     </servlet-mapping>
-    
     <!--  Declaración del servlet  -->
     <servlet>
         <servlet-name>EstadisticasGestor</servlet-name>
@@ -73,18 +72,15 @@
         <servlet-name>CancelarReserva</servlet-name>
         <url-pattern>/CancelarReserva</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>Temperatura</servlet-name>
-        <servlet-class>Servlets.Temperatura</servlet-class>
+        <servlet-class>Servlets.LecturasSensores</servlet-class>
     </servlet>
     <!--  Mapeo del servlet  -->
     <servlet-mapping>
         <servlet-name>Temperatura</servlet-name>
         <url-pattern>/Temperatura</url-pattern>
     </servlet-mapping>
-    
-    
     <servlet>
         <servlet-name>InfCubiculo</servlet-name>
         <servlet-class>Servlets.InfCubiculo</servlet-class>
@@ -94,7 +90,4 @@
         <servlet-name>InfCubiculo</servlet-name>
         <url-pattern>/InfCubiculo</url-pattern>
     </servlet-mapping>
-
-    
-    
 </web-app>

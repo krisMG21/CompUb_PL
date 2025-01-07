@@ -96,5 +96,4 @@ public class EstadisticasCliente extends HttpServlet {
 
         return estadisticas;
     }
-
 }
