@@ -1,19 +1,21 @@
 package Servlets;
 
 import Database.ConnectionDB;
+import Mqtt.MQTTBroker;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.json.JSONArray;
+import jakarta.servlet.annotation.WebServlet;
 import org.json.JSONObject;
+import Logic.Log;
+import Logic.Logic;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.*;
-import java.util.Optional;
+import org.json.JSONArray;
 
-@WebServlet(name = "Reserva", urlPatterns = {"/Reserva", "/Reserva/*"})
 public class Reserva extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -22,99 +24,115 @@ public class Reserva extends HttpServlet {
         super();
     }
 
+    // Método POST para realizar una reserva
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
 
-        JSONObject jsonResponse = new JSONObject();
-        String email = request.getParameter("email");
-        String idSalaStr = request.getParameter("idSala");
-        String horaReservaStr = request.getParameter("horaReserva");
+        ConnectionDB connectionBD = new ConnectionDB();
+        Connection conexionBD = null;
+        PreparedStatement preparedStatement = null;
 
-        if (email == null || email.isEmpty() || idSalaStr == null || horaReservaStr == null) {
-            sendErrorResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Parámetros incompletos. Verifique email, idSala y horaReserva.");
-            return;
-        }
+        try {
+            conexionBD = connectionBD.obtainConnection(true);
 
-        try (Connection conexionBD = new ConnectionDB().obtainConnection(true)) {
-            int idSala = Integer.parseInt(idSalaStr);
-            Timestamp horaReserva = Timestamp.valueOf(horaReservaStr);
+            String email = request.getParameter("email");
+            int idSala = Integer.parseInt(request.getParameter("idSala"));
+            Timestamp horaReserva = Timestamp.valueOf(request.getParameter("horaReserva"));
 
-            if (reservaExiste(conexionBD, idSala, horaReserva)) {
-                sendErrorResponse(response, HttpServletResponse.SC_CONFLICT, "Ya existe una reserva en esta sala para la fecha y hora especificada.");
-                return;
-            }
-
-            String sql = "INSERT INTO biblioteca.Reservas (email_usuario, idSala_sala, horaReserva) VALUES (?, ?, ?)";
-            try (PreparedStatement preparedStatement = conexionBD.prepareStatement(sql)) {
-                preparedStatement.setString(1, email);
-                preparedStatement.setInt(2, idSala);
-                preparedStatement.setTimestamp(3, horaReserva);
-
-                int rowsAffected = preparedStatement.executeUpdate();
-                if (rowsAffected > 0) {
-                    jsonResponse.put("success", true);
-                    jsonResponse.put("message", "Reserva realizada con éxito");
-                    response.setStatus(HttpServletResponse.SC_OK);
-                } else {
-                    sendErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al realizar la reserva.");
+            // Comprobar si ya existe una reserva en la misma sala a la misma hora
+            String checkSql = "SELECT COUNT(*) AS conflictCount FROM biblioteca.Reservas WHERE idSala_sala = ? AND horaReserva = ?";
+            try (PreparedStatement checkStmt = conexionBD.prepareStatement(checkSql)) {
+                checkStmt.setInt(1, idSala);
+                checkStmt.setTimestamp(2, horaReserva);
+                try (ResultSet rs = checkStmt.executeQuery()) {
+                    if (rs.next() && rs.getInt("conflictCount") > 0) {
+                        JSONObject jsonResponse = new JSONObject();
+                        jsonResponse.put("success", false);
+                        jsonResponse.put("message", "Ya existe una reserva en esta sala para la fecha y hora especificada.");
+                        response.getWriter().write(jsonResponse.toString());
+                        return;
+                    }
                 }
             }
-        } catch (IllegalArgumentException e) {
-            sendErrorResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Formato de parámetros inválido.");
+
+            // Insertar nueva reserva
+            String sql = "INSERT INTO biblioteca.Reservas (email_usuario, idSala_sala, horaReserva) VALUES (?, ?, ?)";
+            preparedStatement = ConnectionDB.getStatement(conexionBD, sql);
+            preparedStatement.setString(1, email);
+            preparedStatement.setInt(2, idSala);
+            preparedStatement.setTimestamp(3, horaReserva);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected > 0) {
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("success", true);
+                jsonResponse.put("message", "Reserva realizada con éxito");
+                response.getWriter().write(jsonResponse.toString());
+            } else {
+                JSONObject jsonResponse = new JSONObject();
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Error al realizar la reserva");
+                response.getWriter().write(jsonResponse.toString());
+            }
         } catch (SQLException e) {
-            log("Error en la base de datos: " + e.getMessage(), e);
-            sendErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error interno en el servidor.");
+            Log.log.error("Error en la base de datos: " + e.getMessage(), e);
+            JSONObject jsonResponse = new JSONObject();
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Error en la base de datos: " + e.getMessage());
+            response.getWriter().write(jsonResponse.toString());
+        } finally {
+            if (preparedStatement != null) try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                Log.log.error("Error al cerrar PreparedStatement", e);
+            }
+            if (conexionBD != null) {
+                connectionBD.closeConnection(conexionBD);
+            }
         }
     }
 
+    // Método GET para obtener las reservas filtradas
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
         String fecha = request.getParameter("fecha");
 
-        if ((email == null || email.isEmpty()) && (fecha == null || fecha.isEmpty())) {
-            sendErrorResponse(response, HttpServletResponse.SC_BAD_REQUEST, "Debe proporcionar al menos un filtro (email o fecha).");
-            return;
-        }
+        JSONArray reservas = getReservasFiltradas(email, fecha);
 
-        try {
-            JSONArray reservas = getReservasFiltradas(email, fecha);
-            response.setContentType("application/json");
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.getWriter().write(reservas.toString());
-        } catch (SQLException e) {
-            log("Error al consultar las reservas: " + e.getMessage(), e);
-            sendErrorResponse(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error interno en el servidor.");
-        }
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        PrintWriter out = response.getWriter();
+        out.print(reservas.toString());
+        out.flush();
     }
 
+    private JSONArray getReservasFiltradas(String email, String fecha) {
+        JSONArray reservasJson = new JSONArray();
 
-
-    private boolean reservaExiste(Connection conexionBD, int idSala, Timestamp horaReserva) throws SQLException {
-        String checkSql = "SELECT COUNT(*) AS conflictCount FROM biblioteca.Reservas WHERE idSala_sala = ? AND horaReserva = ?";
-        try (PreparedStatement checkStmt = conexionBD.prepareStatement(checkSql)) {
-            checkStmt.setInt(1, idSala);
-            checkStmt.setTimestamp(2, horaReserva);
-            try (ResultSet rs = checkStmt.executeQuery()) {
-                return rs.next() && rs.getInt("conflictCount") > 0;
-            }
-        }
-    }
-
-    private JSONArray getReservasFiltradas(String email, String fecha) throws SQLException {
         String sql = "SELECT idReserva, email_usuario, idSala_sala, horaReserva FROM biblioteca.Reservas WHERE 1=1";
-        if (email != null && !email.isEmpty()) sql += " AND email_usuario = ?";
-        if (fecha != null && !fecha.isEmpty()) sql += " AND DATE(horaReserva) = ?";
 
-        try (Connection conn = new ConnectionDB().obtainConnection(true);
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        if (email != null && !email.isEmpty()) {
+            sql += " AND email_usuario = ?";
+        }
+        if (fecha != null && !fecha.isEmpty()) {
+            sql += " AND DATE(horaReserva) = ?";
+        }
+
+        try (Connection conn = new ConnectionDB().obtainConnection(true); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
             int index = 1;
-            if (email != null && !email.isEmpty()) stmt.setString(index++, email);
-            if (fecha != null && !fecha.isEmpty()) stmt.setString(index, fecha);
+            if (email != null && !email.isEmpty()) {
+                stmt.setString(index++, email);
+            }
+            if (fecha != null && !fecha.isEmpty()) {
+                stmt.setString(index, fecha);
+            }
 
-            JSONArray reservasJson = new JSONArray();
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
                     JSONObject reserva = new JSONObject();
@@ -125,23 +143,39 @@ public class Reserva extends HttpServlet {
                     reservasJson.put(reserva);
                 }
             }
-            return reservasJson;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+
+        return reservasJson;
     }
 
-    private void sendErrorResponse(HttpServletResponse response, int statusCode, String message) throws IOException {
+    // Método DELETE para cancelar una reserva
+    @Override
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+
+        String email = request.getParameter("email");
+        int idSala = Integer.parseInt(request.getParameter("idSala"));
+        Timestamp horaReserva = Timestamp.valueOf(request.getParameter("horaReserva"));
+
+        boolean success = Logic.cancelarReserva(email, idSala, horaReserva);
+
         JSONObject jsonResponse = new JSONObject();
-        jsonResponse.put("success", false);
-        jsonResponse.put("message", message);
-        response.setStatus(statusCode);
+        if (success) {
+            jsonResponse.put("success", true);
+            jsonResponse.put("message", "Reserva cancelada con éxito.");
+        } else {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Error al cancelar la reserva.");
+        }
+
         response.getWriter().write(jsonResponse.toString());
     }
 
-    private void sendSuccessResponse(HttpServletResponse response, String message) throws IOException {
-        JSONObject jsonResponse = new JSONObject();
-        jsonResponse.put("success", true);
-        jsonResponse.put("message", message);
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().write(jsonResponse.toString());
+    @Override
+    public void destroy() {
+        // Limpiar recursos, si es necesario
     }
 }
