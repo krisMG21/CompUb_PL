@@ -273,48 +273,54 @@
                 });
             });
 
-            // Fetch de reservas
-            function fetchReservas() {
-                 let filtroEmail = document.getElementById('filtroEmail').value;
-                let filtroFecha = document.getElementById('filtroFecha').value;
+function fetchReservas() {
+    let filtroEmail = document.getElementById('filtroEmail').value;
+    let filtroFecha = document.getElementById('filtroFecha').value;
 
-                let url = 'Reserva';
-                let params = [];
-                if (filtroEmail) {
-                    params.push('email_usuario=' + encodeURIComponent(filtroEmail));
-                }
-                if (filtroFecha) {
-                    params.push('fecha=' + encodeURIComponent(filtroFecha));
-                }
-                if (params.length > 0) {
-                    url += '?' + params.join('&');
-                }
+    let url = 'Reserva';
+    let params = [];
 
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        let reservasTable = document.getElementById('reservasTable').getElementsByTagName('tbody')[0];
-                        reservasTable.innerHTML = ''; // Limpiar el contenido previo
-                        if (data.length > 0) {
-                            data.forEach(reserva => {
-                                let row = reservasTable.insertRow();
-                                let cellEmail = row.insertCell(0);
-                                let cellIdSala = row.insertCell(1);
-                                let cellHoraReserva = row.insertCell(2);
+    // Solo agregar los filtros si están llenos
+    if (filtroEmail) {
+        params.push('email_usuario=' + encodeURIComponent(filtroEmail));
+    }
+    if (filtroFecha) {
+        params.push('fecha=' + encodeURIComponent(filtroFecha));
+    }
 
-                                cellEmail.textContent = reserva.email;
-                                cellIdSala.textContent = reserva.idSala;
-                                cellHoraReserva.textContent = reserva.horaReserva;
-                            });
-                        } else {
-                            let row = reservasTable.insertRow();
-                            let cell = row.insertCell(0);
-                            cell.colSpan = 3;
-                            cell.textContent = 'No hay reservas futuras que coincidan con los filtros.';
-                        }
-                    })
-                    .catch(error => console.error('Error al obtener las reservas:', error));
+    // Si hay parámetros, agregarlos a la URL
+    if (params.length > 0) {
+        url += '?' + params.join('&');
+    }
+
+    // Realizar la petición al servidor
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            let reservasTable = document.getElementById('reservasTable').getElementsByTagName('tbody')[0];
+            reservasTable.innerHTML = ''; // Limpiar el contenido previo
+
+            if (data.length > 0) {
+                data.forEach(reserva => {
+                    let row = reservasTable.insertRow();
+                    let cellEmail = row.insertCell(0);
+                    let cellIdSala = row.insertCell(1);
+                    let cellHoraReserva = row.insertCell(2);
+
+                    cellEmail.textContent = reserva.email;
+                    cellIdSala.textContent = reserva.idSala;
+                    cellHoraReserva.textContent = reserva.horaReserva;
+                });
+            } else {
+                let row = reservasTable.insertRow();
+                let cell = row.insertCell(0);
+                cell.colSpan = 3;
+                cell.textContent = 'No hay reservas futuras que coincidan con los filtros.';
             }
+        })
+        .catch(error => console.error('Error al obtener las reservas:', error));
+}
+
         </script>
     </body>
 </html>
