@@ -18,8 +18,8 @@
 // INFO: MODO DE EJECUCIÓN
 // ==================================================
 typedef enum {SALA, CUBICULO} tipo;
-#define MODE SALA
-// #define MODE CUBICULO
+//#define MODE SALA
+#define MODE CUBICULO
 
 
 // INFO: IDENTIFICADOR DE CIRCUITO
@@ -84,7 +84,7 @@ bool ocupado = false;
 // Variables sala
 bool sala_reservada = false;
 bool sala_abierta = false;
-unsigned long UID_Valida = 0; //Not set yet
+unsigned long UID_Valida = 1; //Not set yet
 
 // Contador de pulsaciones del botón
 int pulsaciones = 0;
@@ -217,7 +217,7 @@ void loop() {
     }
     delay(500);
 }
-
+}
 // Conexión a WiFi
 void initWifi() {
     WiFi.begin(WIFI_SSID, WIFI_PASS); // Conectar a la red WiFi
