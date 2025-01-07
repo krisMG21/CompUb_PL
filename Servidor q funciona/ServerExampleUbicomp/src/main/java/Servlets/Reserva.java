@@ -8,13 +8,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.annotation.WebServlet;
 import org.json.JSONObject;
+import org.json.JSONArray;
 import Logic.Log;
 import Logic.Logic;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
-import org.json.JSONArray;
 
 @WebServlet(name = "Reserva", urlPatterns = {"/Reserva", "/Reserva/*"})
 public class Reserva extends HttpServlet {
@@ -33,25 +33,39 @@ public class Reserva extends HttpServlet {
 
         ConnectionDB connectionBD = new ConnectionDB();
         Connection conexionBD = null;
-        PreparedStatement preparedStatement = null;
+        
+        JSONObject jsonResponse = new JSONObject();
+        
+        String email = request.getParameter("email");
+        String idSalaStr = request.getParameter("idSala");
+        String horaReservaStr = request.getParameter("horaReserva");
+        
+        //Validación de parámetros
+        if (email == null || email.isEmpty() || idSalaStr == null || horaReservaStr == null){
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Parámetros incompletos. Verifique email, idSala y horaReserva.");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(jsonResponse.toString());
+            return;
+        }
 
         try {
+            int idSala = Integer.parseInt(idSalaStr);
+            Timestamp horaReserva = Timestamp.valueOf(horaReservaStr);
+            
             conexionBD = connectionBD.obtainConnection(true);
-
-            String email = request.getParameter("email");
-            int idSala = Integer.parseInt(request.getParameter("idSala"));
-            Timestamp horaReserva = Timestamp.valueOf(request.getParameter("horaReserva"));
 
             // Comprobar si ya existe una reserva en la misma sala a la misma hora
             String checkSql = "SELECT COUNT(*) AS conflictCount FROM biblioteca.Reservas WHERE idSala_sala = ? AND horaReserva = ?";
             try (PreparedStatement checkStmt = conexionBD.prepareStatement(checkSql)) {
                 checkStmt.setInt(1, idSala);
                 checkStmt.setTimestamp(2, horaReserva);
+                
                 try (ResultSet rs = checkStmt.executeQuery()) {
                     if (rs.next() && rs.getInt("conflictCount") > 0) {
-                        JSONObject jsonResponse = new JSONObject();
                         jsonResponse.put("success", false);
                         jsonResponse.put("message", "Ya existe una reserva en esta sala para la fecha y hora especificada.");
+                        response.setStatus(HttpServletResponse.SC_CONFLICT);
                         response.getWriter().write(jsonResponse.toString());
                         return;
                     }
@@ -60,36 +74,37 @@ public class Reserva extends HttpServlet {
 
             // Insertar nueva reserva
             String sql = "INSERT INTO biblioteca.Reservas (email_usuario, idSala_sala, horaReserva) VALUES (?, ?, ?)";
-            preparedStatement = ConnectionDB.getStatement(conexionBD, sql);
-            preparedStatement.setString(1, email);
-            preparedStatement.setInt(2, idSala);
-            preparedStatement.setTimestamp(3, horaReserva);
+            
+            try(PreparedStatement preparedStatement = conexionBD.prepareStatement(sql)){
+                preparedStatement.setString(1, email);
+                preparedStatement.setInt(2, idSala);
+                preparedStatement.setTimestamp(3, horaReserva);
 
-            int rowsAffected = preparedStatement.executeUpdate();
+                int rowsAffected = preparedStatement.executeUpdate();
 
-            if (rowsAffected > 0) {
-                JSONObject jsonResponse = new JSONObject();
-                jsonResponse.put("success", true);
-                jsonResponse.put("message", "Reserva realizada con éxito");
-                response.getWriter().write(jsonResponse.toString());
-            } else {
-                JSONObject jsonResponse = new JSONObject();
-                jsonResponse.put("success", false);
-                jsonResponse.put("message", "Error al realizar la reserva");
+                if (rowsAffected > 0) {
+                    jsonResponse.put("success", true);
+                    jsonResponse.put("message", "Reserva realizada con éxito");
+                    response.setStatus(HttpServletResponse.SC_OK);
+                } else {
+                    jsonResponse.put("success", false);
+                    jsonResponse.put("message", "Error al realizar la reserva");
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
                 response.getWriter().write(jsonResponse.toString());
             }
+        } catch (IllegalArgumentException e) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Formato de parámetros inválido.");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(jsonResponse.toString());
         } catch (SQLException e) {
             Log.log.error("Error en la base de datos: " + e.getMessage(), e);
-            JSONObject jsonResponse = new JSONObject();
             jsonResponse.put("success", false);
             jsonResponse.put("message", "Error en la base de datos: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             response.getWriter().write(jsonResponse.toString());
         } finally {
-            if (preparedStatement != null) try {
-                preparedStatement.close();
-            } catch (SQLException e) {
-                Log.log.error("Error al cerrar PreparedStatement", e);
-            }
             if (conexionBD != null) {
                 connectionBD.closeConnection(conexionBD);
             }
@@ -101,21 +116,35 @@ public class Reserva extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String email = request.getParameter("email");
         String fecha = request.getParameter("fecha");
+        
+        // Validar filtros
+        if ((email == null || email.isEmpty()) && (fecha == null || fecha.isEmpty())) {
+            JSONObject errorResponse = new JSONObject();
+            errorResponse.put("success", false);
+            errorResponse.put("message", "Debe proporcionar al menos un filtro (email o fecha).");
+            response.setContentType("application/json");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(errorResponse.toString());
+            return;
+        }
 
         JSONArray reservas = getReservasFiltradas(email, fecha);
 
         response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter().write(reservas.toString());
+        
+        //response.setCharacterEncoding("UTF-8");
 
-        PrintWriter out = response.getWriter();
-        out.print(reservas.toString());
-        out.flush();
+        //PrintWriter out = response.getWriter();
+        //out.print(reservas.toString());
+        //out.flush();
     }
 
     private JSONArray getReservasFiltradas(String email, String fecha) {
         JSONArray reservasJson = new JSONArray();
 
-        String sql = "SELECT idReserva, email_usuario, idSala_sala, horaReserva FROM biblioteca.Reservas WHERE 1=1";
+        String sql = "SELECT idReserva, email_usuario, idSala_sala, horaReserva FROM biblioteca.Reservas";
 
         if (email != null && !email.isEmpty()) {
             sql += " AND email_usuario = ?";
@@ -158,18 +187,39 @@ public class Reserva extends HttpServlet {
         response.setCharacterEncoding("UTF-8");
 
         String email = request.getParameter("email");
-        int idSala = Integer.parseInt(request.getParameter("idSala"));
-        Timestamp horaReserva = Timestamp.valueOf(request.getParameter("horaReserva"));
-
-        boolean success = Logic.cancelarReserva(email, idSala, horaReserva);
+        String idSalaStr = request.getParameter("idSala");
+        String horaReservaStr = request.getParameter("horaReserva");
 
         JSONObject jsonResponse = new JSONObject();
-        if (success) {
-            jsonResponse.put("success", true);
-            jsonResponse.put("message", "Reserva cancelada con éxito.");
-        } else {
+
+        // Validar parámetros
+        if (email == null || email.isEmpty() || idSalaStr == null || horaReservaStr == null) {
             jsonResponse.put("success", false);
-            jsonResponse.put("message", "Error al cancelar la reserva.");
+            jsonResponse.put("message", "Parámetros incompletos. Verifique email, idSala y horaReserva.");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().write(jsonResponse.toString());
+            return;
+        }
+        
+        try {
+            int idSala = Integer.parseInt(idSalaStr);
+            Timestamp horaReserva = Timestamp.valueOf(horaReservaStr);
+
+            boolean success = Logic.cancelarReserva(email, idSala, horaReserva);
+
+            if (success) {
+                jsonResponse.put("success", true);
+                jsonResponse.put("message", "Reserva cancelada con éxito.");
+                response.setStatus(HttpServletResponse.SC_OK);
+            } else {
+                jsonResponse.put("success", false);
+                jsonResponse.put("message", "Error al cancelar la reserva.");
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            }
+        } catch (IllegalArgumentException e) {
+            jsonResponse.put("success", false);
+            jsonResponse.put("message", "Formato de parámetros inválido.");
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
 
         response.getWriter().write(jsonResponse.toString());

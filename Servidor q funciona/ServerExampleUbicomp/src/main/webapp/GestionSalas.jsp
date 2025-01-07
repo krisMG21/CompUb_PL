@@ -16,6 +16,7 @@
         <title>Gestión de Reservas de Salas</title>
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
         <style>
+            /* Estilos generales */
             body {
                 font-family: Arial, sans-serif;
                 background-color: #f2f7fc;
@@ -23,7 +24,6 @@
                 margin: 0;
                 padding: 0;
             }
-
             header {
                 background-color: #a1c6ea;
                 color: white;
@@ -31,7 +31,6 @@
                 text-align: center;
                 font-size: 24px;
             }
-
             .container {
                 max-width: 900px;
                 margin: 20px auto;
@@ -40,22 +39,18 @@
                 border-radius: 8px;
                 box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             }
-
             h2 {
                 color: #3b6a92;
             }
-
             .form-group {
                 margin-bottom: 15px;
             }
-
             label {
                 display: block;
                 margin-bottom: 8px;
                 font-size: 16px;
                 color: #3b6a92;
             }
-
             input[type="email"], select, input[type="text"], input[type="date"] {
                 width: 100%;
                 padding: 10px;
@@ -66,7 +61,6 @@
                 box-sizing: border-box;
                 background-color: #f9f9f9;
             }
-
             button {
                 background-color: #a1c6ea;
                 color: white;
@@ -77,54 +71,37 @@
                 border-radius: 5px;
                 transition: background-color 0.3s ease;
             }
-
             button:hover {
                 background-color: #5a92bb;
             }
-
-            hr {
-                border: 1px solid #e1e1e1;
-                margin: 20px 0;
-            }
-
             table {
                 width: 100%;
                 border-collapse: collapse;
                 margin-top: 20px;
             }
-
             th, td {
                 padding: 10px;
                 text-align: left;
                 border-bottom: 1px solid #ddd;
             }
-
             th {
                 background-color: #a1c6ea;
                 color: white;
             }
-
-            td {
-                background-color: #f9f9f9;
-            }
-
             td[colspan="3"] {
                 text-align: center;
                 color: #999;
             }
-
             #mensajeReserva {
                 margin-top: 15px;
                 padding: 10px;
                 border-radius: 5px;
                 font-size: 14px;
             }
-
             .exito {
                 background-color: #d4edda;
                 color: #155724;
             }
-
             .error {
                 background-color: #f8d7da;
                 color: #721c24;
@@ -155,9 +132,7 @@
                     <label for="idSala">ID de la Sala:</label>
                     <select id="idSala" name="idSala" required>
                         <option value="">--Selecciona una sala--</option>
-                        <option value="1">Sala 1</option>
-                        <option value="2">Sala 2</option>
-                        <!-- Más opciones según las salas disponibles -->
+                        <!-- Opciones dinámicas cargadas desde el backend -->
                     </select>
                 </div>
                 <div class="form-group">
@@ -181,19 +156,9 @@
 
             <hr>
 
-            <!-- Filtro para las reservas -->
-            <div class="form-group">
-                <label for="filtroEmail">Filtrar por Email:</label>
-                <input type="email" id="filtroEmail" name="filtroEmail">
-            </div>
-            <div class="form-group">
-                <label for="filtroFecha">Filtrar por Fecha:</label>
-                <input type="date" id="filtroFecha" name="filtroFecha">
-            </div>
-
             <!-- Consultar Reservas Futuras -->
             <h2>Consultar Reservas Futuras</h2>
-            <div id="reservas">
+            <div>
                 <button onclick="fetchReservas()">Cargar Reservas Futuras</button>
             </div>
 
@@ -219,20 +184,18 @@
         <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
         <script>
             $(function () {
-                // Deshabilitar fines de semana y días festivos
-                const diasNoLaborables = ["2025-01-01", "2025-12-25"];
+                // Cargar salas disponibles
+                cargarSalas();
 
+                // Configuración del calendario
+                const diasNoLaborables = ["2025-01-01", "2025-12-25"];
                 $("#fecha").datepicker({
                     dateFormat: "yy-mm-dd",
                     minDate: 0,
                     beforeShowDay: function (date) {
                         const day = date.getDay();
                         const formattedDate = $.datepicker.formatDate('yy-mm-dd', date);
-
-                        if (day === 0 || day === 6 || diasNoLaborables.includes(formattedDate)) {
-                            return [false, "disabled-date", "No disponible"];
-                        }
-                        return [true, "enabled-date", "Disponible"];
+                        return [day !== 0 && day !== 6 && !diasNoLaborables.includes(formattedDate)];
                     }
                 });
 
@@ -245,82 +208,49 @@
                     const hora = $("#horaReserva").val();
 
                     if (!email || !idSala || !fecha || !hora) {
-                        $("#mensajeReserva").html("Por favor, completa todos los campos.")
-                            .removeClass("exito").addClass("error").fadeIn();
+                        mostrarMensaje("Por favor, completa todos los campos.", false);
                         return;
                     }
 
-                    const horaReserva = fecha + " " + hora + ":00";
-
-                    $.ajax({
-                        url: 'Reserva',
-                        type: 'POST',
-                        data: { email, idSala, horaReserva },
-                        success: function (response) {
-                            if (response.success) {
-                                $("#mensajeReserva").html(response.message)
-                                    .removeClass("error").addClass("exito").fadeIn();
-                            } else {
-                                $("#mensajeReserva").html(response.message)
-                                    .removeClass("exito").addClass("error").fadeIn();
-                            }
-                        },
-                        error: function () {
-                            $("#mensajeReserva").html("Error al procesar la reserva.")
-                                .removeClass("exito").addClass("error").fadeIn();
-                        }
-                    });
+                    $.post('Reserva', { email, idSala, horaReserva: `${fecha} ${hora}:00` })
+                        .done(response => mostrarMensaje(response.message, response.success))
+                        .fail(() => mostrarMensaje("Error al realizar la reserva.", false));
                 });
             });
 
-function fetchReservas() {
-    let filtroEmail = document.getElementById('filtroEmail').value;
-    let filtroFecha = document.getElementById('filtroFecha').value;
-
-    let url = 'Reserva';
-    let params = [];
-
-    // Solo agregar los filtros si están llenos
-    if (filtroEmail) {
-        params.push('email_usuario=' + encodeURIComponent(filtroEmail));
-    }
-    if (filtroFecha) {
-        params.push('fecha=' + encodeURIComponent(filtroFecha));
-    }
-
-    // Si hay parámetros, agregarlos a la URL
-    if (params.length > 0) {
-        url += '?' + params.join('&');
-    }
-
-    // Realizar la petición al servidor
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            let reservasTable = document.getElementById('reservasTable').getElementsByTagName('tbody')[0];
-            reservasTable.innerHTML = ''; // Limpiar el contenido previo
-
-            if (data.length > 0) {
-                data.forEach(reserva => {
-                    let row = reservasTable.insertRow();
-                    let cellEmail = row.insertCell(0);
-                    let cellIdSala = row.insertCell(1);
-                    let cellHoraReserva = row.insertCell(2);
-
-                    cellEmail.textContent = reserva.email;
-                    cellIdSala.textContent = reserva.idSala;
-                    cellHoraReserva.textContent = reserva.horaReserva;
-                });
-            } else {
-                let row = reservasTable.insertRow();
-                let cell = row.insertCell(0);
-                cell.colSpan = 3;
-                cell.textContent = 'No hay reservas futuras que coincidan con los filtros.';
+            function cargarSalas() {
+                fetch('SalaDisponible')
+                    .then(response => response.json())
+                    .then(data => {
+                        const select = $('#idSala');
+                        select.empty().append('<option value="">--Selecciona una sala--</option>');
+                        data.forEach(sala => {
+                            select.append(`<option value="${sala.id}">Sala ${sala.id}</option>`);
+                        });
+                    })
+                    .catch(error => console.error('Error al cargar las salas:', error));
             }
-        })
-        .catch(error => console.error('Error al obtener las reservas:', error));
-}
 
+            function mostrarMensaje(mensaje, exito) {
+                const div = $("#mensajeReserva");
+                div.text(mensaje).removeClass("exito error").addClass(exito ? "exito" : "error").fadeIn();
+            }
+
+            function fetchReservas() {
+                fetch('Reserva')
+                    .then(response => response.json())
+                    .then(data => {
+                        const tableBody = $('#reservasTable tbody').empty();
+                        if (data.length > 0) {
+                            data.forEach(r => tableBody.append(
+                                `<tr><td>${r.email}</td><td>${r.idSala}</td><td>${r.horaReserva}</td></tr>`
+                            ));
+                        } else {
+                            tableBody.append('<tr><td colspan="3">No hay reservas futuras.</td></tr>');
+                        }
+                    })
+                    .catch(error => console.error('Error al cargar reservas:', error));
+            }
         </script>
     </body>
 </html>
