@@ -70,14 +70,6 @@
             border-radius: 8px;
             margin-top: 20px;
         }
-        #raw-data {
-            background-color: #f1f8ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-family: monospace;
-            white-space: pre-wrap;
-        }
     </style>
 </head>
 <body>
@@ -99,7 +91,6 @@
             </tbody>
         </table>
         <div id="error" class="error" style="display: none;"></div>
-        <div id="raw-data"></div>
     </div>
 
 <script>

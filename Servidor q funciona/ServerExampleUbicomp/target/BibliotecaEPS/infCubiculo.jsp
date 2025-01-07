@@ -70,14 +70,6 @@
             border-radius: 8px;
             margin-top: 20px;
         }
-        #raw-data {
-            background-color: #f1f8ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-family: monospace;
-            white-space: pre-wrap;
-        }
     </style>
 </head>
 <body>
@@ -90,6 +82,7 @@
                     <th>Temperatura</th>
                     <th>Humedad</th>
                     <th>Sonido</th>
+                    <th>Luz</th> <!-- Nueva columna para la luz -->
                     <th>Fecha y Hora</th>
                 </tr>
             </thead>
@@ -98,7 +91,6 @@
             </tbody>
         </table>
         <div id="error" class="error" style="display: none;"></div>
-        <div id="raw-data"></div>
     </div>
 
     <script>
@@ -115,7 +107,6 @@
                 })
                 .then(data => {
                     console.log("Datos recibidos:", data);
-                    document.getElementById('raw-data').textContent = "Datos crudos recibidos: " + JSON.stringify(data);
                     populateUltimasLecturas(data);
                 })
                 .catch(error => {
@@ -127,7 +118,7 @@
 
         function populateUltimasLecturas(lecturas) {
             const lecturasTable = document.getElementById('lecturasTable').getElementsByTagName('tbody')[0];
-            lecturasTable.innerHTML = ""; // Clear the table
+            lecturasTable.innerHTML = ""; // Limpiar la tabla antes de insertar los nuevos datos
             
             // Verificar si lecturas es un array
             if (!Array.isArray(lecturas)) {
@@ -136,11 +127,12 @@
             
             lecturas.forEach(lectura => {
                 let row = lecturasTable.insertRow();
-                row.insertCell(0).textContent = lectura.idCubiculo; // Asegúrate de que el campo se llama idCubiculo
+                row.insertCell(0).textContent = lectura.idCubiculo; // ID de cubículo
                 row.insertCell(1).textContent = formatLecturaValue("Temperatura", lectura.temperatura);
                 row.insertCell(2).textContent = formatLecturaValue("Humedad", lectura.humedad);
                 row.insertCell(3).textContent = formatLecturaValue("Sonido", lectura.sonido);
-                row.insertCell(4).textContent = new Date(lectura.fechaHora).toLocaleString();
+                row.insertCell(4).textContent = formatLecturaValue("Luz", lectura.luz); // Lectura de luz
+                row.insertCell(5).textContent = new Date(lectura.fechaHora).toLocaleString(); // Fecha y hora
             });
         }
 
@@ -150,6 +142,7 @@
                 case "Temperatura": return valor + " °C";
                 case "Humedad": return valor + " %";
                 case "Sonido": return valor + " dB";
+                case "Luz": return valor + " lux"; // Formato de luz en lux
                 default: return valor; // Manejar cualquier otro tipo si es necesario
             }
         }

@@ -10,8 +10,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-        <link rel="icon" href="Fotos/favicon.png" type="image/png">
-
+    <link rel="icon" href="Fotos/favicon.png" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datos de los Sensores</title>
@@ -69,14 +68,6 @@
             border-radius: 8px;
             margin-top: 20px;
         }
-        #raw-data {
-            background-color: #f1f8ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-family: monospace;
-            white-space: pre-wrap;
-        }
     </style>
 </head>
 <body>
@@ -97,7 +88,6 @@
             </tbody>
         </table>
         <div id="error" class="error" style="display: none;"></div>
-        <div id="raw-data"></div>
     </div>
 
 <script>
@@ -114,7 +104,6 @@
             })
             .then(data => {
                 console.log("Datos recibidos:", data);
-                document.getElementById('raw-data').textContent = "Datos crudos recibidos: " + JSON.stringify(data);
                 populateUltimasLecturas(data);
             })
             .catch(error => {

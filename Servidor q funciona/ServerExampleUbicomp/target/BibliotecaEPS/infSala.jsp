@@ -59,14 +59,6 @@
             border-radius: 8px;
             margin-top: 20px;
         }
-        #raw-data {
-            background-color: #f1f8ff;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            font-family: monospace;
-            white-space: pre-wrap;
-        }
         .table-header {
             display: flex;
             align-items: center;
@@ -99,8 +91,8 @@
             </tbody>
         </table>
         <div id="error" class="error" style="display: none;"></div>
-        <div id="raw-data"></div>
     </div>
+
 <script>
     console.log("Script iniciado");
 
@@ -115,7 +107,6 @@
             })
             .then(data => {
                 console.log("Datos recibidos:", data);
-                document.getElementById('raw-data').textContent = "Datos crudos recibidos: " + JSON.stringify(data);
                 populateUltimasLecturas(data);
             })
             .catch(error => {
