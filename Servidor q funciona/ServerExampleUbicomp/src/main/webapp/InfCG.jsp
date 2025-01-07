@@ -90,6 +90,7 @@
                     <th>Temperatura</th>
                     <th>Humedad</th>
                     <th>Sonido</th>
+                    <th>Luz</th> <!-- Nueva columna para Luz -->
                     <th>Fecha y Hora</th>
                 </tr>
             </thead>
@@ -101,58 +102,85 @@
         <div id="raw-data"></div>
     </div>
 
-    <script>
-        console.log("Script iniciado");
-
-        document.addEventListener('DOMContentLoaded', function () {
-            fetch('/BibliotecaEPS/InfCubiculo') // Cambia la URL según tu servlet
-                .then(response => {
-                    console.log("Respuesta recibida:", response);
-                    if (!response.ok) {
-                        throw new Error('Error en la respuesta del servidor: ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log("Datos recibidos:", data);
-                    document.getElementById('raw-data').textContent = "Datos crudos recibidos: " + JSON.stringify(data);
-                    populateUltimasLecturas(data);
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    document.getElementById('error').textContent = "Error: " + error.message;
-                    document.getElementById('error').style.display = 'block';
-                });
-        });
-
-        function populateUltimasLecturas(lecturas) {
-            const lecturasTable = document.getElementById('lecturasTable').getElementsByTagName('tbody')[0];
-            lecturasTable.innerHTML = ""; // Clear the table
-            
-            // Verificar si lecturas es un array
-            if (!Array.isArray(lecturas)) {
-                lecturas = [lecturas]; // Si no es un array, convertirlo en uno
-            }
-            
-            lecturas.forEach(lectura => {
-                let row = lecturasTable.insertRow();
-                row.insertCell(0).textContent = lectura.idCubiculo; // Asegúrate de que el campo se llama idCubiculo
-                row.insertCell(1).textContent = formatLecturaValue("Temperatura", lectura.temperatura);
-                row.insertCell(2).textContent = formatLecturaValue("Humedad", lectura.humedad);
-                row.insertCell(3).textContent = formatLecturaValue("Sonido", lectura.sonido);
-                row.insertCell(4).textContent = new Date(lectura.fechaHora).toLocaleString();
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/BibliotecaEPS/InfCubiculo') // Cambia la URL según tu servlet
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                populateUltimasLecturas(data);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById('error').textContent = "Error: " + error.message;
+                document.getElementById('error').style.display = 'block';
             });
+    });
+
+    function populateUltimasLecturas(lecturas) {
+        const lecturasTable = document.getElementById('lecturasTable').getElementsByTagName('tbody')[0];
+        const alertasContainer = document.createElement('div'); // Contenedor para todas las alertas
+        alertasContainer.id = 'alertas';
+        alertasContainer.style.marginTop = '20px';
+        alertasContainer.style.padding = '10px';
+        document.body.appendChild(alertasContainer);
+
+        lecturasTable.innerHTML = ""; // Limpiar la tabla
+        alertasContainer.innerHTML = ""; // Limpiar alertas
+
+        if (!Array.isArray(lecturas)) {
+            lecturas = [lecturas];
         }
 
-        function formatLecturaValue(tipoSensor, valor) {
-            if (valor === null || valor === undefined) return "N/A";
-            switch(tipoSensor) {
-                case "Temperatura": return valor + " °C";
-                case "Humedad": return valor + " %";
-                case "Sonido": return valor + " dB";
-                default: return valor; // Manejar cualquier otro tipo si es necesario
-            }
+        lecturas.forEach(lectura => {
+            let row = lecturasTable.insertRow();
+            row.insertCell(0).textContent = lectura.idCubiculo;
+            row.insertCell(1).textContent = formatLecturaValue("Temperatura", lectura.temperatura);
+            row.insertCell(2).textContent = formatLecturaValue("Humedad", lectura.humedad);
+            row.insertCell(3).textContent = formatLecturaValue("Sonido", lectura.sonido);
+            row.insertCell(4).textContent = formatLecturaValue("Luz", lectura.luz); // Agregar valor de luz
+            row.insertCell(5).textContent = new Date(lectura.fechaHora).toLocaleString();
+
+            // Check for temperature alerts
+            addTemperatureAlert(alertasContainer, lectura.idCubiculo, lectura.temperatura);
+        });
+    }
+
+    function formatLecturaValue(tipoSensor, valor) {
+        if (valor === null || valor === undefined) return "N/A";
+        switch(tipoSensor) {
+            case "Temperatura": return valor + " °C";
+            case "Humedad": return valor + " %";
+            case "Sonido": return valor + " dB";
+            case "Luz": return valor + " lux"; // Formato para la luz
+            default: return valor;
         }
-    </script>
+    }
+
+    function addTemperatureAlert(container, idCubiculo, temperatura) {
+        let alertMessage = "";
+        if (temperatura > 27) {
+            alertMessage = `⚠️ Cubículo ${idCubiculo}: ¡Hace mucho calor! La temperatura ha superado los 27°C (${temperatura}°C).`;
+        } else if (temperatura < 17) {
+            alertMessage = `⚠️ Cubículo ${idCubiculo}: ¡Hace mucho frío! La temperatura está por debajo de los 17°C (${temperatura}°C).`;
+        }
+
+        if (alertMessage) {
+            const alertDiv = document.createElement('div');
+            alertDiv.textContent = alertMessage;
+            alertDiv.style.marginBottom = '10px';
+            alertDiv.style.padding = '10px';
+            alertDiv.style.borderRadius = '8px';
+            alertDiv.style.backgroundColor = temperatura > 27 ? '#f8d7da' : '#d4edda';
+            alertDiv.style.color = temperatura > 27 ? '#721c24' : '#155724';
+            container.appendChild(alertDiv);
+        }
+    }
+</script>
+
 </body>
 </html>
