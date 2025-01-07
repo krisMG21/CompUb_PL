@@ -1,17 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%
-    // Verificar si el usuario estÃ¡ autenticado
-    String userEmail = (String) session.getAttribute("email");
-    if (userEmail == null) {
-        response.sendRedirect("MenuInicio.jsp");
-        return; 
-    }
-%>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-        <link rel="icon" href="Fotos/favicon.png" type="image/png">
-
+    <link rel="icon" href="Fotos/favicon.png" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Datos de los Sensores</title>
@@ -77,11 +67,23 @@
             font-family: monospace;
             white-space: pre-wrap;
         }
+        .table-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .table-header img {
+            width: 24px;
+            height: 24px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Datos de Sensores de Todas las Salas</h1>
+        <div class="table-header">
+            <h2>Lecturas de Sensores</h2>
+        </div>
         <table id="lecturasTable">
             <thead>
                 <tr>
@@ -99,59 +101,79 @@
         <div id="error" class="error" style="display: none;"></div>
         <div id="raw-data"></div>
     </div>
+<script>
+    console.log("Script iniciado");
 
-    <script>
-        console.log("Script iniciado");
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('/BibliotecaEPS/Temperatura')
+            .then(response => {
+                console.log("Respuesta recibida:", response);
+                if (!response.ok) {
+                    throw new Error('Error en la respuesta del servidor: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Datos recibidos:", data);
+                document.getElementById('raw-data').textContent = "Datos crudos recibidos: " + JSON.stringify(data);
+                populateUltimasLecturas(data);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById('error').textContent = "Error: " + error.message;
+                document.getElementById('error').style.display = 'block';
+            });
+    });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            fetch('/BibliotecaEPS/Temperatura')
-                .then(response => {
-                    console.log("Respuesta recibida:", response);
-                    if (!response.ok) {
-                        throw new Error('Error en la respuesta del servidor: ' + response.status);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log("Datos recibidos:", data);
-                    document.getElementById('raw-data').textContent = "Datos crudos recibidos: " + JSON.stringify(data);
-                    populateUltimasLecturas(data);
-                })
-                .catch(error => {
-                    console.error("Error:", error);
-                    document.getElementById('error').textContent = "Error: " + error.message;
-                    document.getElementById('error').style.display = 'block';
-                });
+    function populateUltimasLecturas(lecturas) {
+        const lecturasTable = document.getElementById('lecturasTable').getElementsByTagName('tbody')[0];
+        lecturasTable.innerHTML = ""; // Clear the table
+
+        // Verificar si lecturas es un array
+        if (!Array.isArray(lecturas)) {
+            lecturas = [lecturas]; // Si no es un array, convertirlo en uno
+        }
+
+        let alertas = []; // Almacenar alertas para temperaturas fuera del rango
+
+        lecturas.forEach(lectura => {
+            let row = lecturasTable.insertRow();
+            row.insertCell(0).textContent = lectura.idSala;
+            const temperatura = lectura.temperatura;
+            row.insertCell(1).textContent = formatLecturaValue("Temperatura", temperatura);
+            row.insertCell(2).textContent = formatLecturaValue("Humedad", lectura.humedad);
+            row.insertCell(3).textContent = formatLecturaValue("Sonido", lectura.sonido);
+            row.insertCell(4).textContent = new Date(lectura.fechaHora).toLocaleString();
+
+            // Verificar si la temperatura está fuera del rango
+            if (temperatura > 30 || temperatura < 10) {
+                alertas.push(`Sala ${lectura.idSala}: Temperatura fuera del rango (${temperatura} °C)`);
+                row.style.backgroundColor = "#f8d7da"; // Resaltar fila en caso de alerta
+            }
         });
 
-        function populateUltimasLecturas(lecturas) {
-            const lecturasTable = document.getElementById('lecturasTable').getElementsByTagName('tbody')[0];
-            lecturasTable.innerHTML = ""; // Clear the table
-            
-            // Verificar si lecturas es un array
-            if (!Array.isArray(lecturas)) {
-                lecturas = [lecturas]; // Si no es un array, convertirlo en uno
-            }
-            
-            lecturas.forEach(lectura => {
-                let row = lecturasTable.insertRow();
-                row.insertCell(0).textContent = lectura.idSala; // Cambiar a idSala si es necesario
-                row.insertCell(1).textContent = formatLecturaValue("Temperatura", lectura.temperatura);
-                row.insertCell(2).textContent = formatLecturaValue("Humedad", lectura.humedad);
-                row.insertCell(3).textContent = formatLecturaValue("Sonido", lectura.sonido);
-                row.insertCell(4).textContent = new Date(lectura.fechaHora).toLocaleString(); // Cambiar el Ã­ndice a 4
-            });
+        if (alertas.length > 0) {
+            showAlertas(alertas);
         }
+    }
 
-        function formatLecturaValue(tipoSensor, valor) {
-            if (valor === null || valor === undefined) return "N/A";
-            switch(tipoSensor) {
-                case "Temperatura": return valor + " Â°C";
-                case "Humedad": return valor + " %";
-                case "Sonido": return valor + " dB";
-                default: return valor; // Manejar cualquier otro tipo si es necesario
-            }
+    function formatLecturaValue(tipoSensor, valor) {
+        if (valor === null || valor === undefined) return "N/A";
+        switch (tipoSensor) {
+            case "Temperatura": return valor + " °C";
+            case "Humedad": return valor + " %";
+            case "Sonido": return valor + " dB";
+            default: return valor; // Manejar cualquier otro tipo si es necesario
         }
-    </script>
+    }
+
+    function showAlertas(alertas) {
+        const alertaDiv = document.createElement('div');
+        alertaDiv.className = 'error';
+        alertaDiv.innerHTML = `<strong>¡Atención!</strong><br>` + alertas.join('<br>');
+        document.querySelector('.container').prepend(alertaDiv);
+    }
+</script>
+
 </body>
 </html>
