@@ -135,9 +135,9 @@ void loop() {
       startTime = millis();
 
       // Sensor DHT
-      float temp = dht.readTemperature();
+      int temp = dht.readTemperature();
       publish("sala/1/temp", std::to_string(temp));
-      float hum = dht.readHumidity();
+      int hum = dht.readHumidity();
       publish("sala/1/hum", std::to_string(hum));
     }
 
@@ -177,9 +177,9 @@ void loop() {
       delay(100);
 
       // Sensor DHT
-      float temp = dht.readTemperature();
+      int temp = dht.readTemperature();
       publish("cubiculo/1/temp", std::to_string(temp));
-      float hum = dht.readHumidity();
+      int hum = dht.readHumidity();
       publish(topic + "hum", std::to_string(hum));
     }
 
