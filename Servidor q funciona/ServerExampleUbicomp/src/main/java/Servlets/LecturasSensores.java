@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 
+
 public class LecturasSensores extends HttpServlet {
 
     @Override
@@ -38,8 +39,8 @@ public class LecturasSensores extends HttpServlet {
             }
 
             String query = "SELECT s.idSala, " +
-                           "MAX(CASE WHEN l.idSensor = 1 THEN l.valor END) AS temperatura, " +
-                           "MAX(CASE WHEN l.idSensor = 2 THEN l.valor END) AS humedad, " +
+                           "MAX(CASE WHEN l.idSensor = 1 THEN l.valor END) AS humedad, " +
+                           "MAX(CASE WHEN l.idSensor = 2 THEN l.valor END) AS temperatura, " +
                            "MAX(CASE WHEN l.idSensor = 3 THEN l.valor END) AS sonido, " +
                            "MAX(CASE WHEN l.idSensor = 4 THEN l.valor END) AS luz, " +
                            "MAX(l.fechaHora) AS fechaHora " +
