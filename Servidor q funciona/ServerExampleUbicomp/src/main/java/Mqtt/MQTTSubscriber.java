@@ -136,7 +136,7 @@ public class MQTTSubscriber implements MqttCallback {
         return switch (sensorName) {
             case "hum" -> 1;
             case "temp" -> 2;
-            case "ruido" -> 3;
+            case "sonido" -> 3;
             case "luz" -> 4;
             case "ocupado" -> 5;
             default -> 0;

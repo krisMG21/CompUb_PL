@@ -56,8 +56,8 @@ public class InfCubiculo extends HttpServlet {
                     cubiculoData.put("idCubiculo", rs.getInt("idCubiculo"));
                     cubiculoData.put("temperatura", rs.getObject("temperatura"));
                     cubiculoData.put("humedad", rs.getObject("humedad"));
-                    cubiculoData.put("sonido", rs.getObject("sonido"));
-                    cubiculoData.put("luz", rs.getObject("luz"));
+                    cubiculoData.put("sonido", categorizarRuido(rs.getInt("sonido")));
+                    cubiculoData.put("luz", categorizarLuminosidad(rs.getInt("luz")));
                     cubiculoData.put("fechaHora", rs.getString("fechaHora"));
                     sensoresData.put(cubiculoData);
                 }
@@ -71,5 +71,25 @@ public class InfCubiculo extends HttpServlet {
         }
 
         return sensoresData;
+    }
+    
+    private String categorizarRuido(int valor) {
+        if (valor < 30) {
+            return "Bajo";
+        } else if (valor <= 60) {
+            return "Medio";
+        } else {
+            return "Alto";
+        }
+    }
+    
+    private String categorizarLuminosidad(int valor) {
+        if (valor < 100) {
+            return "Bajo";
+        } else if (valor <= 300) {
+            return "Medio";
+        } else {
+            return "Alto";
+        }
     }
 }
