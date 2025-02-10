@@ -25,7 +25,7 @@ typedef enum { SALA,
 
 // INFO: IDENTIFICADOR DE CIRCUITO
 // ==================================================
-#define ID 1
+#define ID 2
 
 
 // INFO: PINES
@@ -136,9 +136,9 @@ void loop() {
 
       // Sensor DHT
       int temp = dht.readTemperature();
-      publish("sala/1/temp", std::to_string(temp));
+      publish(topic + "temp", std::to_string(temp));
       int hum = dht.readHumidity();
-      publish("sala/1/hum", std::to_string(hum));
+      publish(topic + "hum", std::to_string(hum));
     }
 
     unsigned long UID = leerTarjeta();
@@ -172,13 +172,13 @@ void loop() {
 
       // Sensor de sonido
       int sonido = analogRead(SSONIDO);
-      publish("cubiculo/1/sonido", std::to_string(sonido));
+      publish(topic + "sonido", std::to_string(sonido));
 
       delay(100);
 
       // Sensor DHT
       int temp = dht.readTemperature();
-      publish("cubiculo/1/temp", std::to_string(temp));
+      publish(topic + "temp", std::to_string(temp));
       int hum = dht.readHumidity();
       publish(topic + "hum", std::to_string(hum));
     }
@@ -189,7 +189,7 @@ void loop() {
     bool ocupado_temp = distancia < 15;
     if (ocupado_temp != ocupado) {
       ocupado = ocupado_temp;
-      publish("cubiculo/1/ocupado", std::to_string(ocupado));
+      publish(topic + "ocupado", std::to_string(ocupado));
       if (ocupado) {
         digitalWrite(RED_LED, HIGH);
         digitalWrite(GREEN_LED, LOW);

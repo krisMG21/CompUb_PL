@@ -128,35 +128,35 @@ public class ConnectionDB
     }
 
     public static PreparedStatement GetTarjetaFromUsuario(Connection con) {
-        return getStatement(con, "SELECT idTarjeta FROM Usuarios WHERE email=?");
+        return getStatement(con, "SELECT idTarjeta FROM biblioteca.Usuarios WHERE email=?");
     }
     
     public static PreparedStatement GetOcupacionSala(Connection con) {
-        return getStatement(con, "SELECT ocupada FROM Salas WHERE idSala=?");
+        return getStatement(con, "SELECT ocupada FROM biblioteca.Salas WHERE idSala=?");
     }
     
     public static PreparedStatement GetOcupacionCubiculo(Connection con) {
-        return getStatement(con, "SELECT ocupado FROM Cubiculos WHERE idCubiculo=?");
+        return getStatement(con, "SELECT ocupado FROM biblioteca.Cubiculos WHERE idCubiculo=?");
     }
     
     public static PreparedStatement GetLecturas(Connection con) {
-        return getStatement(con, "SELECT * FROM LecturaSensores");
+        return getStatement(con, "SELECT * FROM biblioteca.LecturaSensores");
     }
     
     public static PreparedStatement GetUsuarioPassw(Connection con){
-        return getStatement(con, "SELECT tipo FROM Usuarios WHERE email=? AND passw=?");
+        return getStatement(con, "SELECT tipo FROM biblioteca.Usuarios WHERE email=? AND passw=?");
     }
     
     public static PreparedStatement GetVecesReserva(Connection con){ 
-        return getStatement(con, "SELECT COUNT(*) FROM Reservas WHERE email_usuario=? AND idSala=?");
+        return getStatement(con, "SELECT COUNT(*) FROM biblioteca.Reservas WHERE email_usuario=? AND idSala=?");
         //Si se quiere saber el tiempo total de las reservas en h, multiplicar por 2 el numero de reservas. 
     }
     
     public static PreparedStatement GetRuidoCubiculo(Connection con){ //Es decir, la última lectura
-        return getStatement(con, "SELECT valor FROM LecturaSensores WHERE idSensor=3 AND idCubiculo=?  ORDER BY fechaHora DESC LIMIT 1;");
+        return getStatement(con, "SELECT valor FROM biblioteca.LecturaSensores WHERE idSensor=3 AND idCubiculo=?  ORDER BY fechaHora DESC LIMIT 1;");
     }
     
     public static PreparedStatement GetHumedadCubiculo(Connection con){ //Es decir, la última lectura
-        return getStatement(con, "SELECT valor FROM LecturaSensores WHERE idSensor=1 AND idCubiculo=?  ORDER BY fechaHora DESC LIMIT 1;");
+        return getStatement(con, "SELECT valor FROM biblioteca.LecturaSensores WHERE idSensor=1 AND idCubiculo=?  ORDER BY fechaHora DESC LIMIT 1;");
     }
 }

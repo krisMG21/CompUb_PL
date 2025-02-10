@@ -97,7 +97,7 @@
     console.log("Script iniciado");
 
     document.addEventListener('DOMContentLoaded', function () {
-        fetch('/BibliotecaEPS/LecturaSensores')
+        fetch('/BibliotecaEPS/Temperatura')
             .then(response => {
                 console.log("Respuesta recibida:", response);
                 if (!response.ok) {

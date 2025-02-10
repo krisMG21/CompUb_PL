@@ -39,8 +39,8 @@ public class InfCubiculo extends HttpServlet {
 
             // Modificar la consulta para obtener datos de cubículos
             String query = "SELECT c.idCubiculo, " +
-                           "MAX(CASE WHEN l.idSensor = 1 THEN l.valor END) AS temperatura, " +
-                           "MAX(CASE WHEN l.idSensor = 2 THEN l.valor END) AS humedad, " +
+                           "MAX(CASE WHEN l.idSensor = 1 THEN l.valor END) AS humedad, " +
+                           "MAX(CASE WHEN l.idSensor = 2 THEN l.valor END) AS temperatura, " +
                            "MAX(CASE WHEN l.idSensor = 3 THEN l.valor END) AS sonido, " +
                            "MAX(CASE WHEN l.idSensor = 4 THEN l.valor END) AS luz, " +
                            "MAX(l.fechaHora) AS fechaHora " +
